@@ -490,7 +490,6 @@
       return;
     }
 
-    // OFFICIAL PORTFOLIO lives on the left carrier route.
     if(currentLocation==="official"){
       await carryWithHistoryRing(ENDPOINTS.official,HISTORY_CARRIER_CENTER,1020);
       setBall(...HISTORY_CARRIER_CENTER);
@@ -506,7 +505,6 @@
       return;
     }
 
-    // PERSONAL HISTORY lives at the bottom of the elevator.
     if(currentLocation==="history"){
       await moveBall([ENDPOINTS.history,[790,748]],260,"in");
       await moveElevator(443);
@@ -514,7 +512,6 @@
       return;
     }
 
-    // UNOFFICIAL PORTFOLIO lives at the top-right trampoline route.
     if(currentLocation==="unofficial"){
       await moveBall([
         ENDPOINTS.unofficial,
@@ -566,7 +563,6 @@
     }
   }
 
-  // left carrier -> OFFICIAL PORTFOLIO
   async function goToOfficialLeft(){
     await moveBall([
       HUB,
@@ -623,7 +619,6 @@
     setBall(...ENDPOINTS.teaching);
   }
 
-  // elevator -> PERSONAL HISTORY
   async function goToPersonalHistory(){
     if(elevatorY!==443){
       elevatorCab.setAttribute("transform","translate(790 443)");
@@ -642,7 +637,7 @@
     await moveBall([[790,748],ENDPOINTS.history],280,"out");
   }
 
-  // right ramp + trampoline -> UNOFFICIAL PORTFOLIO
+
   async function goToUnofficialRight(){
     await moveBall([
       HUB,
@@ -749,10 +744,7 @@
   });
 
 
-  // JELLY TITLE --------------------------------------------------------------
-  // Each letter now uses the user-supplied manual glyph cutouts; only the remaining screenshots were color-cleaned. Nearby
-  // letters are gently attracted toward the cursor, overshoot, squash/stretch,
-  // and then spring back to their exact original positions.
+
   const titleLetters = Array.from(document.querySelectorAll('#pageTitle .title-letter')).map((el, index) => ({
     el,
     index,
@@ -822,7 +814,6 @@
           tx = (dx / safeDist) * pull;
           ty = (dy / safeDist) * pull;
 
-          // A tiny per-letter wobble keeps the reaction organic rather than rigid.
           const wobble = Math.sin(time * 0.006 + letter.phase) * 1.8 * strength;
           tx += wobble;
           ty += Math.cos(time * 0.005 + letter.phase) * 1.2 * strength;
@@ -842,8 +833,6 @@
       letter.y += letter.vy;
       letter.rot += (letter.targetRot - letter.rot) * 0.12;
 
-      // Jelly squash/stretch follows motion velocity, but stays subtle enough
-      // that the lettering remains readable.
       const speed = Math.hypot(letter.vx, letter.vy);
       const stretch = Math.min(0.045, speed * 0.0045);
       const sxJ = 1 + stretch;

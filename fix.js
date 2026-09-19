@@ -1,6 +1,5 @@
 (() => {
-  // NAVIGATION PAGE ONLY.
-  // Rename "official portfolio" -> "portfolio".
+  
   const portfolioNav = document.querySelector('.nav[data-destination="official"]');
   const portfolioLabel = portfolioNav?.querySelector('text');
 
@@ -8,7 +7,6 @@
     portfolioLabel.textContent = 'portfolio';
   }
 
-  // Use the requested cursor on the navigation page.
   const style = document.createElement('style');
   style.textContent = `
     html, body, body *, svg, svg * {
@@ -17,8 +15,7 @@
   `;
   document.head.appendChild(style);
 
-  // The existing navigation script still opens "official-portfolio.html".
-  // Rewrite only that destination to "portfolio.html".
+
   const nativeOpen = window.open.bind(window);
 
   window.open = function(url, target, features) {

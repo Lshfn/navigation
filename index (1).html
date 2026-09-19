@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Portfolio Pinball Navigation – crystal redesign</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    html,
+    body,
+    body *,
+    svg,
+    svg * {
+      cursor: url("https://dariaivans.neocities.org/portfolio_img/2251-48x48x32.png") 0 0, auto !important;
+    }
+
+    a,
+    button,
+    [role="button"],
+    [onclick],
+    .nav,
+    .nav * {
+      cursor: url("https://dariaivans.neocities.org/portfolio_img/14687-48x48x32.png") 0 0, pointer !important;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="loading" style="font-family:Arial,sans-serif;padding:20px;">loading…</div>
+
+  <script>
+  (async () => {
+    const ORIGINAL_SOURCES = [
+      "https://raw.githubusercontent.com/Lshfn/navigation/042addcd5f2d11c8c2873d8bdd877e35774078d9/index.html",
+      "https://cdn.jsdelivr.net/gh/Lshfn/navigation@042addcd5f2d11c8c2873d8bdd877e35774078d9/index.html"
+    ];
+
+    async function getOriginalHTML() {
+      let lastError = null;
+
+      for (const url of ORIGINAL_SOURCES) {
+        try {
+          const response = await fetch(url, { cache: "no-store" });
+          if (!response.ok) throw new Error("HTTP " + response.status);
+          return await response.text();
+        } catch (error) {
+          lastError = error;
+        }
+      }
+
+      throw lastError || new Error("Could not load original navigation.");
+    }
+
+    function loadScript(src) {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = src;
+        script.onload = resolve;
+        script.onerror = () => reject(new Error("Could not load " + src));
+        document.body.appendChild(script);
+      });
+    }
+
+    function applyNavigationChanges() {
+      const CONTACTS_URL = "https://dariaivans.neocities.org/contact/contact";
+      const OLD_UNOFFICIAL_URL = "https://dariaivans.hotglue.me/?projects";
+      const OLD_OFFICIAL_URL = "official-portfolio.html";
+      const PORTFOLIO_URL = "portfolio.html";
+      const TEACHING_URL = "teaching.html";
+
+      function navText(destination) {
+        return document.querySelector(
+          `.nav[data-destination="${destination}"] text`
+        );
+      }
+
+      /* official portfolio -> portfolio */
+      const portfolio = navText("official");
+      if (portfolio) {
+        portfolio.textContent = "portfolio";
+      }
+
+      /* upper-right route: unofficial portfolio -> teaching */
+      const upperRight = navText("unofficial");
+      if (upperRight) {
+        upperRight.textContent = "teaching";
+        upperRight.setAttribute("fill", "var(--violet)");
+      }
+
+      /* lower-left route: teaching -> contacts */
+      const lowerLeft = navText("teaching");
+      if (lowerLeft) {
+        lowerLeft.textContent = "contacts";
+        lowerLeft.setAttribute("fill", "var(--blue)");
+        lowerLeft.style.fontFamily =
+          '"Portfolio566", Arial, Helvetica, sans-serif';
+        lowerLeft.style.fontWeight = "400";
+      }
+
+      /* back to the homepage -> homepage */
+      const homepage = navText("home");
+      if (homepage) {
+        homepage.textContent = "homepage";
+      }
+
+      /*
+        Keep the original pinball routes/animations, but remap
+        the pages opened at the end of the animations.
+      */
+      const nativeOpen = window.open.bind(window);
+
+      window.open = function(url, target, features) {
+        let destination = url;
+
+        if (typeof destination === "string") {
+          if (
+            destination === OLD_OFFICIAL_URL ||
+            destination.endsWith("/official-portfolio.html")
+          ) {
+            destination = PORTFOLIO_URL;
+          }
+          else if (destination === OLD_UNOFFICIAL_URL) {
+            destination = TEACHING_URL;
+          }
+          else if (
+            destination === TEACHING_URL ||
+            destination.endsWith("/teaching.html")
+          ) {
+            destination = CONTACTS_URL;
+          }
+        }
+
+        return nativeOpen(destination, target, features);
+      };
+
+      /*
+        Keep the ball visible while it travels through
+        the vertical tube leading to Personal History.
+      */
+      const ball = document.getElementById("ball");
+
+      if (ball) {
+        if (ball.parentNode) {
+          ball.parentNode.appendChild(ball);
+        }
+
+        const keepBallInHistoryTube = () => {
+          const x = Number(ball.getAttribute("cx"));
+          const y = Number(ball.getAttribute("cy"));
+
+          const inHistoryTube =
+            Number.isFinite(x) &&
+            Number.isFinite(y) &&
+            Math.abs(x - 790) <= 18 &&
+            y >= 378 &&
+            y <= 800;
+
+          if (inHistoryTube) {
+            ball.style.transform = "none";
+            ball.style.transformOrigin = "center";
+            ball.style.opacity = "1";
+            ball.style.filter = "";
+          }
+        };
+
+        const observer = new MutationObserver(keepBallInHistoryTube);
+
+        observer.observe(ball, {
+          attributes: true,
+          attributeFilter: ["cx", "cy"]
+        });
+
+        keepBallInHistoryTube();
+      }
+    }
+
+    try {
+      const originalHTML = await getOriginalHTML();
+
+      const parsed = new DOMParser().parseFromString(
+        originalHTML,
+        "text/html"
+      );
+
+      const board = parsed.querySelector("#board");
+
+      if (!board) {
+        throw new Error("SVG board was not found in the original file.");
+      }
+
+      const loading = document.getElementById("loading");
+      if (loading) loading.remove();
+
+      document.body.appendChild(
+        document.importNode(board, true)
+      );
+
+      await loadScript("script.js");
+      applyNavigationChanges();
+
+    } catch (error) {
+      console.error(error);
+
+      const loading = document.getElementById("loading");
+
+      if (loading) {
+        loading.textContent =
+          "Navigation could not be loaded. Please refresh the page.";
+      }
+    }
+  })();
+  </script>
+</body>
+</html>

@@ -571,10 +571,117 @@ video[controls],
   text-underline-offset: 3px;
 }
 
+
+
+/* --- Hover-activated draggable color orbs ---
+   Added without changing the portfolio's original cursor or interactions. */
+.background-orbs {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.bg-orb {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+  pointer-events: auto;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  will-change: left, top, transform, filter;
+  opacity: .98;
+}
+
+/* The orb is completely still until hover. */
+.bg-orb.is-hovered:not(.is-dragging) {
+  animation: orbAwake 1.8s ease-in-out infinite;
+  filter: drop-shadow(0 0 6px rgba(0,0,0,.12));
+}
+
+.bg-orb.is-dragging {
+  filter: drop-shadow(0 0 10px rgba(0,0,0,.18));
+}
+
+.bg-orb.is-attracted {
+  filter: drop-shadow(0 0 9px rgba(255,255,255,.52));
+}
+
+.bg-orb img {
+  display: block;
+  width: 48px;
+  height: 48px;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+@keyframes orbAwake {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  30%      { transform: rotate(-3deg) scale(1.035); }
+  65%      { transform: rotate(3deg) scale(.985); }
+}
+
+/* Initial positions stay in the empty/white areas. */
+#orb-2255 { left: 1350px; top: 92px; }
+#orb-2254 { left: 88px; top: 278px; }
+#orb-2249 { left: 1972px; top: 452px; }
+#orb-2248 { left: 824px; top: 914px; }
+#orb-2245 { left: 1978px; top: 1050px; }
+
+/* Contrast rules requested earlier. */
+body.bg-pink {
+  --magenta: #86c51b;
+  --magenta2: #86c51b;
+}
+
+body.bg-blue {
+  --blue: #22b8b8;
+}
+
+html,
+body,
+.portfolio-wrap,
+#stage {
+  transition: background-color .45s ease, background-image .45s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-orb.is-hovered:not(.is-dragging) {
+    animation: none;
+  }
+}
+
 </style>
 </head>
 <body>
 <div class="portfolio-wrap"><main id="stage">
+
+<div class="background-orbs" aria-label="Background color controls">
+  <button class="bg-orb" id="orb-2255" type="button" data-bg="#d4db1c" aria-label="Yellow background orb" aria-pressed="false">
+    <img src="https://dariaivans.neocities.org/portfolio_img/2255-48x48x32.png" alt="">
+  </button>
+  <button class="bg-orb" id="orb-2254" type="button" data-bg="#22b8b8" aria-label="Cyan background orb" aria-pressed="false">
+    <img src="https://dariaivans.neocities.org/portfolio_img/2254-48x48x32.png" alt="">
+  </button>
+  <button class="bg-orb" id="orb-2249" type="button" data-bg="#86c51b" aria-label="Green background orb" aria-pressed="false">
+    <img src="https://dariaivans.neocities.org/portfolio_img/2249-48x48x32.png" alt="">
+  </button>
+  <button class="bg-orb" id="orb-2248" type="button" data-bg="#c735c4" aria-label="Magenta background orb" aria-pressed="false">
+    <img src="https://dariaivans.neocities.org/portfolio_img/2248-48x48x32.png" alt="">
+  </button>
+  <button class="bg-orb" id="orb-2245" type="button" data-bg="#4052d5" aria-label="Blue background orb" aria-pressed="false">
+    <img src="https://dariaivans.neocities.org/portfolio_img/2245-48x48x32.png" alt="">
+  </button>
+</div>
+
 <svg id="connections" viewBox="0 0 2100 1220" aria-hidden="true"></svg>
 <section class="projects">
   <div class="project webfont p-chronicle" data-group="web-main" style="--text-delay:.34s" data-desc="An interactive map of the early Runet.">the Chronicle of the Runet<br>(from Eugene Gorny)</div>
@@ -1129,6 +1236,309 @@ video[controls],
   document.addEventListener('pointerup', clearClickCursor, { passive: true });
   document.addEventListener('pointercancel', clearClickCursor, { passive: true });
   window.addEventListener('blur', clearClickCursor);
+})();
+</script>
+
+
+
+<script>
+(() => {
+  const root = document.documentElement;
+  const body = document.body;
+  const stage = document.getElementById('stage');
+  const wrap = document.querySelector('.portfolio-wrap');
+  const orbElements = Array.from(document.querySelectorAll('.bg-orb'));
+
+  if (!stage || !wrap || !orbElements.length) return;
+
+  const DEFAULT_BG = '#efefef';
+  const ORB_SIZE = 48;
+  const RADIUS = ORB_SIZE / 2;
+
+  /* Nearby orbs begin to pull toward one another here. */
+  const ATTRACT_DISTANCE = 180;
+
+  /* At this distance their colors combine into a persistent gradient. */
+  const GRADIENT_DISTANCE = 70;
+
+  const modeClassMap = {
+    'orb-2248': 'bg-pink',
+    'orb-2245': 'bg-blue'
+  };
+
+  let activeOrbId = null;
+  let collisionGradient = null;
+  let collisionOrbIds = [];
+
+  let draggedOrb = null;
+  let movedDuringDrag = false;
+  let dragStartClientX = 0;
+  let dragStartClientY = 0;
+  let dragOffsetX = 0;
+  let dragOffsetY = 0;
+
+  const backgroundTargets = [body, wrap, stage];
+
+  const clearContrastClasses = () => {
+    body.classList.remove('bg-pink', 'bg-blue');
+  };
+
+  const setBackgroundImage = value => {
+    backgroundTargets.forEach(el => {
+      el.style.backgroundImage = value;
+    });
+  };
+
+  const applyContrastForIds = ids => {
+    ids.forEach(id => {
+      const cls = modeClassMap[id];
+      if (cls) body.classList.add(cls);
+    });
+  };
+
+  const applyCurrentBackground = () => {
+    clearContrastClasses();
+
+    const active = activeOrbId
+      ? document.getElementById(activeOrbId)
+      : null;
+
+    root.style.setProperty(
+      '--bg',
+      active ? (active.dataset.bg || DEFAULT_BG) : DEFAULT_BG
+    );
+
+    if (collisionGradient) {
+      setBackgroundImage(collisionGradient);
+      applyContrastForIds(collisionOrbIds);
+    } else {
+      setBackgroundImage('none');
+      if (activeOrbId) applyContrastForIds([activeOrbId]);
+    }
+  };
+
+  const resetToWhite = () => {
+    activeOrbId = null;
+    collisionGradient = null;
+    collisionOrbIds = [];
+    orbElements.forEach(el => el.setAttribute('aria-pressed', 'false'));
+    applyCurrentBackground();
+  };
+
+  const applyOrbColor = orb => {
+    /*
+      Second click on the currently selected orb:
+      return everything to the original white background.
+    */
+    if (activeOrbId === orb.el.id) {
+      resetToWhite();
+      return;
+    }
+
+    /* Any ordinary orb click removes an existing collision gradient. */
+    collisionGradient = null;
+    collisionOrbIds = [];
+    activeOrbId = orb.el.id;
+
+    orbElements.forEach(el => {
+      el.setAttribute('aria-pressed', el === orb.el ? 'true' : 'false');
+    });
+
+    applyCurrentBackground();
+  };
+
+  const showCollisionGradient = (orbA, orbB) => {
+    collisionOrbIds = [orbA.el.id, orbB.el.id];
+    collisionGradient =
+      `linear-gradient(135deg, ${orbA.color} 0%, ${orbB.color} 100%)`;
+    applyCurrentBackground();
+  };
+
+  const clamp = (value, min, max) =>
+    Math.max(min, Math.min(max, value));
+
+  const stageSize = () => ({
+    width: stage.clientWidth || 2100,
+    height: stage.clientHeight || 1220
+  });
+
+  const orbs = orbElements.map(el => ({
+    el,
+    x: parseFloat(getComputedStyle(el).left) || 0,
+    y: parseFloat(getComputedStyle(el).top) || 0,
+    vx: 0,
+    vy: 0,
+    hovered: false,
+    dragging: false,
+    color: el.dataset.bg || DEFAULT_BG
+  }));
+
+  const updateClasses = orb => {
+    orb.el.classList.toggle('is-hovered', orb.hovered && !orb.dragging);
+    orb.el.classList.toggle('is-dragging', orb.dragging);
+  };
+
+  const renderOrb = orb => {
+    orb.el.style.left = `${orb.x}px`;
+    orb.el.style.top = `${orb.y}px`;
+  };
+
+  const centerOf = orb => ({
+    x: orb.x + RADIUS,
+    y: orb.y + RADIUS
+  });
+
+  orbs.forEach(orb => {
+    orb.el.addEventListener('mouseenter', () => {
+      orb.hovered = true;
+      updateClasses(orb);
+    });
+
+    orb.el.addEventListener('mouseleave', () => {
+      if (!orb.dragging) {
+        orb.hovered = false;
+        updateClasses(orb);
+      }
+    });
+
+    orb.el.addEventListener('pointerdown', event => {
+      /*
+        We handle click-vs-drag ourselves so dragging cannot accidentally
+        apply a background color.
+      */
+      event.preventDefault();
+
+      const rect = stage.getBoundingClientRect();
+
+      draggedOrb = orb;
+      movedDuringDrag = false;
+      dragStartClientX = event.clientX;
+      dragStartClientY = event.clientY;
+
+      dragOffsetX = (event.clientX - rect.left) - orb.x;
+      dragOffsetY = (event.clientY - rect.top) - orb.y;
+
+      orb.dragging = true;
+      orb.hovered = true;
+      updateClasses(orb);
+
+      try {
+        orb.el.setPointerCapture(event.pointerId);
+      } catch (_) {}
+    });
+  });
+
+  window.addEventListener('pointermove', event => {
+    if (!draggedOrb) return;
+
+    const rect = stage.getBoundingClientRect();
+    const { width, height } = stageSize();
+
+    const pointerX = event.clientX - rect.left;
+    const pointerY = event.clientY - rect.top;
+
+    if (
+      Math.hypot(
+        event.clientX - dragStartClientX,
+        event.clientY - dragStartClientY
+      ) > 4
+    ) {
+      movedDuringDrag = true;
+    }
+
+    draggedOrb.x = clamp(
+      pointerX - dragOffsetX,
+      0,
+      width - ORB_SIZE
+    );
+    draggedOrb.y = clamp(
+      pointerY - dragOffsetY,
+      0,
+      height - ORB_SIZE
+    );
+
+    renderOrb(draggedOrb);
+  });
+
+  const finishPointer = () => {
+    if (!draggedOrb) return;
+
+    const orb = draggedOrb;
+    orb.dragging = false;
+    updateClasses(orb);
+
+    /* No meaningful movement = a click. */
+    if (!movedDuringDrag) {
+      applyOrbColor(orb);
+    }
+
+    draggedOrb = null;
+    movedDuringDrag = false;
+  };
+
+  window.addEventListener('pointerup', finishPointer);
+  window.addEventListener('pointercancel', finishPointer);
+
+  function animate() {
+    const { width, height } = stageSize();
+
+    orbs.forEach(orb => {
+      orb.el.classList.remove('is-attracted');
+
+      if (!orb.dragging) {
+        /* Very gentle inertial movement caused only by attraction. */
+        orb.vx *= .88;
+        orb.vy *= .88;
+
+        orb.x = clamp(orb.x + orb.vx, 0, width - ORB_SIZE);
+        orb.y = clamp(orb.y + orb.vy, 0, height - ORB_SIZE);
+        renderOrb(orb);
+      }
+    });
+
+    /*
+      Attraction only exists while the user is actively dragging an orb.
+      Nothing moves autonomously.
+    */
+    if (draggedOrb) {
+      const draggedCenter = centerOf(draggedOrb);
+
+      orbs.forEach(other => {
+        if (other === draggedOrb) return;
+
+        const otherCenter = centerOf(other);
+        const dx = draggedCenter.x - otherCenter.x;
+        const dy = draggedCenter.y - otherCenter.y;
+        const distance = Math.hypot(dx, dy) || 1;
+
+        if (distance < ATTRACT_DISTANCE) {
+          const strength =
+            (ATTRACT_DISTANCE - distance) / ATTRACT_DISTANCE;
+          const nx = dx / distance;
+          const ny = dy / distance;
+
+          other.el.classList.add('is-attracted');
+          draggedOrb.el.classList.add('is-attracted');
+
+          /*
+            The non-dragged orb visibly comes toward the dragged one.
+            Stronger pull when they are closer.
+          */
+          other.vx += nx * strength * 1.15;
+          other.vy += ny * strength * 1.15;
+        }
+
+        if (distance < GRADIENT_DISTANCE) {
+          showCollisionGradient(draggedOrb, other);
+        }
+      });
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  applyCurrentBackground();
+  requestAnimationFrame(animate);
 })();
 </script>
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Daria Ivans — portfolio</title>
+<title> this is Daria Ivans's portfolio page</title>
 <style>
 @font-face { font-family: Title1; src: url('https://dariaivans.neocities.org/fontsportfolio/title1.otf') format('opentype'); font-display: swap; }
 @font-face { font-family: WebBased; src: url('https://dariaivans.neocities.org/fontsportfolio/webbased.otf') format('opentype'); font-display: swap; }
@@ -65,15 +65,14 @@ body { overflow:auto; }
 .project { position:absolute; line-height:1.02; text-align:center; visibility:hidden; clip-path:inset(0 100% 0 0); user-select:none; color:var(--magenta); pointer-events:auto; overflow:visible; }
 .project[data-desc] { cursor: help; }
 
-/* The reveal animation uses clip-path, so the tooltip must explicitly
-   disable that clipping while the project is hovered. */
+
 .project[data-desc]:hover {
   z-index: 100;
   clip-path: none !important;
   overflow: visible !important;
 }
 
-/* Description appears directly ON TOP OF the project title. */
+/* here we go again */
 .project[data-desc]::after {
   content: attr(data-desc);
   position: absolute;
@@ -161,7 +160,6 @@ body { overflow:auto; }
 @keyframes nodeAppear { from { opacity:0; } to { opacity:1; } }
 
 
-/* Larger, more vertical hover descriptions for VIRTUAL WORLDS projects */
 .p-encounters[data-desc]::after,
 .p-c8[data-desc]::after,
 .p-infinite[data-desc]::after,
@@ -179,8 +177,6 @@ body { overflow:auto; }
   border-radius: 0;
 }
 
-
-/* Real hover boxes used where the description contains a clickable link. */
 .project.rich-desc {
   cursor: help;
 }
@@ -236,15 +232,12 @@ body { overflow:auto; }
   cursor: pointer;
 }
 
-/* Keep the tooltip visible while the pointer is over the box/link itself. */
 .desc-box:hover {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
 }
 
-
-/* Clickable project titles */
 .project[data-project-url] {
   cursor: pointer;
 }
@@ -255,15 +248,13 @@ body { overflow:auto; }
   text-underline-offset: 3px;
 }
 
-/* Don't underline the hover-description itself. */
 .project[data-project-url] .desc-box {
   text-decoration: none;
 }
 
 
-/* --- Description placement: keep the project title itself fully clickable --- */
 
-/* Plain data-desc tooltips */
+/* Pupupu */
 .project[data-desc]::after {
   left: 50%;
   top: auto;
@@ -273,7 +264,6 @@ body { overflow:auto; }
   pointer-events: none;
 }
 
-/* Rich descriptions with links */
 .project.rich-desc .desc-box {
   left: 50%;
   top: auto;
@@ -282,7 +272,6 @@ body { overflow:auto; }
   border-radius: 0 !important;
 }
 
-/* Crowded Virtual Worlds labels: place descriptions beside the titles. */
 .p-encounters[data-desc]::after {
   left: 100%;
   top: 50%;
@@ -335,15 +324,12 @@ body { overflow:auto; }
   transform: translate(-14px, -50%);
 }
 
-/* Jobless + Templates contain clickable links.
-   Their boxes sit immediately above the title, so moving from title to box
-   does not cross a dead gap. */
+
 .p-jobless.rich-desc .desc-box,
 .p-templates.rich-desc .desc-box {
   bottom: calc(100% - 2px);
 }
 
-/* Click feedback: clicked project title turns yellow and stays yellow. */
 .project.project-selected {
   color: #c8d100 !important;
   text-shadow:
@@ -351,7 +337,7 @@ body { overflow:auto; }
     0 0 7px rgba(200, 209, 0, .25);
 }
 
-/* Keep description colors unchanged even when the project is selected. */
+
 .project.project-selected::after,
 .project.project-selected .desc-box,
 .project.project-selected .desc-box a {
@@ -359,7 +345,6 @@ body { overflow:auto; }
 }
 
 
-/* Inline YouTube player — magenta/yellow, no rounded corners */
 #video-player-backdrop {
   position: fixed;
   inset: 0;
@@ -437,7 +422,6 @@ body { overflow:auto; }
 }
 
 
-/* keep project title itself as the click target */
 .project[data-project-url] {
   cursor: pointer;
 }
@@ -505,8 +489,6 @@ body { overflow:auto; }
   display: none;
 }
 
-
-/* Three-video layout for A journey to Crimea */
 #crimea-video-grid {
   display: none;
   width: 100%;
@@ -540,13 +522,11 @@ body { overflow:auto; }
 }
 
 
-/* Normal cursor across the portfolio */
 body,
 body * {
   cursor: url("https://www.rw-designer.com/cursor-extern.php?id=34820"), auto !important;
 }
 
-/* "There is something to click here" cursor */
 a,
 button,
 .category,
@@ -572,9 +552,6 @@ video[controls],
 }
 
 
-
-/* --- Hover-activated draggable color orbs ---
-   Added without changing the portfolio's original cursor or interactions. */
 .background-orbs {
   position: absolute;
   inset: 0;
@@ -600,7 +577,7 @@ video[controls],
   opacity: .98;
 }
 
-/* The orb is completely still until hover. */
+
 .bg-orb.is-hovered:not(.is-dragging) {
   animation: orbAwake 1.8s ease-in-out infinite;
   filter: drop-shadow(0 0 6px rgba(0,0,0,.12));
@@ -629,14 +606,12 @@ video[controls],
   65%      { transform: rotate(3deg) scale(.985); }
 }
 
-/* Initial positions stay in the empty/white areas. */
 #orb-2255 { left: 1350px; top: 92px; }
 #orb-2254 { left: 88px; top: 278px; }
 #orb-2249 { left: 1972px; top: 452px; }
 #orb-2248 { left: 824px; top: 914px; }
 #orb-2245 { left: 1978px; top: 1050px; }
 
-/* Contrast rules requested earlier. */
 body.bg-pink {
   --magenta: #86c51b;
   --magenta2: #86c51b;
@@ -731,18 +706,12 @@ body,
   const stage = document.getElementById('stage');
   const SVG_NS = 'http://www.w3.org/2000/svg';
 
-  /*
-    Every road is ONE straight segment.
-    It begins at the edge of the relevant image/category (or at an explicit
-    point matching the screenshot) and stops BEFORE the project title.
-    No polyline bends, so a road can no longer wander across text/images.
-  */
+ 
   const connections = {
     'web-main': [
-      // category -> SMALLER TOOLS oval
+   
       { fromPoint:[681,289], to:'#sub-webtools', shape:'square', color:'#a73cf4', targetGap:10 },
 
-      // exactly like the screenshot: green / purple square roads
       { fromPoint:[1000,286], to:'.p-chronicle', shape:'square', color:'#27be37', targetGap:12 },
       { fromPoint:[1005,357], to:'.p-breakup',   shape:'square', color:'#a73cf4', targetGap:12 },
       { fromPoint:[596,503],  to:'.p-jobless',   shape:'square', color:'#27be37', targetGap:12 },
@@ -750,7 +719,7 @@ body,
     ],
 
     'webtools': [
-      // subcategory projects are BLUE text, but the roads are MAGENTA DOTS
+ 
       { from:'#sub-webtools', to:'.p-drawing',   shape:'dot', color:'#d236ff', sourceGap:7, targetGap:10 },
       { from:'#sub-webtools', to:'.p-glitch',    shape:'dot', color:'#d236ff', sourceGap:7, targetGap:10 },
       { from:'#sub-webtools', to:'.p-geocities', shape:'dot', color:'#d236ff', sourceGap:7, targetGap:10 },
@@ -758,7 +727,7 @@ body,
     ],
 
     'perf-main': [
-      // blue SQUARES, four short straight roads
+   
       { fromPoint:[1708,180], to:'.p-altered',   shape:'square', color:'#354cff', targetGap:10 },
       { fromPoint:[1570,236], to:'.p-public',    shape:'square', color:'#354cff', targetGap:10 },
       { fromPoint:[1856,233], to:'.p-interview', shape:'square', color:'#354cff', targetGap:10 },
@@ -766,7 +735,7 @@ body,
     ],
 
     'video-main': [
-      // Reference-like VIDEO ART: very short yellow square paths.
+
       { from:'.p-antimob', to:'.p-man',       shape:'square', color:'#c8d100', sourceGap:6, targetGap:9 },
       { from:'.p-antimob', to:'.p-roza',      shape:'square', color:'#c8d100', sourceGap:6, targetGap:9 },
       { from:'.p-antimob', toPoint:[352,790],  shape:'square', color:'#c8d100', sourceGap:6 },
@@ -781,7 +750,6 @@ body,
     ],
 
     'virtual-main': [
-      // Labels were pulled close to the cluster to match the reference.
       { fromPoint:[1400,646], to:'.p-encounters', shape:'square', color:'#a73cf4', targetGap:9 },
       { fromPoint:[1524,646], to:'.p-c8',         shape:'square', color:'#27be37', targetGap:9 },
       { fromPoint:[1318,740], to:'.p-infinite',   shape:'square', color:'#a73cf4', targetGap:10, minNodes:6 },
@@ -793,7 +761,7 @@ body,
     ],
 
     'mmos': [
-      // Magenta dots as in the reference; now the labels sit much closer.
+    
       { from:'#sub-mmos', to:'.p-parallel',  shape:'dot', color:'#d236ff', sourceGap:6, targetGap:9 },
       { from:'#sub-mmos', to:'.p-fragments', shape:'dot', color:'#d236ff', sourceGap:6, targetGap:9 },
       { from:'#sub-mmos', to:'.p-qq',        shape:'dot', color:'#d236ff', sourceGap:6, targetGap:9 }
@@ -821,8 +789,7 @@ body,
     };
   }
 
-  // Intersection of a ray from rectangle centre toward a point with the rectangle edge.
-  // gap > 0 moves the result OUTSIDE the rectangle, preventing overlap.
+
   function edgePoint(rect, toward, gap = 0) {
     const dx = toward.x - rect.cx;
     const dy = toward.y - rect.cy;
@@ -903,7 +870,6 @@ body,
       const dy = seg.end.y - seg.start.y;
       const len = Math.hypot(dx, dy);
 
-      // Screenshot rhythm: dots are a little farther apart than squares.
       const spacing = cfg.shape === 'dot' ? 16 : 14;
       const count = Math.max(cfg.minNodes ?? 3, Math.floor(len / spacing));
 
@@ -917,7 +883,6 @@ body,
     return group;
   }
 
-  // Build groups after fonts/layout are ready so target boxes are exact.
   const groups = Object.keys(connections);
   function buildAll() {
     groups.forEach(drawGroup);
@@ -978,7 +943,6 @@ body,
     });
   });
 
-  // Recalculate if the custom fonts change metrics after loading.
   Promise.resolve(document.fonts?.ready).then(buildAll);
   window.addEventListener('load', buildAll, { once:true });
 })();
@@ -1093,8 +1057,6 @@ body,
         playsinline: '1'
       });
 
-      /* YouTube requires an identifiable HTTP(S) embedding context.
-         Add the page origin whenever one exists. */
       if (location.protocol === 'http:' || location.protocol === 'https:') {
         params.set('origin', location.origin);
       }
@@ -1136,7 +1098,7 @@ body,
     backdrop.classList.add('open');
 
     if (location.protocol === 'file:') {
-      /* file:// pages do not provide the HTTP Referer YouTube now requires. */
+
       frame.src = '';
       frame.classList.add('hidden');
       localLink.href = url;
@@ -1215,8 +1177,7 @@ body,
 (() => {
   document.querySelectorAll('.project[data-project-url]').forEach(project => {
     project.addEventListener('click', event => {
-      /* Clicking article/course inside a hover description should not select
-         or trigger the project title itself. */
+
       if (event.target.closest('.desc-box a')) return;
 
       project.classList.add('project-selected');
@@ -1255,10 +1216,10 @@ body,
   const ORB_SIZE = 48;
   const RADIUS = ORB_SIZE / 2;
 
-  /* Nearby orbs begin to pull toward one another here. */
+
   const ATTRACT_DISTANCE = 180;
 
-  /* At this distance their colors combine into a persistent gradient. */
+
   const GRADIENT_DISTANCE = 70;
 
   const modeClassMap = {
@@ -1326,16 +1287,12 @@ body,
   };
 
   const applyOrbColor = orb => {
-    /*
-      Second click on the currently selected orb:
-      return everything to the original white background.
-    */
+ 
     if (activeOrbId === orb.el.id) {
       resetToWhite();
       return;
     }
 
-    /* Any ordinary orb click removes an existing collision gradient. */
     collisionGradient = null;
     collisionOrbIds = [];
     activeOrbId = orb.el.id;
@@ -1402,10 +1359,7 @@ body,
     });
 
     orb.el.addEventListener('pointerdown', event => {
-      /*
-        We handle click-vs-drag ourselves so dragging cannot accidentally
-        apply a background color.
-      */
+
       event.preventDefault();
 
       const rect = stage.getBoundingClientRect();
@@ -1467,7 +1421,6 @@ body,
     orb.dragging = false;
     updateClasses(orb);
 
-    /* No meaningful movement = a click. */
     if (!movedDuringDrag) {
       applyOrbColor(orb);
     }
@@ -1486,7 +1439,7 @@ body,
       orb.el.classList.remove('is-attracted');
 
       if (!orb.dragging) {
-        /* Very gentle inertial movement caused only by attraction. */
+
         orb.vx *= .88;
         orb.vy *= .88;
 
@@ -1496,10 +1449,7 @@ body,
       }
     });
 
-    /*
-      Attraction only exists while the user is actively dragging an orb.
-      Nothing moves autonomously.
-    */
+
     if (draggedOrb) {
       const draggedCenter = centerOf(draggedOrb);
 
@@ -1520,10 +1470,7 @@ body,
           other.el.classList.add('is-attracted');
           draggedOrb.el.classList.add('is-attracted');
 
-          /*
-            The non-dragged orb visibly comes toward the dragged one.
-            Stronger pull when they are closer.
-          */
+        
           other.vx += nx * strength * 1.15;
           other.vy += ny * strength * 1.15;
         }

@@ -24,17 +24,6 @@
     touch-action:none;
   }
 
-  /* Prevent the historical board from flashing on screen before
-     the current navigation patch has finished applying. */
-  #board{
-    opacity:0;
-    animation:revealBoard .01s linear .35s forwards;
-  }
-
-  @keyframes revealBoard{
-    to{opacity:1}
-  }
-
   @font-face{
     font-family:"Portfolio566";
     src:url("https://dariaivans.neocities.org/fonts/566-font.otf") format("opentype");

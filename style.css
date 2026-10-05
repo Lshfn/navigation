@@ -24,20 +24,6 @@
     touch-action:none;
   }
 
-  /* Hide the historical board only while the current navigation patch
-     is still being applied. applyNavigationChanges() sets the upper-right
-     label's fill to var(--violet); that exact DOM change reveals the board.
-     Browsers without :has() support simply keep the old behaviour. */
-  @supports selector(#board:has(*)) {
-    #board{
-      opacity:0 !important;
-    }
-
-    #board:has(.nav[data-destination="unofficial"] text[fill="var(--violet)"]){
-      opacity:1 !important;
-    }
-  }
-
   @font-face{
     font-family:"Portfolio566";
     src:url("https://dariaivans.neocities.org/fonts/566-font.otf") format("opentype");

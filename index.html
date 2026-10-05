@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>it's Daria Ivans's Pinball Page</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=board-ready-20261005">
 
   <style>
 @keyframes rwdcur16171 {
@@ -190,6 +190,8 @@
       }
     }
 
+    let importedBoard = null;
+
     try {
       const originalHTML = await getOriginalHTML();
 
@@ -205,16 +207,21 @@
       }
 
       const loading = document.getElementById("loading");
-      if (loading) loading.remove();
 
-      document.body.appendChild(
-        document.importNode(board, true)
-      );
+      importedBoard = document.importNode(board, true);
+      importedBoard.style.setProperty("visibility", "hidden", "important");
+      importedBoard.style.setProperty("opacity", "0", "important");
+      document.body.appendChild(importedBoard);
 
       await loadScript("script.js");
       applyNavigationChanges();
 
+      importedBoard.style.setProperty("opacity", "1", "important");
+      importedBoard.style.setProperty("visibility", "visible", "important");
+      if (loading) loading.remove();
+
     } catch (error) {
+      if (importedBoard) importedBoard.remove();
       console.error(error);
 
       const loading = document.getElementById("loading");

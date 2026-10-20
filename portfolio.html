@@ -634,6 +634,12 @@ body,
   }
 }
 
+/* Rebuilt paths stay visible without restarting their reveal animation. */
+.trail-set.revealed.redrawn .trail-node {
+  opacity: 1;
+  animation: none;
+}
+
 </style>
 </head>
 <body>
@@ -851,6 +857,8 @@ body,
     group.appendChild(node);
   }
 
+  const revealed = new Set();
+
   function drawGroup(name) {
     let group = document.getElementById('trail-' + name);
     if (group) group.remove();
@@ -858,6 +866,8 @@ body,
     group = document.createElementNS(SVG_NS, 'g');
     group.id = 'trail-' + name;
     group.classList.add('trail-set');
+    // A late load/font redraw must preserve paths already revealed by a click.
+    if (revealed.has(name)) group.classList.add('revealed', 'redrawn');
     svg.appendChild(group);
 
     let globalIndex = 0;
@@ -887,8 +897,6 @@ body,
   function buildAll() {
     groups.forEach(drawGroup);
   }
-
-  const revealed = new Set();
 
   function revealProjects(group) {
     document.querySelectorAll('.project[data-group="' + group + '"]')

@@ -107,3 +107,32 @@
   #pageTitle .title-letter image{
     image-rendering:auto;
   }
+
+
+  #pinball-world { width:100%; height:100%; transform-origin:50% 50%; transition:transform 1.25s cubic-bezier(.64,.02,.25,1); }
+  #pinball-world.upside-down { transform:rotate(180deg); }
+  #board { overflow:hidden; }
+  .new-control { cursor:pointer; outline:none; }
+  .new-control:focus-visible { filter:drop-shadow(0 0 4px #ed1daf); }
+  .nav, .nav:focus, .nav:focus-visible, .nav *:focus { outline:none !important; box-shadow:none !important; -webkit-tap-highlight-color:transparent; }
+  .secondary-ball { cursor:pointer; pointer-events:all; outline:none; touch-action:manipulation; -webkit-tap-highlight-color:transparent; }
+  .catcher { touch-action:none; cursor:grab; }
+  .catcher.dragging { cursor:grabbing; filter:drop-shadow(0 3px 3px #aaa); }
+  .nav[data-destination="history"] text { fill:#ed1daf; }
+  #filmDialog { position:fixed; margin:0; z-index:5; border:1px solid #d1a5c2; border-radius:3px; padding:0; color:#413342; background:#f3f1f2; width:min(300px,78vw); max-height:50vh; box-shadow:4px 5px 12px #54445430; }
+  .film-bar { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:6px 9px; font-size:12px; color:#b62585; }
+  #filmLink { margin-left:auto; color:#b62585; text-decoration:none; }
+  #filmLink[hidden] { display:none; }
+  #filmClose { border:0; background:none; color:#bc2388; font-size:24px; line-height:1; padding:0 2px; cursor:pointer; }
+  #filmBody { min-height:145px; display:grid; place-items:center; }
+  #filmBody video, #filmBody iframe { display:block; width:100%; border:0; max-height:38vh; }
+  #filmBody iframe { aspect-ratio:16/9; }
+  .missing-film { padding:18px; text-align:center; font-size:12px; }
+  .missing-film svg { width:44px; height:44px; margin:0 auto 10px; }
+  #worldReturn { position:fixed; right:16px; bottom:14px; border:1px solid #d3c1ce; color:#bc2388; background:#f3f1f2e8; padding:7px 11px; cursor:pointer; z-index:3; font:14px Arial,sans-serif; }
+  #worldReturn[hidden] { display:none; }
+  .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+  @media(prefers-reduced-motion:reduce) {
+    #pinball-world { transition-duration:.01ms; }
+    html,body,body *,svg,svg * { animation-duration:100000s !important; }
+  }

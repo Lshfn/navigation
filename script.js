@@ -1,10 +1,10 @@
 (() => {
   const LINKS = {
-    history: "history.html",
+    history: "https://lshfn.github.io/navigation/history.html",
     cv: "https://docs.google.com/document/d/14i8lpF-PPK2IcqgMuQ-s5R-ya_tmGrCH/edit?usp=sharing&ouid=107911058444608401925&rtpof=true&sd=true",
-    official: "official-portfolio.html",
-    teaching: "teaching.html",
-    unofficial: "https://dariaivans.hotglue.me/?projects",
+    official: "https://lshfn.github.io/navigation/portfolio.html",
+    teaching: "https://dariaivans.neocities.org/contact/contact",
+    unofficial: "https://lshfn.github.io/navigation/teaching.html",
     home: "https://dariaivans.neocities.org/"
   };
 
@@ -56,65 +56,44 @@
       return [key,a];
     })
   );
-  let audioUnlocked = false;
-  const pendingSoundStops = {};
+  let audioUnlocked=false;
+  let soundMovementActive=false;
+  const movementSounds=new Set();
+  const pendingSoundStops={};
 
   function clearPendingStop(key){
-    if(pendingSoundStops[key]){
-      clearTimeout(pendingSoundStops[key]);
-      delete pendingSoundStops[key];
-    }
+    if(pendingSoundStops[key]){clearTimeout(pendingSoundStops[key]);delete pendingSoundStops[key];}
   }
-
   function unlockAudio(){
-    if(audioUnlocked) return;
-    audioUnlocked = true;
-    Object.values(sounds).forEach(a => {
-      const oldVolume = a.volume;
-      a.volume = 0;
-      const p = a.play();
-      if(p && p.then){
-        p.then(() => { a.pause(); a.currentTime = 0; a.volume = oldVolume || .34; }).catch(() => { a.volume = oldVolume || .34; });
-      }
-    });
+    // The first actual effect starts in the user's click. Do not briefly play
+    // every effect here: that races against the first sound and can cut it off.
+    audioUnlocked=true;
   }
-
-  function startSound(key, {loop=true, volume=.32}={}){
-    const a = sounds[key];
-    if(!a) return;
-    clearPendingStop(key);
-    try{
-      a.loop = loop;
-      a.volume = volume;
-      if(!a.paused){
-        return;
-      }
-      a.currentTime = 0;
-      a.play().catch(()=>{});
-    }catch(e){}
-  }
-
-  function stopSound(key, {force=false, delay=140}={}){
-    const a = sounds[key];
-    if(!a) return;
-    clearPendingStop(key);
-
-    const performStop = () => {
-      try{ a.pause(); a.currentTime = 0; }catch(e){}
-      delete pendingSoundStops[key];
-    };
-
-    if(force || delay <= 0){
-      performStop();
-      return;
-    }
-
-    pendingSoundStops[key] = setTimeout(performStop, delay);
-  }
-
   function stopAllSounds(){
-    Object.keys(sounds).forEach(key => stopSound(key, {force:true}));
+    for(const [key,a] of Object.entries(sounds)){
+      clearPendingStop(key);
+      try{a.pause();a.currentTime=0;a.loop=false;}catch{}
+    }
   }
+  function beginSoundMovement(){
+    stopAllSounds();movementSounds.clear();soundMovementActive=true;unlockAudio();
+  }
+  function finishSoundMovement(){
+    soundMovementActive=false;stopAllSounds();
+  }
+  function startSound(key,{volume=.32}={}){
+    const a=sounds[key];
+    if(!a||!audioUnlocked||movementSounds.has(key))return;
+    movementSounds.add(key);clearPendingStop(key);
+    try{a.loop=false;a.volume=volume;a.currentTime=0;a.play().catch(()=>{});}catch{}
+  }
+  function stopSound(key,{force=false,delay=140}={}){
+    if(soundMovementActive&&!force)return;
+    const a=sounds[key];if(!a)return;clearPendingStop(key);
+    const stop=()=>{try{a.pause();a.currentTime=0;}catch{}delete pendingSoundStops[key];};
+    if(force||delay<=0)stop();else pendingSoundStops[key]=setTimeout(stop,delay);
+  }
+
 
   function setBall(x,y){
     ball.setAttribute("cx", x);
@@ -172,13 +151,23 @@
   async function moveBall(points,duration,mode="inout",soundKey="roll"){
     if(soundKey) startSound(soundKey,{loop:true,volume:soundKey==="roll"?.24:.3});
     return new Promise(resolve=>{
-      const start=performance.now();
+      let start=performance.now();
 
-      function frame(now){
+      async function frame(now){
         const raw=Math.min(1,(now-start)/duration);
-        const t=easeValue(raw,mode);
-        const p=pointOnPolyline(points,t);
+        const t=mode==="timed"?raw:easeValue(raw,mode);
+        const p=mode==="timed"?window.PinballSpring.pointAt(points,t):pointOnPolyline(points,t);
 
+        const capture = window.PinballExtras?.offerMain([160+.8*p[0],175+.8*p[1]]);
+        if(capture){
+          const pausedAt = performance.now();
+          const releasedAt = await capture;
+          const resume = [(releasedAt[0]-160)/.8,(releasedAt[1]-175)/.8];
+          const resumeMove = ()=>moveBall([resume,p],360,"out",null);
+          if(window.PinballExtras?.resumeAfterCatch)await window.PinballExtras.resumeAfterCatch([releasedAt,[160+.8*p[0],175+.8*p[1]]],resumeMove);
+          else await resumeMove();
+          start += performance.now()-pausedAt;
+        }
         setBall(p[0],p[1]);
         ball.style.transformOrigin=p[0]+"px "+p[1]+"px";
         ball.style.transform="rotate("+(t*900)+"deg)";
@@ -485,6 +474,11 @@
       return;
     }
 
+    if(currentLocation==="addon"){
+      await moveBall([[Number(ball.getAttribute("cx")),Number(ball.getAttribute("cy"))],HUB],700,"inout");
+      return;
+    }
+
     if(currentLocation==="cv"){
       setBall(HUB[0],HUB[1]);
       return;
@@ -715,6 +709,17 @@
   };
 
   async function navigateBall(name){
+    if(window.PinballExtras?.navigate){
+      if(running || !TARGETS[name])return;
+      running=true;beginSoundMovement();setActive(name);clearBallTransform();
+      try {
+        await window.PinballExtras.navigate(name,(points,duration=800,mode="linear")=>moveBall(points.map(([x,y])=>[(x-160)/.8,(y-175)/.8]),duration,mode));
+        currentLocation=name;setBall(...ENDPOINTS[name]);clearBallTransform();
+        window.open(LINKS[name],"_blank","noopener,noreferrer");
+      } finally {finishSoundMovement();running=false;}
+      return;
+    }
+
     if(running || !TARGETS[name]) return;
 
     if(currentLocation===name){
@@ -739,7 +744,33 @@
     running=false;
   }
 
+  window.PinballCore = {
+    get busy(){ return running; },
+    get point(){ return [160 + .8 * Number(ball.getAttribute("cx")), 175 + .8 * Number(ball.getAttribute("cy"))]; },
+    open: name => { if(LINKS[name]) window.open(LINKS[name],"_blank","noopener,noreferrer"); },
+    sound: {play:startSound},
+    flipper: {flip:flipMiniTrampoline,retract:retractMiniTrampoline,restore:restoreMiniTrampoline,pulse:()=>pulse(miniTrampoline)},
+    async addon(task){
+      if(running) return false;
+      running = true;
+      beginSoundMovement();
+      clearBallTransform();
+      try {
+        await task({
+          move: (points, duration=800, mode="inout") => moveBall(points.map(([x,y]) => [(x-160)/.8,(y-175)/.8]), duration, mode),
+          set: (x,y) => setBall((x-160)/.8,(y-175)/.8)
+        });
+        currentLocation = "addon";
+      } finally { clearBallTransform(); finishSoundMovement(); running = false; }
+      return true;
+    }
+  };
+
   document.querySelectorAll(".nav").forEach(el=>{
+    el.setAttribute("role", "link");
+    el.setAttribute("tabindex", "0");
+    el.setAttribute("aria-label", el.textContent.trim());
+    el.addEventListener("keydown", e => { if(e.key === "Enter") { e.preventDefault(); el.dispatchEvent(new MouseEvent("click", {bubbles:true})); } });
     el.addEventListener("click",()=>{ unlockAudio(); navigateBall(el.dataset.destination); });
   });
 

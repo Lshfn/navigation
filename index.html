@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>it's Daria Ivans's Pinball Page</title>
-  <link rel="stylesheet" href="style.css?v=board-ready-20261005">
+  <link rel="stylesheet" href="style.css?v=pinball-20261102">
 
   <style>
 @keyframes rwdcur16171 {
@@ -54,185 +54,51 @@
 </head>
 
 <body>
-  <div id="loading" style="font-family:Arial,sans-serif;padding:20px;">loading…</div>
-
-  <script>
+<div id="loading" style="font-family:Arial,sans-serif;padding:20px;position:absolute;">loading…</div>
+<div id="pinball-world"></div>
+<button id="worldReturn" hidden type="button" aria-label="Return from the upside-down page">↕ back</button>
+<span id="liveStatus" class="sr-only" aria-live="polite"></span>
+<dialog id="filmDialog" aria-label="Video preview"><div class="film-bar"><span>video</span><a id="filmLink" hidden target="_blank" rel="noopener noreferrer" aria-label="Open video in a new tab">↗</a><button type="button" id="filmClose" aria-label="Close video">×</button></div><div id="filmBody"></div></dialog>
+<script>
   (async () => {
-    const ORIGINAL_SOURCES = [
-      "https://raw.githubusercontent.com/Lshfn/navigation/042addcd5f2d11c8c2873d8bdd877e35774078d9/index.html",
-      "https://cdn.jsdelivr.net/gh/Lshfn/navigation@042addcd5f2d11c8c2873d8bdd877e35774078d9/index.html"
+    const sources=[
+      'https://raw.githubusercontent.com/Lshfn/navigation/042addcd5f2d11c8c2873d8bdd877e35774078d9/index.html',
+      'https://cdn.jsdelivr.net/gh/Lshfn/navigation@042addcd5f2d11c8c2873d8bdd877e35774078d9/index.html'
     ];
-
-    async function getOriginalHTML() {
-      let lastError = null;
-
-      for (const url of ORIGINAL_SOURCES) {
-        try {
-          const response = await fetch(url, { cache: "no-store" });
-          if (!response.ok) throw new Error("HTTP " + response.status);
-          return await response.text();
-        } catch (error) {
-          lastError = error;
-        }
+    async function originalBoard(){
+      let lastError;
+      for(const url of sources){
+        try{const response=await fetch(url,{cache:'no-store'});if(!response.ok)throw new Error('HTTP '+response.status);return await response.text();}
+        catch(error){lastError=error;}
       }
-
-      throw lastError || new Error("Could not load original navigation.");
+      throw lastError||new Error('Could not load original navigation');
     }
-
-    function loadScript(src) {
-      return new Promise((resolve, reject) => {
-        const script = document.createElement("script");
-        script.src = src;
-        script.onload = resolve;
-        script.onerror = () => reject(new Error("Could not load " + src));
-        document.body.appendChild(script);
-      });
-    }
-
-    function applyNavigationChanges() {
-      const CONTACTS_URL = "https://dariaivans.neocities.org/contact/contact";
-      const OLD_UNOFFICIAL_URL = "https://dariaivans.hotglue.me/?projects";
-      const OLD_OFFICIAL_URL = "official-portfolio.html";
-      const PORTFOLIO_URL = "portfolio.html";
-      const TEACHING_URL = "teaching.html";
-
-      function navText(destination) {
-        return document.querySelector(
-          `.nav[data-destination="${destination}"] text`
-        );
-      }
-
-      const portfolio = navText("official");
-      if (portfolio) {
-        portfolio.textContent = "portfolio";
-      }
-
-      const upperRight = navText("unofficial");
-      if (upperRight) {
-        upperRight.textContent = "teaching";
-        upperRight.setAttribute("fill", "var(--violet)");
-      }
-
-      const lowerLeft = navText("teaching");
-      if (lowerLeft) {
-        lowerLeft.textContent = "contacts";
-        lowerLeft.setAttribute("fill", "var(--blue)");
-        lowerLeft.style.fontFamily =
-          '"Portfolio566", Arial, Helvetica, sans-serif';
-        lowerLeft.style.fontWeight = "400";
-      }
-
-      const homepage = navText("home");
-      if (homepage) {
-        homepage.textContent = "homepage";
-      }
-
-      const nativeOpen = window.open.bind(window);
-
-      window.open = function(url, target, features) {
-        let destination = url;
-
-        if (typeof destination === "string") {
-          if (
-            destination === OLD_OFFICIAL_URL ||
-            destination.endsWith("/official-portfolio.html")
-          ) {
-            destination = PORTFOLIO_URL;
-          }
-          else if (destination === OLD_UNOFFICIAL_URL) {
-            destination = TEACHING_URL;
-          }
-          else if (
-            destination === TEACHING_URL ||
-            destination.endsWith("/teaching.html")
-          ) {
-            destination = CONTACTS_URL;
-          }
-        }
-
-        return nativeOpen(destination, target, features);
-      };
-
-      const ball = document.getElementById("ball");
-
-      if (ball) {
-        if (ball.parentNode) {
-          ball.parentNode.appendChild(ball);
-        }
-
-        const keepBallInHistoryTube = () => {
-          const x = Number(ball.getAttribute("cx"));
-          const y = Number(ball.getAttribute("cy"));
-
-          const inHistoryTube =
-            Number.isFinite(x) &&
-            Number.isFinite(y) &&
-            Math.abs(x - 790) <= 18 &&
-            y >= 378 &&
-            y <= 800;
-
-          if (inHistoryTube) {
-            ball.style.transform = "none";
-            ball.style.transformOrigin = "center";
-            ball.style.opacity = "1";
-            ball.style.filter = "";
-          }
-        };
-
-        const observer = new MutationObserver(keepBallInHistoryTube);
-
-        observer.observe(ball, {
-          attributes: true,
-          attributeFilter: ["cx", "cy"]
-        });
-
-        keepBallInHistoryTube();
-      }
-    }
-
-    let importedBoard = null;
-
-    try {
-      const originalHTML = await getOriginalHTML();
-
-      const parsed = new DOMParser().parseFromString(
-        originalHTML,
-        "text/html"
-      );
-
-      const board = parsed.querySelector("#board");
-
-      if (!board) {
-        throw new Error("SVG board was not found in the original file.");
-      }
-
-      const loading = document.getElementById("loading");
-
-      importedBoard = document.importNode(board, true);
-      importedBoard.style.setProperty("visibility", "hidden", "important");
-      importedBoard.style.setProperty("opacity", "0", "important");
-      document.body.appendChild(importedBoard);
-
-      await loadScript("script.js");
-      applyNavigationChanges();
-
-      importedBoard.style.setProperty("opacity", "1", "important");
-      importedBoard.style.setProperty("visibility", "visible", "important");
-      if (loading) loading.remove();
-
-    } catch (error) {
-      if (importedBoard) importedBoard.remove();
-      console.error(error);
-
-      const loading = document.getElementById("loading");
-
-      if (loading) {
-        loading.textContent =
-          "Navigation could not be loaded. Please refresh the page.";
-      }
+    function loadScript(src){return new Promise((resolve,reject)=>{
+      const script=document.createElement('script');script.src=src;script.onload=resolve;script.onerror=()=>reject(new Error('Could not load '+src));document.body.appendChild(script);
+    });}
+    let importedBoard;
+    try{
+      const html=await originalBoard();
+      const parsed=new DOMParser().parseFromString(html,'text/html');
+      const board=parsed.querySelector('#board');
+      if(!board)throw new Error('SVG board was not found');
+      importedBoard=document.importNode(board,true);
+      importedBoard.style.setProperty('visibility','hidden','important');
+      importedBoard.style.setProperty('opacity','0','important');
+      document.getElementById('pinball-world').appendChild(importedBoard);
+      await loadScript('board-enhancements.js?v=pinball-20261102');
+      await loadScript('spring-physics.js?v=pinball-20261102');
+      await loadScript('script.js?v=pinball-20261102');
+      await loadScript('pinball-additions.js?v=pinball-20261102');
+      importedBoard.style.setProperty('opacity','1','important');
+      importedBoard.style.setProperty('visibility','visible','important');
+      document.getElementById('loading').remove();
+    }catch(error){
+      importedBoard?.remove();console.error(error);
+      document.getElementById('loading').textContent='Navigation could not be loaded. Please refresh the page.';
     }
   })();
-  </script>
+</script>
   <!-- if u are here then u've been looking for smth. I dont know exactly what, but i can answer some of your questions - yes, i do use ai (who doesn't?). Do i have a strategy for critical ai integration and conversation? not yet, but i'm on it. I use ai for my imperfect english, for working with huge data i gather and can't digest on my own. Does my awareness of ai exploitation change anything? i don't know, not yet, at least not now, when I have to do smth with my life that keeps on going. What do u think? -->
 </body>
 </html>

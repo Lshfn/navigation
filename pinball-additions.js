@@ -122,7 +122,7 @@
         const dx=(point[0]-previous[0])/66,dy=(point[1]-previous[1])/26;
         const t=clamp(-(ax*dx+ay*dy)/(dx*dx+dy*dy||1),0,1);
         if((ax+t*dx)**2+(ay+t*dy)**2<=1) {
-          status.textContent='Ball caught. Tap the catcher or press Enter to release.';
+          status.textContent='Ball caught.';
           flash(c.el);
           return new Promise(resolve=>{primaryHold={main:true,catcher:c,resolve};c.held=primaryHold;});
         }
@@ -431,7 +431,6 @@
   const marbles=[];
   let createdCount=0;
   const twinStops=['hub','portfolio','contacts','about','teaching','home'];
-  const stopLinks={hub:'cv',portfolio:'official',contacts:'teaching',about:'history',teaching:'unofficial',home:'home'};
   function putTwin(b,point){
     b.x=point[0];b.y=point[1];b.el.setAttribute('cx',b.x);b.el.setAttribute('cy',b.y);
     if(carrierActor===b.el)positionCarrier(point);else updateElevator(point);
@@ -463,11 +462,11 @@
         await travelOnStructures({move:(points,duration,mode)=>moveTwin(b,points,duration,mode)},[b.x,b.y],target,b.el);
         arrived=true;
       });
-      if(arrived){b.stopIndex++;core.open(stopLinks[target]);}
+      if(arrived)b.stopIndex++;
     }catch(error){if(error.name!=='BallCaught')console.error(error);}
     finally{
       if(b.mode!=='held')b.mode='idle';b.el.setAttribute('aria-busy','false');
-      status.textContent='The second ball is waiting. Click it to move again.';
+      status.textContent='Duplicate ball stopped.';
     }
   }
   function spawnTwin(){
@@ -476,8 +475,7 @@
       old.el.remove();old.path?.remove();marbles.splice(marbles.indexOf(old),1);
     }
     const [x,y]=nodes.split,tint=createdCount++%2?'twinMint':'twinPink';
-    const b={x,y,el:svg('circle',{cx:x,cy:y,r:radius,fill:`url(#${tint})`,filter:'url(#shadow)',class:'secondary-ball',role:'button',tabindex:0,'aria-label':'Move the second ball','aria-busy':'false'},ballsLayer),mode:'idle',stopIndex:0,catchUntil:performance.now()+650,catcher:null};
-    svg('title',{},b.el).textContent='Click to move to the next destination';
+    const b={x,y,radius:11,el:svg('circle',{cx:x,cy:y,r:11,fill:`url(#${tint})`,filter:'url(#shadow)',class:'secondary-ball',role:'button',tabindex:0,'aria-label':'Duplicate ball','aria-busy':'false'},ballsLayer),mode:'idle',stopIndex:0,catchUntil:performance.now()+650,catcher:null};
     marbles.push(b);action(b.el,()=>advanceTwin(b));b.el.animate([{opacity:0},{opacity:1}],{duration:250});return b;
   }
   function tryCatch(b,oldX,oldY,now){
@@ -486,7 +484,7 @@
       if(c.held)continue;
       const ax=(oldX-c.x)/66,ay=(oldY-c.y)/26,dx=(b.x-oldX)/66,dy=(b.y-oldY)/26;
       const t=clamp(-(ax*dx+ay*dy)/(dx*dx+dy*dy||1),0,1);
-      if((ax+t*dx)**2+(ay+t*dy)**2<=1){c.held=b;b.catcher=c;b.mode='held';flash(c.el);status.textContent='Ball caught. Click the ball to continue.';return true;}
+      if((ax+t*dx)**2+(ay+t*dy)**2<=1){c.held=b;b.catcher=c;b.mode='held';flash(c.el);status.textContent='Ball caught.';return true;}
     }
   }
   async function jump(){
@@ -494,12 +492,12 @@
     await core.addon(async a=>{
       await travelMain(a,'split');flash(splitter);spawnTwin();await wait(140);await travelMain(a,'hub');
     });
-    status.textContent='A second ball is waiting. Click it to move.';
+    status.textContent='Duplicate ball ready.';
   }
   action(splitter,jump);
   pinkTrampoline.classList.add('new-control');
   pinkTrampoline.setAttribute('role','button');pinkTrampoline.setAttribute('tabindex','0');
-  pinkTrampoline.setAttribute('aria-label','Bounce the ball on the pink trampoline');
+  pinkTrampoline.setAttribute('aria-label','Pink trampoline');
   action(pinkTrampoline,async()=>{
     if(core.busy||flipping)return;
     await core.addon(async a=>{
@@ -509,7 +507,7 @@
     });
   });
   const launcher=document.getElementById('launchButton');
-  launcher.setAttribute('role','button');launcher.setAttribute('tabindex','0');launcher.setAttribute('aria-label','Roll the ball toward the splitting trampoline');action(launcher,jump);
+  launcher.setAttribute('role','button');launcher.setAttribute('tabindex','0');launcher.setAttribute('aria-label','Launcher');action(launcher,jump);
 
   async function climb(){
     if(core.busy||flipping)return;flipping=true;
@@ -519,7 +517,7 @@
       for(let y=270;y>=-38;y-=28)rungs.push([1401+(rungs.length%2?8:-8),y]);
       await a.move(rungs,1700,'linear');
       upsideDown=!upsideDown;world.classList.toggle('upside-down',upsideDown);
-      ladder.setAttribute('aria-pressed',String(upsideDown));ladder.setAttribute('aria-label',upsideDown?'Climb the ladder to return':'Climb the ladder into the upside-down page');
+      ladder.setAttribute('aria-pressed',String(upsideDown));ladder.setAttribute('aria-label',upsideDown?'Return ladder':'Ladder');
       document.getElementById('worldReturn').hidden=!upsideDown;
       await wait(reduced?1:1260);
       await a.move(rungs.slice().reverse(),1300,'linear');
@@ -611,7 +609,7 @@
         if(b.life>b.max||b.y < -60){b.el.remove();bubbles.splice(i,1);}
       }
       for(const b of [...marbles]) {
-        if(b.mode==='held')putTwin(b,[b.catcher.x,b.catcher.y-radius]);
+        if(b.mode==='held')putTwin(b,[b.catcher.x,b.catcher.y-b.radius]);
       }
     }
     requestAnimationFrame(frame);

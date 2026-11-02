@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>This is Daria Ivans's Pinball Page</title>
-  <link rel="stylesheet" href="style.css?v=pinball-20261102">
+  <link rel="stylesheet" href="style.css?v=pinball-20261102-video">
 
   <style>
 @keyframes rwdcur16171 {
@@ -86,10 +86,10 @@
       importedBoard.style.setProperty('visibility','hidden','important');
       importedBoard.style.setProperty('opacity','0','important');
       document.getElementById('pinball-world').appendChild(importedBoard);
-      await loadScript('board-enhancements.js?v=pinball-20261102');
-      await loadScript('spring-physics.js?v=pinball-20261102');
-      await loadScript('script.js?v=pinball-20261102');
-      await loadScript('pinball-additions.js?v=pinball-20261102');
+      await loadScript('board-enhancements.js?v=pinball-20261102-video');
+      await loadScript('spring-physics.js?v=pinball-20261102-video');
+      await loadScript('script.js?v=pinball-20261102-video');
+      await loadScript('pinball-additions.js?v=pinball-20261102-video');
       importedBoard.style.setProperty('opacity','1','important');
       importedBoard.style.setProperty('visibility','visible','important');
       document.getElementById('loading').remove();

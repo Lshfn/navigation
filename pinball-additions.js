@@ -387,12 +387,12 @@
       for(const [fn,duration] of [[spring.compression,110],[spring.release,85]]){
         pinkTrampoline.setAttribute('data-spring-phase',fn===spring.compression?'compression':'release');
         const contactPoints=Array.from({length:31},(_,i)=>springContact(fn(i/30),actor));
-        await Promise.all([a.move(contactPoints,duration,'timed'),flexMat(fn,duration)]);
+        await Promise.all([a.move(contactPoints,duration,'timed'),flexMat(fn,duration*(a.motionScale||1))]);
       }
       pinkTrampoline.setAttribute('data-spring-phase','flight');
       await Promise.all([
         a.move(spring.flight(springContact(-8,actor),landing,85),860,'timed'),
-        flexMat(spring.settle,600)
+        flexMat(spring.settle,600*(a.motionScale||1))
       ]);
     }finally{
       springAnimation++;pinkTrampoline.setAttribute('data-spring-phase','idle');
@@ -475,12 +475,14 @@
   };
   window.PinballExtras.resumeAfterCatch=(points,move)=>transferAcross(move);
   const marbles=[];
+  const smallBallSpeed=.75;
   const maxMarbles=12;
   let createdCount=0;
   const twinStops=['hub','portfolio','contacts','about','teaching','home','film','ladder','split'];
   const ballColors=['#ff4ab9','#4ce9e5','#ffe14a','#8b66ff','#93ed4a','#ff8654','#74a9ff'];
   const ballDefs=board.querySelector('defs');
-  const textureIds=media.fills.map((url,i)=>{
+  const gifTextures=media.fills.filter(url=>/\.gif(?:[?#]|$)/i.test(url)||/^data:image\/gif[;,]/i.test(url));
+  const textureIds=(gifTextures.length?gifTextures:media.fills).map((url,i)=>{
     const id='roamingBallTexture'+i;
     const pattern=svg('pattern',{id,width:1,height:1,viewBox:'0 0 64 64',preserveAspectRatio:'xMidYMid slice'},ballDefs);
     svg('image',{href:url,width:64,height:64,preserveAspectRatio:'xMidYMid slice'},pattern);
@@ -521,7 +523,7 @@
       b.pausedTime=0;b.pauseStarted=null;frameId=requestAnimationFrame(tick);
     });
   }
-  function scheduleTwin(b,delay=rand(600,1900)){
+  function scheduleTwin(b,delay=rand(800,2200)){
     clearTimeout(b.timer);
     if(b.removed||b.reacting||b.mode!=='idle')return;
     b.timer=setTimeout(()=>{
@@ -535,7 +537,7 @@
     const choices=twinStops.filter(name=>Math.hypot(b.x-nodes[name][0],b.y-nodes[name][1])>2&&name!==b.lastStop);
     const target=choices[Math.floor(rand(0,choices.length))];
     b.controller=new AbortController();setTwinMode(b,'moving');b.el.setAttribute('data-target',target);
-    const a={signal:b.controller.signal,silent:true,move:(points,duration,mode)=>moveTwin(b,points,duration,mode)};
+    const a={signal:b.controller.signal,silent:true,motionScale:1/smallBallSpeed,move:(points,duration,mode)=>moveTwin(b,points,duration/smallBallSpeed,mode)};
     b.journey=travelOnStructures(a,[b.x,b.y],target,b.el);
     try{
       await b.journey;b.lastStop=target;
@@ -563,7 +565,7 @@
     b.el.animate([{opacity:0},{opacity:1}],{duration:250});
     // A twin born during a journey follows that same rail/flight until arrival.
     if(parent&&['moving','following'].includes(parent.mode)){b.leader=parent;setTwinMode(b,'following');}
-    else scheduleTwin(b,rand(800,1600));
+    else scheduleTwin(b,rand(1000,1800));
     return b;
   }
   function removeTwin(b){

@@ -104,15 +104,15 @@
     }
     b.catcher = null;
     b.catchUntil = performance.now()+1000;
-    b.mode='idle';
+    setTwinMode(b,'idle');scheduleTwin(b);
     b.path?.remove();b.path=null;
     flash(c.el);
   }
   window.PinballExtras = {
     offerMain(point) {
       if(carrierActor===main){positionCarrier(point);return null;}
-      if(transferActor===main)return null;
-      updateElevator(point);
+      if(transferActors.has(main))return null;
+      if(!elevatorActor||elevatorActor===main)updateElevator(point);
       const previous=Math.hypot(point[0]-lastMainPoint[0],point[1]-lastMainPoint[1])>100?point:lastMainPoint;
       lastMainPoint=point;
       if(primaryHold||performance.now()<mainIgnoreUntil)return null;
@@ -297,7 +297,30 @@
   }
   const carrier=document.getElementById('historyCarrier');
   const carrierHome=P([495,420]);
-  let carrierPoint=carrierHome.slice(),carrierActor=null,transferActor=null;
+  let carrierPoint=carrierHome.slice(),carrierActor=null,elevatorActor=null;
+  const transferActors=new Set();
+  // Balls share the original moving equipment, with the main ball first in line.
+  const equipment=new Map();
+  function interrupted(){const error=new Error('Ball movement interrupted');error.name='AbortError';return error;}
+  function checkMovement(a){if(a.signal?.aborted)throw interrupted();}
+  async function withEquipment(name,actor,a,task){
+    checkMovement(a);
+    if(!equipment.has(name))equipment.set(name,{busy:false,queue:[]});
+    const resource=equipment.get(name);
+    await new Promise((resolve,reject)=>{
+      const entry={actor,start:null,cancel:null};
+      entry.cancel=()=>{const i=resource.queue.indexOf(entry);if(i>=0){resource.queue.splice(i,1);reject(interrupted());}};
+      entry.start=()=>{a.signal?.removeEventListener('abort',entry.cancel);resource.busy=true;resolve();};
+      if(resource.busy){
+        if(actor===main){const i=resource.queue.findIndex(e=>e.actor!==main);resource.queue.splice(i<0?resource.queue.length:i,0,entry);}
+        else resource.queue.push(entry);
+        a.signal?.addEventListener('abort',entry.cancel,{once:true});
+      }else entry.start();
+    });
+    try{checkMovement(a);return await task();}
+    finally{resource.busy=false;resource.queue.shift()?.start();}
+  }
+  function routeSound(a,key,options){if(!a.silent)core.sound.play(key,options);}
   function positionCarrier(point){
     carrierPoint=point.slice();
     carrier.setAttribute('transform',`translate(${(point[0]-160)/.8} ${(point[1]-175)/.8})`);
@@ -322,14 +345,14 @@
   async function transferAcross(move,actor=main){
     const originalOpacity=actor.style.opacity;
     let fade;
-    transferActor=actor;
+    transferActors.add(actor);
     try{
       fade=actor.animate([{opacity:1},{opacity:0}],{duration:180,fill:'forwards'});
       await fade.finished;actor.style.opacity='0';fade.cancel();
       await move();
       fade=actor.animate([{opacity:0},{opacity:1}],{duration:180,fill:'forwards'});
       await fade.finished;
-    }finally{fade?.cancel();actor.style.opacity=originalOpacity;transferActor=null;}
+    }finally{fade?.cancel();actor.style.opacity=originalOpacity;transferActors.delete(actor);}
   }
   const pinkTrampoline=document.getElementById('miniTrampoline');
   const pinkPaths=pinkTrampoline.querySelectorAll(':scope > path');
@@ -338,8 +361,9 @@
   let springAnimation=0;
   // Centre of the ball at contact with the top of the mat, including its radius
   // and the existing two-degree rotation of the whole trampoline.
-  function springContact(depth=0){
-    const localY=-15.5-22+depth,angle=2*Math.PI/180;
+  function springContact(depth=0,actor=main){
+    const ballRadius=actor===main?22:11/.8;
+    const localY=-15.5-ballRadius+depth,angle=2*Math.PI/180;
     return P([1085-localY*Math.sin(angle),444+localY*Math.cos(angle)]);
   }
   const springApproach=sample('#rightRamp path').reduce((best,p)=>Math.hypot(p[0]-920,p[1]-497)<Math.hypot(best[0]-920,best[1]-497)?p:best);
@@ -355,19 +379,19 @@
       requestAnimationFrame(tick);
     });
   }
-  async function reboundFromPink(a,landing){
-    core.sound.play('roll',{volume:.24});
+  async function reboundFromPink(a,landing,actor=main){
+    routeSound(a,'roll',{volume:.24});
     springAnimation++;
     try{
       // During contact, mat and ball have exactly the same displacement.
       for(const [fn,duration] of [[spring.compression,110],[spring.release,85]]){
         pinkTrampoline.setAttribute('data-spring-phase',fn===spring.compression?'compression':'release');
-        const contactPoints=Array.from({length:31},(_,i)=>springContact(fn(i/30)));
+        const contactPoints=Array.from({length:31},(_,i)=>springContact(fn(i/30),actor));
         await Promise.all([a.move(contactPoints,duration,'timed'),flexMat(fn,duration)]);
       }
       pinkTrampoline.setAttribute('data-spring-phase','flight');
       await Promise.all([
-        a.move(spring.flight(springContact(-8),landing,85),860,'timed'),
+        a.move(spring.flight(springContact(-8,actor),landing,85),860,'timed'),
         flexMat(spring.settle,600)
       ]);
     }finally{
@@ -376,48 +400,70 @@
     }
   }
   async function travelOnStructures(a,start,target,actor=main){
+    checkMovement(a);
     if(typeof target==='string'&&Math.hypot(start[0]-nodes[target][0],start[1]-nodes[target][1])<.5)return;
     // Fall onto the actual upper surface, compress it, and rebound to the hub.
     if(Math.hypot(start[0]-nodes.teaching[0],start[1]-nodes.teaching[1])<1&&target!=='teaching'){
-      core.sound.play('roll',{volume:.24});
-      await a.move(spring.flight(start,springContact(),24),760,'timed');
-      await reboundFromPink(a,nodes.hub);
+      await withEquipment('pink',actor,a,async()=>{
+        routeSound(a,'roll',{volume:.24});
+        await a.move(spring.flight(start,springContact(0,actor),24),760,'timed');
+        await reboundFromPink(a,nodes.hub,actor);
+      });
       start=nodes.hub;
     }
     if(target==='teaching'){
       await travelOnStructures(a,start,springApproach,actor);
-      const contact=springContact();
-      await a.move([springApproach,[contact[0]-35,contact[1]-2],contact],360,'in');
-      await reboundFromPink(a,nodes.teaching);
+      await withEquipment('pink',actor,a,async()=>{
+        const contact=springContact(0,actor);
+        await a.move([springApproach,[contact[0]-35,contact[1]-2],contact],360,'in');
+        await reboundFromPink(a,nodes.teaching,actor);
+      });
       return;
     }
     // In the original homepage route the flipper retracts before the ball
     // enters the lower track, then returns after the bounce on the big ramp.
     if(target==='home'){
       await travelOnStructures(a,start,'rightEnd',actor);
-      await core.flipper.retract();document.getElementById('downPath').classList.add('open');
-      try{
-        core.sound.play('roll',{volume:.24});
-        await a.move([[983,438],[1015,490],[1050,550],[1090,620],[1125,692],[1150,706]].map(P),900,'in');
-        flash(document.getElementById('bigTrampoline'));
-        await a.move([[1150,706],[1170,680],[1190,700],[1172,746],[1148,782]].map(P),620,'out');
-        flash(document.getElementById('homeRing'));
-      }finally{document.getElementById('downPath').classList.remove('open');await core.flipper.restore();}
+      await withEquipment('pink',actor,a,async()=>{
+        await core.flipper.retract();
+        try{
+          checkMovement(a);document.getElementById('downPath').classList.add('open');
+          routeSound(a,'roll',{volume:.24});
+          await a.move([[983,438],[1015,490],[1050,550],[1090,620],[1125,692],[1150,706]].map(P),900,'in');
+          flash(document.getElementById('bigTrampoline'));
+          await a.move([[1150,706],[1170,680],[1190,700],[1172,746],[1148,782]].map(P),620,'out');
+          flash(document.getElementById('homeRing'));
+        }finally{document.getElementById('downPath').classList.remove('open');await core.flipper.restore();}
+      });
       return;
     }
     const p=plan(start,target),finish=activate(p);
     try{
       for(const step of p.steps){
+        checkMovement(a);
         if(step.cost<.5)continue;
         const edge=step.edge;
         const sound=edge.carrierRoute?'synth':edge.a==='liftTop'&&edge.b==='about'?'tube':edge.a==='blueTop'&&edge.b==='blueEnd'?'blue':'roll';
-        core.sound.play(sound,{volume:sound==='roll'?.24:.3});
+        routeSound(a,sound,{volume:sound==='roll'?.24:.3});
         const move=()=>a.move(step.points,clamp(step.cost*3.4,130,5000),'linear');
-        if(step.edge.carrierRoute)await carryAcross(step.points,move,actor);
+        if(step.edge.carrierRoute)await withEquipment('carrier',actor,a,()=>carryAcross(step.points,move,actor));
         else if(step.edge.newRail){
           const endpoint=step.points[step.points.length-1];
           await transferAcross(()=>a.move([endpoint,endpoint],16,'linear'),actor);
         }
+        else if(actor!==main&&edge.a==='mini'&&edge.b==='teaching')await withEquipment('pink',actor,a,async()=>{
+          const contact=springContact(0,actor);
+          await a.move(spring.flight(step.points[0],contact,24),600,'timed');
+          await reboundFromPink(a,step.points[step.points.length-1],actor);
+        });
+        else if(actor!==main&&edge.a==='mini'&&edge.b==='big')await withEquipment('pink',actor,a,async()=>{
+          await core.flipper.retract();
+          try{checkMovement(a);document.getElementById('downPath').classList.add('open');await move();}
+          finally{await core.flipper.restore();}
+        });
+        else if(edge.a==='liftTop'&&edge.b==='about')await withEquipment('elevator',actor,a,async()=>{
+          elevatorActor=actor;try{await move();}finally{elevatorActor=null;}
+        });
         else await move();
       }
     }finally{finish();}
@@ -429,54 +475,138 @@
   };
   window.PinballExtras.resumeAfterCatch=(points,move)=>transferAcross(move);
   const marbles=[];
+  const maxMarbles=12;
   let createdCount=0;
-  const twinStops=['hub','portfolio','contacts','about','teaching','home'];
+  const twinStops=['hub','portfolio','contacts','about','teaching','home','film','ladder','split'];
+  const ballColors=['#ff4ab9','#4ce9e5','#ffe14a','#8b66ff','#93ed4a','#ff8654','#74a9ff'];
+  const ballDefs=board.querySelector('defs');
+  const textureIds=media.fills.map((url,i)=>{
+    const id='roamingBallTexture'+i;
+    const pattern=svg('pattern',{id,width:1,height:1,viewBox:'0 0 64 64',preserveAspectRatio:'xMidYMid slice'},ballDefs);
+    svg('image',{href:url,width:64,height:64,preserveAspectRatio:'xMidYMid slice'},pattern);
+    return id;
+  });
+  const ballSheen=svg('radialGradient',{id:'roamingBallSheen',cx:'.3',cy:'.22',r:'.8'},ballDefs);
+  for(const attrs of [{offset:0,'stop-color':'#fff','stop-opacity':.9},{offset:.22,'stop-color':'#fff','stop-opacity':.25},{offset:.6,'stop-color':'#fff','stop-opacity':0},{offset:1,'stop-color':'#170d40','stop-opacity':.7}])svg('stop',attrs,ballSheen);
+  const effectsLayer=svg('g',{id:'smallBallEffects','pointer-events':'none'},ballsLayer);
+  function setTwinMode(b,mode){b.mode=mode;b.el.setAttribute('data-state',mode);}
   function putTwin(b,point){
-    b.x=point[0];b.y=point[1];b.el.setAttribute('cx',b.x);b.el.setAttribute('cy',b.y);
-    if(carrierActor===b.el)positionCarrier(point);else updateElevator(point);
+    b.x=point[0];b.y=point[1];b.el.setAttribute('transform',`translate(${b.x} ${b.y})`);
+    (b.history??=[]).push(point.slice());if(b.history.length>16)b.history.shift();
+    if(carrierActor===b.el)positionCarrier(point);
+    if(elevatorActor===b.el)updateElevator(point);
   }
   function moveTwin(b,points,duration,mode='linear'){
     return new Promise((resolve,reject)=>{
+      const signal=b.controller.signal;
+      if(signal.aborted){reject(interrupted());return;}
       const start=performance.now();
+      let frameId;
+      const abort=()=>{cancelAnimationFrame(frameId);reject(interrupted());};
+      signal.addEventListener('abort',abort,{once:true});
+      const done=(error)=>{signal.removeEventListener('abort',abort);if(error)reject(error);else resolve();};
       function tick(now){
-        const raw=Math.min(1,(now-start)/duration);
+        if(signal.aborted){done(interrupted());return;}
+        if(document.hidden){b.pauseStarted??=now;frameId=requestAnimationFrame(tick);return;}
+        if(b.pauseStarted!=null){b.pausedTime+=now-b.pauseStarted;b.pauseStarted=null;}
+        const raw=clamp((now-start-b.pausedTime)/duration,0,1);
         const t=mode==='out'?1-Math.pow(1-raw,3):mode==='in'?raw*raw:mode==='inout'?(raw<.5?2*raw*raw:1-Math.pow(-2*raw+2,2)/2):raw;
         const point=mode==='timed'?spring.pointAt(points,raw):pointOn(points,t),oldX=b.x,oldY=b.y;
         putTwin(b,point);
-        if(carrierActor!==b.el&&transferActor!==b.el&&tryCatch(b,oldX,oldY,now)){
-          const error=new Error('Ball held by catcher');error.name='BallCaught';reject(error);return;
+        if(carrierActor!==b.el&&!transferActors.has(b.el)&&tryCatch(b,oldX,oldY,now)){
+          const error=new Error('Ball held by catcher');error.name='BallCaught';done(error);return;
         }
-        if(raw<1)requestAnimationFrame(tick);else resolve();
+        if(raw<1)frameId=requestAnimationFrame(tick);else done();
       }
-      requestAnimationFrame(tick);
+      b.pausedTime=0;b.pauseStarted=null;frameId=requestAnimationFrame(tick);
     });
   }
+  function scheduleTwin(b,delay=rand(600,1900)){
+    clearTimeout(b.timer);
+    if(b.removed||b.reacting||b.mode!=='idle')return;
+    b.timer=setTimeout(()=>{
+      if(b.removed||b.reacting||b.mode!=='idle')return;
+      if(document.hidden||flipping||core.busy){scheduleTwin(b,450);return;}
+      void advanceTwin(b);
+    },delay);
+  }
   async function advanceTwin(b){
-    if(core.busy||flipping||b.mode==='moving')return;
-    if(b.catcher){b.catcher.held=null;b.catcher=null;b.catchUntil=performance.now()+900;}
-    const target=twinStops[b.stopIndex%twinStops.length];
-    b.mode='moving';b.el.setAttribute('aria-busy','true');
-    let arrived=false;
+    if(b.removed||b.reacting||b.mode!=='idle')return;
+    const choices=twinStops.filter(name=>Math.hypot(b.x-nodes[name][0],b.y-nodes[name][1])>2&&name!==b.lastStop);
+    const target=choices[Math.floor(rand(0,choices.length))];
+    b.controller=new AbortController();setTwinMode(b,'moving');b.el.setAttribute('data-target',target);
+    const a={signal:b.controller.signal,silent:true,move:(points,duration,mode)=>moveTwin(b,points,duration,mode)};
+    b.journey=travelOnStructures(a,[b.x,b.y],target,b.el);
     try{
-      await core.addon(async()=>{
-        await travelOnStructures({move:(points,duration,mode)=>moveTwin(b,points,duration,mode)},[b.x,b.y],target,b.el);
-        arrived=true;
-      });
-      if(arrived)b.stopIndex++;
-    }catch(error){if(error.name!=='BallCaught')console.error(error);}
+      await b.journey;b.lastStop=target;
+    }catch(error){if(!['BallCaught','AbortError'].includes(error.name))console.error(error);}
     finally{
-      if(b.mode!=='held')b.mode='idle';b.el.setAttribute('aria-busy','false');
-      status.textContent='Duplicate ball stopped.';
+      b.journey=null;
+      if(!b.removed&&!b.reacting&&b.mode==='moving'){setTwinMode(b,'idle');scheduleTwin(b);}
     }
   }
-  function spawnTwin(){
-    if(marbles.length>=6){
-      const old=marbles.find(b=>!b.catcher)||marbles[0];if(old.catcher)old.catcher.held=null;
-      old.el.remove();old.path?.remove();marbles.splice(marbles.indexOf(old),1);
+  function spawnTwin(parent=null){
+    if(marbles.length>=maxMarbles)return null;
+    const [x,y]=parent?[parent.x,parent.y]:nodes.split;
+    const count=Math.max(1,textureIds.length);
+    const texture=parent?(parent.texture+1+Math.floor(rand(0,Math.max(1,count-1))))%count:Math.floor(rand(0,count));
+    const color=parent?(parent.color+1+Math.floor(rand(0,ballColors.length-1)))%ballColors.length:createdCount%ballColors.length;
+    const b={id:++createdCount,x,y,radius:11,texture,color,removed:false,reacting:false,mode:'idle',catchUntil:performance.now()+900,catcher:null};
+    b.el=svg('g',{class:'secondary-ball',role:'button',tabindex:0,'aria-label':'Small ball','data-ball-id':b.id,'data-texture':texture,'data-color':ballColors[color],'data-state':'idle'},ballsLayer);
+    const fill=textureIds.length?`url(#${textureIds[texture]})`:'url(#twinPink)';
+    svg('circle',{r:15,fill:'transparent'},b.el);
+    svg('circle',{r:b.radius,fill,filter:'url(#shadow)',class:'small-ball-sphere'},b.el);
+    svg('circle',{r:b.radius,fill:ballColors[color],opacity:.22},b.el);
+    svg('circle',{r:b.radius,fill:'url(#roamingBallSheen)'},b.el);
+    svg('ellipse',{cx:-3.5,cy:-4,rx:3.7,ry:2.4,fill:'#fff',opacity:.72},b.el);
+    marbles.push(b);putTwin(b,[x,y]);action(b.el,()=>void reactTwin(b));
+    b.el.animate([{opacity:0},{opacity:1}],{duration:250});
+    // A twin born during a journey follows that same rail/flight until arrival.
+    if(parent&&['moving','following'].includes(parent.mode)){b.leader=parent;setTwinMode(b,'following');}
+    else scheduleTwin(b,rand(800,1600));
+    return b;
+  }
+  function removeTwin(b){
+    if(b.removed)return;b.removed=true;clearTimeout(b.timer);b.controller?.abort();
+    if(b.catcher){b.catcher.held=null;b.catcher=null;}
+    b.bubble?.remove();b.el.remove();const i=marbles.indexOf(b);if(i>=0)marbles.splice(i,1);
+  }
+  async function stopTwin(b){
+    clearTimeout(b.timer);b.leader=null;b.controller?.abort();
+    if(b.catcher){b.catcher.held=null;b.catcher=null;}
+    try{await b.journey;}catch{}
+    b.el.style.opacity='';b.catchUntil=performance.now()+500;
+  }
+  function explodeTwin(b){
+    const burst=svg('g',{class:'twin-explosion',transform:`translate(${b.x} ${b.y})`},effectsLayer);
+    for(let i=0;i<12;i++){
+      const angle=i/12*Math.PI*2+rand(-.15,.15),distance=rand(30,85);
+      const shard=svg('g',{},burst);
+      svg(i%3?'circle':'rect',i%3?{r:rand(1.5,4),fill:ballColors[(b.color+i)%ballColors.length]}:{x:-3,y:-3,width:6,height:6,fill:`url(#${textureIds[b.texture]||'twinPink'})`},shard);
+      shard.animate([{transform:'translate(0px,0px) scale(1)',opacity:1},{transform:`translate(${Math.cos(angle)*distance}px,${Math.sin(angle)*distance+18}px) scale(.2)`,opacity:0}],{duration:rand(420,800),fill:'forwards'});
     }
-    const [x,y]=nodes.split,tint=createdCount++%2?'twinMint':'twinPink';
-    const b={x,y,radius:11,el:svg('circle',{cx:x,cy:y,r:11,fill:`url(#${tint})`,filter:'url(#shadow)',class:'secondary-ball',role:'button',tabindex:0,'aria-label':'Duplicate ball','aria-busy':'false'},ballsLayer),mode:'idle',stopIndex:0,catchUntil:performance.now()+650,catcher:null};
-    marbles.push(b);action(b.el,()=>advanceTwin(b));b.el.animate([{opacity:0},{opacity:1}],{duration:250});return b;
+    removeTwin(b);setTimeout(()=>burst.remove(),850);
+  }
+  async function reactTwin(b){
+    if(b.removed||b.reacting||b.mode==='bubble')return;
+    let outcome=['explode','split','fall','bubble'][Math.floor(rand(0,4))];
+    if(outcome==='split'&&marbles.length>=maxMarbles)outcome='bubble';
+    board.setAttribute('data-last-small-ball-effect',outcome);
+    if(outcome==='split'){
+      const child=spawnTwin(b);flash(b.el);if(child)flash(child.el);return;
+    }
+    b.reacting=true;setTwinMode(b,'reacting');await stopTwin(b);if(b.removed)return;
+    if(outcome==='explode'){explodeTwin(b);return;}
+    b.reacting=false;b.effectTime=0;
+    if(outcome==='fall'){
+      setTwinMode(b,'falling');b.vx=rand(-90,90);b.vy=rand(35,85);return;
+    }
+    setTwinMode(b,'bubble');b.origin=[b.x,b.y];
+    b.bubble=svg('g',{class:'ball-carrying-bubble'},effectsLayer);
+    svg('circle',{r:23,fill:'url(#soapGlass)',stroke:'url(#soapRim)','stroke-width':1.6},b.bubble);
+    if(media.bubble)svg('use',{href:'#suppliedBubbleArtwork',transform:'scale(23)',opacity:.65},b.bubble);
+    svg('path',{d:'M-14 -5 Q-11 -17 3 -17',fill:'none',stroke:'#fff','stroke-width':2,opacity:.85},b.bubble);
+    b.bubble.setAttribute('transform',`translate(${b.x} ${b.y}) scale(.5)`);
   }
   function tryCatch(b,oldX,oldY,now){
     if(now<b.catchUntil)return;
@@ -484,7 +614,7 @@
       if(c.held)continue;
       const ax=(oldX-c.x)/66,ay=(oldY-c.y)/26,dx=(b.x-oldX)/66,dy=(b.y-oldY)/26;
       const t=clamp(-(ax*dx+ay*dy)/(dx*dx+dy*dy||1),0,1);
-      if((ax+t*dx)**2+(ay+t*dy)**2<=1){c.held=b;b.catcher=c;b.mode='held';flash(c.el);status.textContent='Ball caught.';return true;}
+      if((ax+t*dx)**2+(ay+t*dy)**2<=1){c.held=b;b.catcher=c;setTwinMode(b,'held');flash(c.el);status.textContent='Ball caught.';return true;}
     }
   }
   async function jump(){
@@ -609,14 +739,37 @@
         if(b.life>b.max||b.y < -60){b.el.remove();bubbles.splice(i,1);}
       }
       for(const b of [...marbles]) {
+        if(b.mode==='following'){
+          const leader=b.leader;
+          if(leader&&!leader.removed&&['moving','following'].includes(leader.mode)){
+            const trail=leader.history||[[leader.x,leader.y]];
+            putTwin(b,trail[Math.max(0,trail.length-6)]);b.el.style.opacity=leader.el.style.opacity;
+          }else{
+            b.leader=null;b.el.style.opacity='';setTwinMode(b,'idle');scheduleTwin(b,rand(200,600));
+          }
+        }
         if(b.mode==='held')putTwin(b,[b.catcher.x,b.catcher.y-b.radius]);
+        if(b.mode==='falling'){
+          const oldX=b.x,oldY=b.y;b.effectTime+=dt;b.vy+=520*dt;
+          putTwin(b,[b.x+b.vx*dt,b.y+b.vy*dt]);
+          if(tryCatch(b,oldX,oldY,now))continue;
+          if(b.y>960||b.x < -80||b.x>1680)removeTwin(b);
+        }
+        if(b.mode==='bubble'){
+          const t=b.effectTime+=dt;
+          putTwin(b,[b.origin[0]+Math.sin(t*1.8)*24,b.origin[1]-52*t-19*t*t]);
+          const fade=clamp((2.9-t)/.9,0,1);
+          b.bubble.setAttribute('transform',`translate(${b.x} ${b.y}) scale(${Math.min(1,.5+t*2)})`);
+          b.bubble.setAttribute('opacity',fade);b.el.style.opacity=fade;
+          if(t>=2.9||b.y < -50)removeTwin(b);
+        }
       }
     }
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
   document.addEventListener('visibilitychange',()=>{lastFrame=performance.now();});
-  window.addEventListener('pagehide',()=>pipeTimers.forEach(clearTimeout));
+  window.addEventListener('pagehide',()=>{pipeTimers.forEach(clearTimeout);for(const b of [...marbles])removeTwin(b);});
 
   // Preserve the live page's tube visibility repair.
   const restoreTubeBall=()=>{
@@ -626,3 +779,4 @@
   new MutationObserver(restoreTubeBall).observe(main,{attributes:true,attributeFilter:['cx','cy']});
   main.parentNode.appendChild(main);
 })();
+

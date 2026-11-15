@@ -23,7 +23,14 @@ html,body { margin:0; padding:0; background:var(--bg); min-width:100%; min-heigh
 body { overflow:auto; }
 .portfolio-wrap { width:max(2100px, 100vw); min-height:max(1220px,100vh); background:var(--bg); }
 #stage { position:relative; width:2100px; height:1220px; margin:0 auto; background:var(--bg); overflow:visible; isolation:isolate; }
-#connections { position:absolute; inset:0; width:2100px; height:1220px; z-index:1; pointer-events:none; overflow:visible; }
+#connections { position:absolute; inset:0; width:100%; height:100%; z-index:1; pointer-events:none; overflow:visible; }
+body.map-expanded .portfolio-wrap { width:max(2460px,100vw); min-height:max(1440px,100vh); }
+body.map-expanded #stage { width:2460px; height:1440px; }
+.category, .subcategory, .project, .trail-set { translate:var(--cluster-x,0px) var(--cluster-y,0px); }
+body.map-layout-ready :is(.category,.subcategory,.project,.trail-set) { transition:translate .9s cubic-bezier(.22,.68,.25,1); }
+@media (prefers-reduced-motion:reduce) {
+  body.map-layout-ready :is(.category,.subcategory,.project,.trail-set) { transition:none; }
+}
 .trail-set { visibility:hidden; }
 .trail-set.revealed { visibility:visible; }
 .trail-node { opacity:0; shape-rendering:crispEdges; }
@@ -61,7 +68,7 @@ body { overflow:auto; }
 #cat-virtual .virtual-star-left { left:90px; top:82px; width:78px; height:56px; }
 #cat-virtual .virtual-star-right { left:312px; top:74px; width:56px; height:57px; }
 #cat-virtual .category-title { left:82px; top:70px; width:282px; font-size:29px; line-height:.95; }
-#cat-curatorial { left:1810px; top:885px; width:260px; height:225px; }
+#cat-curatorial { left:1870px; top:885px; width:260px; height:225px; }
 #cat-curatorial .curatorial-bg { left:0; top:0; width:260px; height:225px; object-fit:contain; }
 #cat-curatorial .category-title { left:25px; top:94px; width:210px; font-size:28px; line-height:.92; }
 .projects { position:absolute; inset:0; z-index:4; pointer-events:none; }
@@ -716,6 +723,58 @@ body,
   const stage = document.getElementById('stage');
   const SVG_NS = 'http://www.w3.org/2000/svg';
 
+  // Each continent keeps its projects and connecting trails together as the map opens.
+  const continentLayouts = [
+    { id:'cat-web', groups:['web-main','webtools'], subs:['sub-webtools'], compact:[100,65], expanded:[-50,-35] },
+    { id:'cat-perf', groups:['perf-main'], compact:[-70,65], expanded:[145,-15] },
+    { id:'cat-video', groups:['video-main'], compact:[170,-70], expanded:[-15,90] },
+    { id:'cat-various', groups:['various-main'], compact:[80,-75], expanded:[100,180] },
+    { id:'cat-virtual', groups:['virtual-main','mmos'], subs:['sub-mmos'], compact:[-75,-35], expanded:[170,130] },
+    { id:'cat-curatorial', groups:['curatorial-main'], compact:[-80,-25], expanded:[270,210] }
+  ];
+  const layoutByGroup = new Map();
+  let mapExpanded = false;
+  let mapMoving = false;
+  let rebuildAfterMove = false;
+  function setClusterOffset(el, offset) {
+    el.style.setProperty('--cluster-x', offset[0]+'px');
+    el.style.setProperty('--cluster-y', offset[1]+'px');
+  }
+  for (const layout of continentLayouts) {
+    layout.button = document.getElementById(layout.id);
+    layout.members = [layout.button,
+      ...layout.groups.flatMap(group => [...document.querySelectorAll('.project[data-group="'+group+'"]')]),
+      ...(layout.subs || []).map(id => document.getElementById(id))].filter(Boolean);
+    layout.groups.forEach(group => layoutByGroup.set(group,layout));
+    layout.members.forEach(el => setClusterOffset(el,layout.compact));
+  }
+  requestAnimationFrame(() => requestAnimationFrame(() => document.body.classList.add('map-layout-ready')));
+  function currentClusterOffset(name) {
+    const button = layoutByGroup.get(name)?.button;
+    if (!button) return { x:0, y:0 };
+    const rect = button.getBoundingClientRect(), parent = stage.getBoundingClientRect();
+    return { x:rect.left-parent.left-button.offsetLeft, y:rect.top-parent.top-button.offsetTop };
+  }
+  function expandContinents() {
+    if (mapExpanded) return;
+    mapExpanded = true;
+    mapMoving = true;
+    document.body.classList.add('map-expanded');
+    svg.setAttribute('viewBox','0 0 2460 1440');
+    for (const layout of continentLayouts) {
+      layout.members.forEach(el => setClusterOffset(el,layout.expanded));
+      layout.groups.forEach(name => {
+        const trail = document.getElementById('trail-'+name);
+        if (trail) setClusterOffset(trail,layout.expanded);
+      });
+    }
+    const duration = matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 950;
+    setTimeout(() => {
+      mapMoving = false;
+      if (rebuildAfterMove) { rebuildAfterMove = false; buildAll(); }
+    },duration);
+  }
+
  
   const connections = {
     'web-main': [
@@ -818,15 +877,21 @@ body,
     return { x, y };
   }
 
-  function resolveSegment(cfg) {
-    const targetRect = cfg.to ? elementRect(cfg.to) : null;
+  function resolveSegment(cfg, offset) {
+    const localRect = selector => {
+      const rect = elementRect(selector);
+      if (!rect) return null;
+      return { ...rect, left:rect.left-offset.x, right:rect.right-offset.x, cx:rect.cx-offset.x,
+        top:rect.top-offset.y, bottom:rect.bottom-offset.y, cy:rect.cy-offset.y };
+    };
+    const targetRect = cfg.to ? localRect(cfg.to) : null;
     if (!targetRect && !cfg.toPoint) return null;
 
     let start;
     if (cfg.fromPoint) {
       start = { x: cfg.fromPoint[0], y: cfg.fromPoint[1] };
     } else {
-      const sourceRect = elementRect(cfg.from);
+      const sourceRect = localRect(cfg.from);
       if (!sourceRect) return null;
       const toward = cfg.toPoint
         ? { x: cfg.toPoint[0], y: cfg.toPoint[1] }
@@ -874,10 +939,14 @@ body,
     if (revealed.has(name)) group.classList.add('revealed', 'redrawn');
     svg.appendChild(group);
 
+    const layout = layoutByGroup.get(name);
+    if (layout) setClusterOffset(group,mapExpanded ? layout.expanded : layout.compact);
+    const offset = currentClusterOffset(name);
+
     let globalIndex = 0;
 
     for (const cfg of connections[name] || []) {
-      const seg = resolveSegment(cfg);
+      const seg = resolveSegment(cfg,offset);
       if (!seg) continue;
 
       const dx = seg.end.x - seg.start.x;
@@ -899,6 +968,7 @@ body,
 
   const groups = Object.keys(connections);
   function buildAll() {
+    if (mapMoving) { rebuildAfterMove = true; return; }
     groups.forEach(drawGroup);
   }
 
@@ -921,6 +991,7 @@ body,
 
   document.querySelectorAll('.category').forEach(button => {
     button.addEventListener('click', () => {
+      expandContinents();
       const group = button.dataset.projectGroup;
       if (!revealed.has(group)) {
         revealed.add(group);
@@ -955,6 +1026,7 @@ body,
     });
   });
 
+  buildAll();
   Promise.resolve(document.fonts?.ready).then(buildAll);
   window.addEventListener('load', buildAll, { once:true });
 })();

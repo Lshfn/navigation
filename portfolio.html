@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Bump this version whenever the published portfolio changes. -->
-<meta name="portfolio-version" content="20261118-screening-text-drawings-1">
+<meta name="portfolio-version" content="20261118-curatorial-right-small-1">
 <script>
 // Check a fresh copy on entry, including restored browser tabs, to replace stale cached HTML.
 (() => {
@@ -62,8 +62,8 @@ body { overflow:auto; }
 #connections { position:absolute; inset:0; width:100%; height:100%; z-index:1; pointer-events:none; overflow:visible; }
 body.map-expanded .portfolio-wrap { width:max(2520px,100vw); min-height:max(1440px,100vh); }
 body.map-expanded #stage { width:2520px; height:1440px; }
-body.map-expanded.screenings-expanded .portfolio-wrap { width:max(2760px,100vw); min-height:max(1530px,100vh); }
-body.map-expanded.screenings-expanded #stage { width:2760px; height:1530px; }
+body.map-expanded.screenings-expanded .portfolio-wrap { width:max(2900px,100vw); min-height:max(1530px,100vh); }
+body.map-expanded.screenings-expanded #stage { width:2900px; height:1530px; }
 .category, .subcategory, .project, .trail-set { translate:var(--cluster-x,0px) var(--cluster-y,0px); }
 body.map-layout-ready :is(.category,.subcategory,.project,.trail-set) { transition:translate .9s cubic-bezier(.22,.68,.25,1); }
 @media (prefers-reduced-motion:reduce) {
@@ -108,7 +108,7 @@ body.map-layout-ready :is(.category,.subcategory,.project,.trail-set) { transiti
 #cat-virtual .category-title { left:82px; top:70px; width:282px; font-size:29px; line-height:.95; }
 #cat-curatorial { left:1883px; top:896.3px; width:234px; height:202.5px; }
 #cat-curatorial .curatorial-bg { left:0; top:0; width:234px; height:202.5px; object-fit:contain; }
-#cat-curatorial .category-title { left:22.5px; top:84.6px; width:189px; font-size:25.2px; line-height:.92; }
+#cat-curatorial .category-title { left:22.5px; top:84.6px; width:189px; font-size:22px; line-height:.92; }
 .projects { position:absolute; inset:0; z-index:4; pointer-events:none; }
 .project { position:absolute; line-height:1.02; text-align:center; visibility:hidden; clip-path:inset(0 100% 0 0); user-select:none; color:var(--project-color,var(--magenta)); pointer-events:auto; overflow:visible; }
 .project[data-desc] { cursor: help; }
@@ -155,7 +155,7 @@ body.map-layout-ready :is(.category,.subcategory,.project,.trail-set) { transiti
 .project.allwords { font-family:AllWords, sans-serif; font-size:17px; }
 .project.webfont { font-family:WebBased, sans-serif; font-size:20px; font-weight:700; font-synthesis:weight; -webkit-text-stroke:.22px currentColor; }
 .project.blue-reveal { color:var(--project-color,var(--blue)); }
-.screening { width:126px; font-size:15px !important; }
+.screening { width:126px; font-size:13px !important; }
 .screening .screening-credit { display:block; margin-top:3px; font-size:.82em; }
 .screening:not(.revealed) { display:none; }
 .screening time { display:block; margin-top:3px; font-size:.85em; }
@@ -787,7 +787,7 @@ html { transition: background-color .45s ease; }
     { id:'cat-video', groups:['video-main'], compact:[170,-70], expanded:[-15,90] },
     { id:'cat-various', groups:['various-main'], compact:[80,-100], expanded:[100,230] },
     { id:'cat-virtual', groups:['virtual-main','mmos'], subs:['sub-mmos'], compact:[-75,-35], expanded:[170,130] },
-    { id:'cat-curatorial', groups:['curatorial-main'], compact:[-25,-130], expanded:[385,210] }
+    { id:'cat-curatorial', groups:['curatorial-main'], compact:[75,-130], expanded:[485,210] }
   ];
   const layoutByGroup = new Map();
   let mapExpanded = false;
@@ -1063,7 +1063,7 @@ html { transition: background-color .45s ease; }
   function revealProjects(group) {
     if (group==='curatorial-main') {
       document.body.classList.add('screenings-expanded');
-      svg.setAttribute('viewBox','0 0 2760 1530');
+      svg.setAttribute('viewBox','0 0 2900 1530');
     }
     document.querySelectorAll('.project[data-group="' + group + '"]')
       .forEach(el => el.classList.add('revealed'));

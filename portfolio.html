@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Bump this version whenever the published portfolio changes. -->
-<meta name="portfolio-version" content="20261118-approved-project-captions-1">
+<meta name="portfolio-version" content="20261119-approved-tool-captions-1">
 <script>
 // Check a fresh copy on entry, including restored browser tabs, to replace stale cached HTML.
 (() => {
@@ -402,6 +402,19 @@ body.map-layout-ready :is(.category,.subcategory,.project,.trail-set) { transiti
   transform:translateY(-50%);
 }
 
+.project[data-group="webtools"][data-desc]::after {
+  min-width:155px; width:175px; max-width:175px;
+  padding:13px 14px 14px; font-size:13px; line-height:1.28; text-align:left;
+}
+:is(.p-drawing,.p-geocities,.p-sky)[data-desc]::after {
+  left:auto; right:calc(100% - var(--title-left,0px) + 6px);
+  top:50%; bottom:auto; transform:translateY(-50%);
+}
+.p-glitch[data-desc]::after {
+  left:calc(var(--title-right,100%) + 6px);
+  top:50%; bottom:auto; transform:translateY(-50%);
+}
+
 .p-jobless.rich-desc .desc-box,
 .p-templates.rich-desc .desc-box {
   bottom: calc(100% - 2px);
@@ -733,10 +746,10 @@ html { transition: background-color .45s ease; }
   <div class="project webfont p-breakup" data-group="web-main" style="--text-delay:.44s" data-desc="A webzine about love, breakups, and the disruptions of human relationships, explored through web design.">Break up Studies<br>(broshenka)<br>Webzine<br>2025</div>
   <div class="project webfont p-jobless rich-desc" data-group="web-main" style="--text-delay:.54s">Jobless Webzine<br>2025<span class="desc-box">A webzine about the precarities of being an artist. INC also published an <a href="https://networkcultures.org/ourcreativereset/2025/11/06/jobless-webzine/" target="_blank" rel="noopener noreferrer">article</a> about the project.</span></div>
   <div class="project webfont p-templates rich-desc" data-group="web-main" style="--text-delay:.64s">templates-00s-10s<br>'Shablony'<br>2026<span class="desc-box">A project built around my handmade archive of Photoshop templates, made during the SFPC <a href="https://alexa4nn.github.io/archive-of-archives/" target="_blank" rel="noopener noreferrer">course</a> <em>Digital Decay and Afterlife</em>.</span></div>
-  <div class="project allwords blue-reveal p-drawing" data-group="webtools" style="--text-delay:.28s">drawing<br>cute</div>
-  <div class="project allwords blue-reveal p-glitch" data-group="webtools" style="--text-delay:.36s">glitch tg<br>bot</div>
-  <div class="project allwords blue-reveal p-geocities" data-group="webtools" style="--text-delay:.44s">geocitiesizer<br>-2.0</div>
-  <div class="project allwords blue-reveal p-sky" data-group="webtools" style="--text-delay:.52s">is_the_sky<br>clear yet</div>
+  <div class="project allwords blue-reveal p-drawing" data-group="webtools" style="--text-delay:.28s" data-desc="A browser drawing playground with a choice of brushes and adjustable brush sizes.">drawing<br>cute</div>
+  <div class="project allwords blue-reveal p-glitch" data-group="webtools" style="--text-delay:.36s" data-desc="A Telegram bot responding to disrupted communication in Russia by glitching uploaded files and mixing them with fragments of earlier uploads.">glitch tg<br>bot</div>
+  <div class="project allwords blue-reveal p-geocities" data-group="webtools" style="--text-delay:.44s" data-desc="A bookmarklet that transforms modern websites with retro backgrounds, wild fonts, blinking text, and scrolling marquees.">geocitiesizer<br>-2.0</div>
+  <div class="project allwords blue-reveal p-sky" data-group="webtools" style="--text-delay:.52s" data-desc="An interactive page about living through the Russian–Ukrainian war and wondering whether the sky is clear yet.">is_the_sky<br>clear yet</div>
   <div class="project allwords p-altered" data-group="perf-main" style="--text-delay:.30s">#alteredmybrainchemistry<br>TikTok performance<br>2023</div>
   <div class="project allwords p-public" data-group="perf-main" style="--text-delay:.38s">public discussion on<br>imperfect technologies<br>2023</div>
   <div class="project allwords p-interview" data-group="perf-main" style="--text-delay:.46s">interview with the<br>researchers of the<br>metaverses<br>2023</div>

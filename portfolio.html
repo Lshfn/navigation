@@ -915,6 +915,14 @@ html { transition: background-color .45s ease; }
 
   function resolveSegment(cfg, offset) {
     const localRect = selector => {
+      const el = typeof selector === 'string' ? document.querySelector(selector) : selector;
+      // Screening positions already share the continent's local coordinates.
+      // Use their layout boxes so scroll anchoring and translate transitions cannot double the offset.
+      if (el?.classList.contains('screening')) {
+        const left=el.offsetLeft, top=el.offsetTop, width=el.offsetWidth, height=el.offsetHeight;
+        return { left, top, right:left+width, bottom:top+height, width, height,
+          cx:left+width/2, cy:top+height/2 };
+      }
       const rect = elementRect(selector);
       if (!rect) return null;
       return { ...rect, left:rect.left-offset.x, right:rect.right-offset.x, cx:rect.cx-offset.x,

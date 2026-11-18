@@ -19,13 +19,15 @@
   --yellowFill: rgba(216,223,22,.76);
 }
 * { box-sizing:border-box; }
-html,body { margin:0; padding:0; background:var(--bg); min-width:100%; min-height:100%; }
+html,body { margin:0; padding:0; min-width:100%; min-height:100%; }
+html { background-color:var(--bg); background-attachment:fixed; background-size:100vw 100vh; background-repeat:no-repeat; }
+body { background:transparent; }
 body { overflow:auto; }
-.portfolio-wrap { width:max(2100px, 100vw); min-height:max(1220px,100vh); background:var(--bg); }
-#stage { position:relative; width:2100px; height:1220px; margin:0 auto; background:var(--bg); overflow:visible; isolation:isolate; }
+.portfolio-wrap { width:max(2100px, 100vw); min-height:max(1220px,100vh); background:transparent; }
+#stage { position:relative; width:2100px; height:1220px; margin:0 auto; background:transparent; overflow:visible; isolation:isolate; }
 #connections { position:absolute; inset:0; width:100%; height:100%; z-index:1; pointer-events:none; overflow:visible; }
-body.map-expanded .portfolio-wrap { width:max(2460px,100vw); min-height:max(1440px,100vh); }
-body.map-expanded #stage { width:2460px; height:1440px; }
+body.map-expanded .portfolio-wrap { width:max(2520px,100vw); min-height:max(1440px,100vh); }
+body.map-expanded #stage { width:2520px; height:1440px; }
 .category, .subcategory, .project, .trail-set { translate:var(--cluster-x,0px) var(--cluster-y,0px); }
 body.map-layout-ready :is(.category,.subcategory,.project,.trail-set) { transition:translate .9s cubic-bezier(.22,.68,.25,1); }
 @media (prefers-reduced-motion:reduce) {
@@ -72,7 +74,7 @@ body.map-layout-ready :is(.category,.subcategory,.project,.trail-set) { transiti
 #cat-curatorial .curatorial-bg { left:0; top:0; width:260px; height:225px; object-fit:contain; }
 #cat-curatorial .category-title { left:25px; top:94px; width:210px; font-size:28px; line-height:.92; }
 .projects { position:absolute; inset:0; z-index:4; pointer-events:none; }
-.project { position:absolute; line-height:1.02; text-align:center; visibility:hidden; clip-path:inset(0 100% 0 0); user-select:none; color:var(--magenta); pointer-events:auto; overflow:visible; }
+.project { position:absolute; line-height:1.02; text-align:center; visibility:hidden; clip-path:inset(0 100% 0 0); user-select:none; color:var(--project-color,var(--magenta)); pointer-events:auto; overflow:visible; }
 .project[data-desc] { cursor: help; }
 
 
@@ -116,14 +118,14 @@ body.map-layout-ready :is(.category,.subcategory,.project,.trail-set) { transiti
 }
 .project.allwords { font-family:AllWords, sans-serif; font-size:17px; }
 .project.webfont { font-family:WebBased, sans-serif; font-size:20px; font-weight:700; font-synthesis:weight; -webkit-text-stroke:.22px currentColor; }
-.project.blue-reveal { color:var(--blue); }
+.project.blue-reveal { color:var(--project-color,var(--blue)); }
 .project.revealed { visibility:visible; animation:textPixels .72s steps(14,end) forwards; animation-delay:var(--text-delay,.35s); }
 @keyframes textPixels { from { clip-path:inset(0 100% 0 0); } to { clip-path:inset(0 0 0 0); } }
 .subcategory { pointer-events:auto; visibility:hidden; z-index:5; }
 .subcategory.revealed { visibility:visible; animation:textPixels .72s steps(14,end) forwards; }
 .subcategory .oval { position:absolute; inset:0; border:2px solid #ee72b8; border-radius:50%; background:rgba(255,255,255,.04); }
 .subcategory.active .oval { background:var(--yellowFill); }
-.subcategory .label { position:absolute; inset:8px 10px; color:var(--magenta); font-family:AllWords, sans-serif; font-size:15px; line-height:.95; text-align:center; pointer-events:none; }
+.subcategory .label { position:absolute; inset:8px 10px; color:var(--label-color,var(--magenta)); font-family:AllWords, sans-serif; font-size:15px; line-height:.95; text-align:center; pointer-events:none; }
 #sub-webtools { left:482px; top:205px; width:178px; height:60px; }
 #sub-mmos { left:1690px; top:714px; width:100px; height:48px; }
 #sub-mmos .label { inset:9px 8px 6px; font-size:15px; line-height:.94; }
@@ -283,55 +285,55 @@ body.map-layout-ready :is(.category,.subcategory,.project,.trail-set) { transiti
 }
 
 .p-encounters[data-desc]::after {
-  left: 100%;
+  left: calc(var(--title-right,100%) + 6px);
   top: 50%;
   bottom: auto;
-  transform: translate(-14px, -50%);
+  transform: translateY(-50%);
 }
 
 .p-c8[data-desc]::after {
-  left: 100%;
+  left: calc(var(--title-right,100%) + 6px);
   top: 50%;
   bottom: auto;
-  transform: translate(-14px, -50%);
+  transform: translateY(-50%);
 }
 
 .p-infinite[data-desc]::after {
   left: auto;
-  right: 100%;
+  right: calc(100% - var(--title-left,0px) + 6px);
   top: 50%;
   bottom: auto;
-  transform: translate(14px, -50%);
+  transform: translateY(-50%);
 }
 
 .p-crimea[data-desc]::after {
   left: auto;
-  right: 100%;
+  right: calc(100% - var(--title-left,0px) + 6px);
   top: 50%;
   bottom: auto;
-  transform: translate(14px, -50%);
+  transform: translateY(-50%);
 }
 
 .p-haunting[data-desc]::after {
   left: auto;
-  right: 100%;
+  right: calc(100% - var(--title-left,0px) + 6px);
   top: 50%;
   bottom: auto;
-  transform: translate(14px, -50%);
+  transform: translateY(-50%);
 }
 
 .p-poluno[data-desc]::after {
-  left: 100%;
+  left: calc(var(--title-right,100%) + 6px);
   top: 50%;
   bottom: auto;
-  transform: translate(-14px, -50%);
+  transform: translateY(-50%);
 }
 
 .p-fragments[data-desc]::after {
-  left: 100%;
+  left: calc(var(--title-right,100%) + 6px);
   top: 50%;
   bottom: auto;
-  transform: translate(-14px, -50%);
+  transform: translateY(-50%);
 }
 
 
@@ -341,10 +343,8 @@ body.map-layout-ready :is(.category,.subcategory,.project,.trail-set) { transiti
 }
 
 .project.project-selected {
-  color: #c8d100 !important;
-  text-shadow:
-    0 0 3px rgba(255, 244, 50, .55),
-    0 0 7px rgba(200, 209, 0, .25);
+  color: var(--project-color,#758000) !important;
+  text-shadow: none;
 }
 
 
@@ -622,21 +622,7 @@ video[controls],
 #orb-2248 { left: 824px; top: 914px; }
 #orb-2245 { left: 1978px; top: 1050px; }
 
-body.bg-pink {
-  --magenta: #86c51b;
-  --magenta2: #86c51b;
-}
-
-body.bg-blue {
-  --blue: #22b8b8;
-}
-
-html,
-body,
-.portfolio-wrap,
-#stage {
-  transition: background-color .45s ease, background-image .45s ease;
-}
+html { transition: background-color .45s ease; }
 
 @media (prefers-reduced-motion: reduce) {
   .bg-orb.is-hovered:not(.is-dragging) {
@@ -725,12 +711,12 @@ body,
 
   // Each continent keeps its projects and connecting trails together as the map opens.
   const continentLayouts = [
-    { id:'cat-web', groups:['web-main','webtools'], subs:['sub-webtools'], compact:[100,65], expanded:[-50,-35] },
+    { id:'cat-web', groups:['web-main','webtools'], subs:['sub-webtools'], compact:[-60,-25], expanded:[-50,-35] },
     { id:'cat-perf', groups:['perf-main'], compact:[-70,65], expanded:[145,-15] },
     { id:'cat-video', groups:['video-main'], compact:[170,-70], expanded:[-15,90] },
-    { id:'cat-various', groups:['various-main'], compact:[80,-75], expanded:[100,180] },
+    { id:'cat-various', groups:['various-main'], compact:[80,-150], expanded:[100,180] },
     { id:'cat-virtual', groups:['virtual-main','mmos'], subs:['sub-mmos'], compact:[-75,-35], expanded:[170,130] },
-    { id:'cat-curatorial', groups:['curatorial-main'], compact:[-80,-25], expanded:[270,210] }
+    { id:'cat-curatorial', groups:['curatorial-main'], compact:[-80,-130], expanded:[330,210] }
   ];
   const layoutByGroup = new Map();
   let mapExpanded = false;
@@ -760,7 +746,7 @@ body,
     mapExpanded = true;
     mapMoving = true;
     document.body.classList.add('map-expanded');
-    svg.setAttribute('viewBox','0 0 2460 1440');
+    svg.setAttribute('viewBox','0 0 2520 1440');
     for (const layout of continentLayouts) {
       layout.members.forEach(el => setClusterOffset(el,layout.expanded));
       layout.groups.forEach(name => {
@@ -1306,11 +1292,6 @@ body,
 
   const GRADIENT_DISTANCE = 70;
 
-  const modeClassMap = {
-    'orb-2248': 'bg-pink',
-    'orb-2245': 'bg-blue'
-  };
-
   let activeOrbId = null;
   let collisionGradient = null;
   let collisionOrbIds = [];
@@ -1322,28 +1303,118 @@ body,
   let dragOffsetX = 0;
   let dragOffsetY = 0;
 
-  const backgroundTargets = [body, wrap, stage];
-
-  const clearContrastClasses = () => {
-    body.classList.remove('bg-pink', 'bg-blue');
-  };
-
+  // Paint the background once, across the viewport, without repeated map-sized gradients.
   const setBackgroundImage = value => {
-    backgroundTargets.forEach(el => {
-      el.style.backgroundImage = value;
-    });
+    root.style.backgroundImage = value;
   };
 
-  const applyContrastForIds = ids => {
-    ids.forEach(id => {
-      const cls = modeClassMap[id];
-      if (cls) body.classList.add(cls);
+  function colorRGB(value) {
+    if (value.startsWith('#')) {
+      const hex = value.slice(1);
+      return [0,2,4].map(i => parseInt(hex.slice(i,i+2),16));
+    }
+    return (value.match(/[\d.]+/g) || []).map(Number);
+  }
+  function luminance(rgb) {
+    const c = rgb.slice(0,3).map(v => {
+      v /= 255;
+      return v <= .04045 ? v/12.92 : ((v+.055)/1.055)**2.4;
     });
-  };
+    return .2126*c[0]+.7152*c[1]+.0722*c[2];
+  }
+  function contrastRatio(a,b) {
+    return (Math.max(a,b)+.05)/(Math.min(a,b)+.05);
+  }
+  function mixRGB(a,b,t) {
+    return a.slice(0,3).map((v,i) => Math.round(v+(b[i]-v)*t));
+  }
+  const colorVariants = new Map();
+  function adaptiveColor(base,backgrounds,target) {
+    if (!colorVariants.has(base)) {
+      const rgb = colorRGB(base), variants = [];
+      for (let step=0;step<=20;step++) {
+        for (const end of [[0,0,0],[255,255,255]]) {
+          const color = mixRGB(rgb,end,step/20);
+          variants.push({ color, light:luminance(color) });
+        }
+      }
+      colorVariants.set(base,variants);
+    }
+    const lights = backgrounds.map(luminance);
+    let best, bestRatio = 0;
+    for (const candidate of colorVariants.get(base)) {
+      const ratio = Math.min(...lights.map(light => contrastRatio(light,candidate.light)));
+      if (ratio>bestRatio) { best=candidate.color; bestRatio=ratio; }
+      if (ratio>=target) return 'rgb('+candidate.color.join(',')+')';
+    }
+    return 'rgb('+best.join(',')+')';
+  }
+  const originalTrailColors = new WeakMap();
+  let contrastRequest = 0, contrastUntil = 0;
+  function refreshContrast() {
+    const solid = colorRGB(getComputedStyle(root).backgroundColor);
+    const gradient = collisionGradient
+      ? collisionOrbIds.map(id => colorRGB(document.getElementById(id).dataset.bg))
+      : null;
+    function backgroundAt(x,y) {
+      if (!gradient) return solid;
+      const t = Math.max(0,Math.min(1,(x+y)/(innerWidth+innerHeight)));
+      return mixRGB(gradient[0],gradient[1],t);
+    }
+    function backgroundsFor(el,overlay) {
+      const r = el.getBoundingClientRect();
+      return [r.left,(r.left+r.right)/2,r.right].map(x => {
+        const bg = backgroundAt(x,(r.top+r.bottom)/2);
+        return overlay ? mixRGB(bg,overlay,overlay[3] ?? 1) : bg;
+      });
+    }
+    document.querySelectorAll('.project').forEach(project => {
+      const selected = project.classList.contains('project-selected');
+      const base = selected ? '#c8d100' : project.classList.contains('blue-reveal') ? '#354cff' : '#bf17c5';
+      project.style.setProperty('--project-color',adaptiveColor(base,backgroundsFor(project),4.5));
+
+      // Anchor side captions to the visible lettering, not the wider project hit area.
+      const range = document.createRange();
+      range.setStart(project,0);
+      const caption = project.querySelector('.desc-box');
+      if (caption) range.setEndBefore(caption);
+      else range.setEnd(project,project.childNodes.length);
+      const text = range.getBoundingClientRect(), box = project.getBoundingClientRect();
+      project.style.setProperty('--title-left',(text.left-box.left)+'px');
+      project.style.setProperty('--title-right',(text.right-box.left)+'px');
+    });
+    document.querySelectorAll('.subcategory').forEach(sub => {
+      const label = sub.querySelector('.label'), oval = sub.querySelector('.oval');
+      const fill = colorRGB(getComputedStyle(oval).backgroundColor);
+      label.style.setProperty('--label-color',adaptiveColor('#bf17c5',backgroundsFor(label,fill),4.5));
+    });
+    document.querySelectorAll('.trail-node').forEach(node => {
+      if (!originalTrailColors.has(node)) originalTrailColors.set(node,node.getAttribute('fill'));
+      node.setAttribute('fill',adaptiveColor(originalTrailColors.get(node),backgroundsFor(node),3.5));
+    });
+    const old = document.querySelector('.old-portfolio');
+    old.style.color = adaptiveColor('#bf17c5',backgroundsFor(old),4.5);
+  }
+  function scheduleContrast(duration=0) {
+    contrastUntil = Math.max(contrastUntil,performance.now()+duration);
+    if (contrastRequest) return;
+    function update(now) {
+      contrastRequest = 0;
+      refreshContrast();
+      if (now<contrastUntil) contrastRequest = requestAnimationFrame(update);
+    }
+    contrastRequest = requestAnimationFrame(update);
+  }
+  const projectsObserver = new MutationObserver(() => scheduleContrast());
+  projectsObserver.observe(document.querySelector('.projects'),{subtree:true,attributes:true,attributeFilter:['class']});
+  projectsObserver.observe(document.getElementById('connections'),{subtree:true,childList:true,attributes:true,attributeFilter:['class']});
+  document.querySelectorAll('.subcategory').forEach(sub => projectsObserver.observe(sub,{attributes:true,attributeFilter:['class']}));
+  window.addEventListener('scroll',() => scheduleContrast(),{passive:true});
+  window.addEventListener('resize',() => scheduleContrast());
+  stage.addEventListener('transitionend',() => scheduleContrast());
+  Promise.resolve(document.fonts?.ready).then(() => scheduleContrast());
 
   const applyCurrentBackground = () => {
-    clearContrastClasses();
-
     const active = activeOrbId
       ? document.getElementById(activeOrbId)
       : null;
@@ -1355,11 +1426,10 @@ body,
 
     if (collisionGradient) {
       setBackgroundImage(collisionGradient);
-      applyContrastForIds(collisionOrbIds);
     } else {
       setBackgroundImage('none');
-      if (activeOrbId) applyContrastForIds([activeOrbId]);
     }
+    scheduleContrast(500);
   };
 
   const resetToWhite = () => {
@@ -1389,6 +1459,7 @@ body,
   };
 
   const showCollisionGradient = (orbA, orbB) => {
+    if (collisionOrbIds[0]===orbA.el.id && collisionOrbIds[1]===orbB.el.id) return;
     collisionOrbIds = [orbA.el.id, orbB.el.id];
     collisionGradient =
       `linear-gradient(135deg, ${orbA.color} 0%, ${orbB.color} 100%)`;

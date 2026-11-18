@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Bump this version whenever the published portfolio changes. -->
-<meta name="portfolio-version" content="20261118-curatorial-art-215">
+<meta name="portfolio-version" content="20261118-approved-project-captions-1">
 <script>
 // Check a fresh copy on entry, including restored browser tabs, to replace stale cached HTML.
 (() => {
@@ -392,6 +392,16 @@ body.map-layout-ready :is(.category,.subcategory,.project,.trail-set) { transiti
 }
 
 
+/* All captions in these groups retain the established pink project-description style. */
+:is(.project[data-group="video-main"],.project[data-group="virtual-main"],.project[data-group="mmos"])[data-desc]::after {
+  min-width:155px; width:175px; max-width:175px;
+  padding:13px 14px 14px; font-size:.86em; line-height:1.28; text-align:left;
+}
+:is(.p-antimob,.p-dora,.p-tapeworm,.p-stories,.p-other3d,.p-parallel,.p-qq)[data-desc]::after {
+  left:calc(var(--title-right,100%) + 6px); top:50%; bottom:auto;
+  transform:translateY(-50%);
+}
+
 .p-jobless.rich-desc .desc-box,
 .p-templates.rich-desc .desc-box {
   bottom: calc(100% - 2px);
@@ -733,23 +743,23 @@ html { transition: background-color .45s ease; }
   <div class="project allwords p-lecture" data-group="perf-main" style="--text-delay:.54s">lecture on the Sims,<br>modding and machinima<br>2025</div>
   <div class="project allwords p-man" data-group="video-main" style="--text-delay:.28s">A Man You<br>Could Have<br>Been</div>
   <div class="project allwords p-roza" data-group="video-main" style="--text-delay:.36s">Roza<br>Vetrov</div>
-  <div class="project allwords p-antimob" data-group="video-main" style="--text-delay:.44s">Antimobilization<br>2022</div>
-  <div class="project allwords p-dora" data-group="video-main" style="--text-delay:.52s">Dora and the<br>Wreath of Christ<br>2021</div>
-  <div class="project allwords p-tapeworm" data-group="video-main" style="--text-delay:.60s">tapeworm<br>ex-communication<br>2023</div>
-  <div class="project allwords p-stories" data-group="video-main" style="--text-delay:.68s">Stories of the<br>lost time<br>2021</div>
+  <div class="project allwords p-antimob" data-group="video-main" style="--text-delay:.44s" data-desc="A two-part video and sound project with Polina Orlikova, made in response to Russia’s invasion of Ukraine and mobilisation in 2022.">Antimobilization<br>2022</div>
+  <div class="project allwords p-dora" data-group="video-main" style="--text-delay:.52s" data-desc="An investigation into a stranger’s photographic archive slips into worlds where facts lose their connections and causality follows other rules.">Dora and the<br>Wreath of Christ<br>2021</div>
+  <div class="project allwords p-tapeworm" data-group="video-main" style="--text-delay:.60s" data-desc="A video and AR filter about parasites as organisms and metaphors for software, and the desire to communicate with what inhabits us.">tapeworm<br>ex-communication<br>2023</div>
+  <div class="project allwords p-stories" data-group="video-main" style="--text-delay:.68s" data-desc="Video, sound, and AR filters imagining humanity surviving Earth’s destruction as a single entity, following Vladislav Mamyshev-Monroe’s vision. With Polina Orlikova.">Stories of the<br>lost time<br>2021</div>
   <div class="project allwords p-unfully" data-group="various-main" style="--text-delay:.28s">unfully recovered<br>2024</div>
   <div class="project allwords p-jewelry" data-group="various-main" style="--text-delay:.38s">hand made jewelry<br>2024</div>
   <div class="project allwords p-drawings" data-group="various-main" style="--text-delay:.46s">drawings</div>
-  <div class="project allwords p-encounters" data-group="virtual-main" style="--text-delay:.26s" data-desc="A VR space about an artist, a scientist, a priest, and a cinematographer travelling to the end of the world.">Encounters at the<br>end of the world<br>2022</div>
-  <div class="project allwords p-c8" data-group="virtual-main" style="--text-delay:.34s" data-desc="A VR space inspired by Samuel Delany's Dhalgren and by smells that are impossible to reproduce in VR.">C8H8O3<br>2022</div>
-  <div class="project allwords p-infinite" data-group="virtual-main" style="--text-delay:.42s" data-desc="A Sims machinima adaptation inspired by David Foster Wallace's Infinite Jest.">Infinite Jest the<br>Sims Machinima<br>2025</div>
-  <div class="project allwords p-crimea" data-group="virtual-main" style="--text-delay:.50s" data-desc="An AR project in which I revisit the Crimea of my childhood through photospheres of Crimea after 2014.">A journey to<br>Crimea<br>2022</div>
-  <div class="project allwords p-haunting" data-group="virtual-main" style="--text-delay:.58s" data-desc="A VRChat project set in a world that glitches from within.">Haunting on the<br>Metaverse<br>2023</div>
-  <div class="project allwords p-poluno" data-group="virtual-main" style="--text-delay:.66s" data-desc="A 3D art project inspired by Mansi Indigenous culture in the Urals and by my grandmother's childhood.">Polunochnoe<br>2021</div>
-  <div class="project allwords p-other3d" data-group="virtual-main" style="--text-delay:.74s">other 3D<br>art works</div>
-  <div class="project allwords blue-reveal p-parallel" data-group="mmos" style="--text-delay:.28s">Parallel Views<br>&amp; Synthesized<br>Lives<br>2023/24</div>
-  <div class="project allwords blue-reveal p-fragments" data-group="mmos" style="--text-delay:.38s" data-desc="An ongoing archive of old virtual worlds.">fragments of<br>flickering MMOs<br>2023-now</div>
-  <div class="project allwords blue-reveal p-qq" data-group="mmos" style="--text-delay:.48s">Qq_aaaqqo<br>2025</div>
+  <div class="project allwords p-encounters" data-group="virtual-main" style="--text-delay:.26s" data-desc="A search for Atlantis in a virtual Antarctica, where a philosopher, a scientist, an artist, and a director become spaces to explore.">Encounters at the<br>end of the world<br>2022</div>
+  <div class="project allwords p-c8" data-group="virtual-main" style="--text-delay:.34s" data-desc="VR spaces inspired by Samuel R. Delany’s Dhalgren and the attempt to evoke smells in a medium without them.">C8H8O3<br>2022</div>
+  <div class="project allwords p-infinite" data-group="virtual-main" style="--text-delay:.42s" data-desc="A nonlinear adaptation of David Foster Wallace’s Infinite Jest, filmed across The Sims games and shaped by their histories and behavioural clichés.">Infinite Jest the<br>Sims Machinima<br>2025</div>
+  <div class="project allwords p-crimea" data-group="virtual-main" style="--text-delay:.50s" data-desc="An AR journey through the Crimea of my childhood, revisited through photospheres made after 2014.">A journey to<br>Crimea<br>2022</div>
+  <div class="project allwords p-haunting" data-group="virtual-main" style="--text-delay:.58s" data-desc="A VRChat world where glitch shaders, recursive corridors, and chaotic portals interrupt movement, vision, and control.">Haunting on the<br>Metaverse<br>2023</div>
+  <div class="project allwords p-poluno" data-group="virtual-main" style="--text-delay:.66s" data-desc="A 3D project connecting Mansi culture in the Urals with memories of my grandmother’s childhood.">Polunochnoe<br>2021</div>
+  <div class="project allwords p-other3d" data-group="virtual-main" style="--text-delay:.74s" data-desc="A selection of 3D works and experiments.">other 3D<br>art works</div>
+  <div class="project allwords blue-reveal p-parallel" data-group="mmos" style="--text-delay:.28s" data-desc="Long-exposure images of avatar movements bring populated and fading virtual worlds into the same space. With Alexander Kovalev.">Parallel Views<br>&amp; Synthesized<br>Lives<br>2023/24</div>
+  <div class="project allwords blue-reveal p-fragments" data-group="mmos" style="--text-delay:.38s" data-desc="An ongoing archive of fading MMOs, gathering screenshots, user stories, digital graveyards, and traces of their communities.">fragments of<br>flickering MMOs<br>2023-now</div>
+  <div class="project allwords blue-reveal p-qq" data-group="mmos" style="--text-delay:.48s" data-desc="A collaborative world in New ManyLand, assembled from archival fragments as an inverted stereogram. With Alexander Kovalev.">Qq_aaaqqo<br>2025</div>
 <div class="project allwords screening s-desktop rich-desc" data-group="curatorial-main" tabindex="0" aria-label="Desktop Videoart — 6 Feb 26" style="left:1835px;top:778px;--text-delay:0.2s">Desktop Videoart<time datetime="2026-02-06">6 Feb 26</time><span class="desc-box" role="tooltip"><ul><li>OS Love — Luc Gut (2016)</li><li>My Mulholland — Jessica McGoff (2020)</li><li>Men Seeking Women — Penny Lane (2007)</li><li>Scrolling Into The Deep — Valerie van Zuijlen (2016)</li><li>Computer Movie No. 2 — CTG (1968)</li><li>Reading // Binging // Benning — Chloé Galibert-Laîné and Kevin B. Lee (2018)</li><li>юманка, метакитч Диалог 0,0701 — Нулевые! (2022)</li><li>Transformers: the Premake — Kevin B. Lee (2014)</li><li>Contra-Internet Inversion Practice #1: Constituting an Outside (Utopian Plagiarism) — Zach Blas (2015)</li><li>Grosse Fatigue — Camille Henrot (2013)</li><li>It’s Okay, No One Can See Us — Molly Soda (2016)</li></ul></span></div>
 <div class="project allwords screening s-narkoza" data-group="curatorial-main" tabindex="0" aria-label="«Наркоза не будет» — 16 Nov 25" style="left:2153px;top:785px;--text-delay:0.24s">«Наркоза не будет»<span class="screening-credit">Alexandra Sashneva (2006)</span><time datetime="2025-11-16">16 Nov 25</time></div>
 <div class="project allwords screening s-film01" data-group="curatorial-main" tabindex="0" aria-label="film01 — 2 Oct 25" style="left:1991.0px;top:792.8px;--text-delay:0.28s">film01<span class="screening-credit">angelicism01</span><time datetime="2025-10-02">2 Oct 25</time></div>

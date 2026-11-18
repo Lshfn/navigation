@@ -3,6 +3,40 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Bump this version whenever the published portfolio changes. -->
+<meta name="portfolio-version" content="20261118-curatorial-small-1">
+<script>
+// Check a fresh copy on entry, including restored browser tabs, to replace stale cached HTML.
+(() => {
+  if (!/^https?:$/.test(location.protocol)) return;
+  const current = document.querySelector('meta[name="portfolio-version"]').content;
+  let checking = false;
+  async function checkVersion() {
+    if (checking) return;
+    checking = true;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 6000);
+    try {
+      const check = new URL(location.href);
+      check.searchParams.set('_portfolio_check', Date.now().toString());
+      const response = await fetch(check, { cache:'no-store', signal:controller.signal });
+      if (!response.ok) return;
+      const html = await response.text();
+      const latest = html.match(/<meta name="portfolio-version" content="([^"]+)"/)[1];
+      if (latest && latest !== current) {
+        const target = new URL(location.href);
+        target.searchParams.delete('_portfolio_check');
+        target.searchParams.set('v', latest);
+        target.searchParams.set('_fresh', Date.now().toString());
+        location.replace(target.href);
+      }
+    } catch { /* Keep the available page usable if the fresh copy cannot be reached. */ }
+    finally { clearTimeout(timeout); checking = false; }
+  }
+  checkVersion();
+  window.addEventListener('pageshow', event => { if (event.persisted) checkVersion(); });
+})();
+</script>
 <title> this is Daria Ivans's portfolio page</title>
 <style>
 @font-face { font-family: Title1; src: url('https://dariaivans.neocities.org/fontsportfolio/title1.otf') format('opentype'); font-display: swap; }
@@ -72,9 +106,9 @@ body.map-layout-ready :is(.category,.subcategory,.project,.trail-set) { transiti
 #cat-virtual .virtual-star-left { left:90px; top:82px; width:78px; height:56px; }
 #cat-virtual .virtual-star-right { left:312px; top:74px; width:56px; height:57px; }
 #cat-virtual .category-title { left:82px; top:70px; width:282px; font-size:29px; line-height:.95; }
-#cat-curatorial { left:1870px; top:885px; width:260px; height:225px; }
-#cat-curatorial .curatorial-bg { left:0; top:0; width:260px; height:225px; object-fit:contain; }
-#cat-curatorial .category-title { left:25px; top:94px; width:210px; font-size:28px; line-height:.92; }
+#cat-curatorial { left:1883px; top:896.3px; width:234px; height:202.5px; }
+#cat-curatorial .curatorial-bg { left:0; top:0; width:234px; height:202.5px; object-fit:contain; }
+#cat-curatorial .category-title { left:22.5px; top:84.6px; width:189px; font-size:25.2px; line-height:.92; }
 .projects { position:absolute; inset:0; z-index:4; pointer-events:none; }
 .project { position:absolute; line-height:1.02; text-align:center; visibility:hidden; clip-path:inset(0 100% 0 0); user-select:none; color:var(--project-color,var(--magenta)); pointer-events:auto; overflow:visible; }
 .project[data-desc] { cursor: help; }
@@ -121,7 +155,7 @@ body.map-layout-ready :is(.category,.subcategory,.project,.trail-set) { transiti
 .project.allwords { font-family:AllWords, sans-serif; font-size:17px; }
 .project.webfont { font-family:WebBased, sans-serif; font-size:20px; font-weight:700; font-synthesis:weight; -webkit-text-stroke:.22px currentColor; }
 .project.blue-reveal { color:var(--project-color,var(--blue)); }
-.screening { width:140px; font-size:17px !important; }
+.screening { width:126px; font-size:15px !important; }
 .screening .screening-credit { display:block; margin-top:3px; font-size:.82em; }
 .screening:not(.revealed) { display:none; }
 .screening time { display:block; margin-top:3px; font-size:.85em; }
@@ -131,7 +165,7 @@ body.map-layout-ready :is(.category,.subcategory,.project,.trail-set) { transiti
   transform:none; width:min(420px,calc(100vw - 32px)); min-width:0; max-width:420px;
   max-height:min(68vh,620px); overflow-y:auto; overscroll-behavior:contain;
   padding:14px 16px; background:#FFF380; color:#0C06F7 !important;
-  font-size:16px; font-style:normal; line-height:1.3; text-shadow:none; box-shadow:none;
+  font-size:13px; font-style:normal; line-height:1.3; text-shadow:none; box-shadow:none;
 }
 .screening .desc-box ul { margin:0; padding:0; list-style:none; }
 .screening .desc-box li + li { margin-top:9px; }
@@ -714,18 +748,18 @@ html { transition: background-color .45s ease; }
   <div class="project allwords blue-reveal p-parallel" data-group="mmos" style="--text-delay:.28s">Parallel Views<br>&amp; Synthesized<br>Lives<br>2023/24</div>
   <div class="project allwords blue-reveal p-fragments" data-group="mmos" style="--text-delay:.38s" data-desc="An ongoing archive of old virtual worlds.">fragments of<br>flickering MMOs<br>2023-now</div>
   <div class="project allwords blue-reveal p-qq" data-group="mmos" style="--text-delay:.48s">Qq_aaaqqo<br>2025</div>
-<div class="project allwords screening s-desktop rich-desc" data-group="curatorial-main" tabindex="0" aria-label="Desktop Videoart — 6 Feb 26" style="left:1830px;top:770px;--text-delay:0.2s">Desktop Videoart<time datetime="2026-02-06">6 Feb 26</time><span class="desc-box" role="tooltip"><ul><li>OS Love — Luc Gut (2016)</li><li>My Mulholland — Jessica McGoff (2020)</li><li>Men Seeking Women — Penny Lane (2007)</li><li>Scrolling Into The Deep — Valerie van Zuijlen (2016)</li><li>Computer Movie No. 2 — CTG (1968)</li><li>Reading // Binging // Benning — Chloé Galibert-Laîné and Kevin B. Lee (2018)</li><li>юманка, метакитч Диалог 0,0701 — Нулевые! (2022)</li><li>Transformers: the Premake — Kevin B. Lee (2014)</li><li>Contra-Internet Inversion Practice #1: Constituting an Outside (Utopian Plagiarism) — Zach Blas (2015)</li><li>Grosse Fatigue — Camille Henrot (2013)</li><li>It’s Okay, No One Can See Us — Molly Soda (2016)</li></ul></span></div>
-<div class="project allwords screening s-narkoza" data-group="curatorial-main" tabindex="0" aria-label="«Наркоза не будет» — 16 Nov 25" style="left:2150px;top:770px;--text-delay:0.24s">«Наркоза не будет»<span class="screening-credit">Alexandra Sashneva (2006)</span><time datetime="2025-11-16">16 Nov 25</time></div>
-<div class="project allwords screening s-film01" data-group="curatorial-main" tabindex="0" aria-label="film01 — 2 Oct 25" style="left:1990px;top:770px;--text-delay:0.28s">film01<span class="screening-credit">angelicism01</span><time datetime="2025-10-02">2 Oct 25</time></div>
-<div class="project allwords screening s-madoka" data-group="curatorial-main" tabindex="0" aria-label="Puella Magi Madoka Magica — 17 May 25" style="left:2190px;top:865px;--text-delay:0.32s">Puella Magi<br>Madoka Magica<time datetime="2025-05-17">17 May 25</time></div>
-<div class="project allwords screening s-infinite" data-group="curatorial-main" tabindex="0" aria-label="Infinite Jest Sims Machinima — 14 Feb 25" style="left:2190px;top:965px;--text-delay:0.36s">Infinite Jest<br>Sims Machinima<span class="screening-credit">Daria Ivans</span><time datetime="2025-02-14">14 Feb 25</time></div>
-<div class="project allwords screening s-shoujo" data-group="curatorial-main" tabindex="0" aria-label="Shōjo Shūmatsu Ryokō — 19 Nov 24" style="left:2190px;top:1065px;--text-delay:0.4s">Shōjo Shūmatsu<br>Ryokō<time datetime="2024-11-19">19 Nov 24</time></div>
-<div class="project allwords screening s-strange" data-group="curatorial-main" tabindex="0" aria-label="We Are The Strange — 26 Sep 24" style="left:2150px;top:1190px;--text-delay:0.44s">We Are The Strange<span class="screening-credit">M dot Strange (2007)</span><time datetime="2024-09-26">26 Sep 24</time></div>
-<div class="project allwords screening s-yuri" data-group="curatorial-main" tabindex="0" aria-label="Yuri Kuma Arashi — 25 May 24" style="left:1990px;top:1190px;--text-delay:0.48s">Yuri Kuma Arashi<time datetime="2024-05-25">25 May 24</time></div>
-<div class="project allwords screening s-cgi" data-group="curatorial-main" tabindex="0" aria-label="early CGI compilation — 15 May 24" style="left:1830px;top:1190px;--text-delay:0.52s">early CGI<br>compilation<time datetime="2024-05-15">15 May 24</time></div>
-<div class="project allwords screening s-miracle" data-group="curatorial-main" tabindex="0" aria-label="Miracle Mile — 4 Apr 24" style="left:1690px;top:1070px;--text-delay:0.56s">Miracle Mile<span class="screening-credit">Steve De Jarnatt (1988)</span><time datetime="2024-04-04">4 Apr 24</time></div>
-<div class="project allwords screening s-asexual" data-group="curatorial-main" tabindex="0" aria-label="Asexual movies — 19 Mar 24" style="left:1690px;top:965px;--text-delay:0.6s">Asexual movies<time datetime="2024-03-19">19 Mar 24</time></div>
-<div class="project allwords screening s-sims rich-desc" data-group="curatorial-main" tabindex="0" aria-label="sims machinimas — 22 Feb 24" style="left:1690px;top:860px;--text-delay:0.64s">sims machinimas<time datetime="2024-02-22">22 Feb 24</time><span class="desc-box" role="tooltip"><ul><li>edgy time with mom — twee whistler (2018)</li><li>The Strangerhood – Why are You Here? — Rooster Teeth (2004–2005)</li><li>Podzámok — franziska beyer (2010)</li><li>Post-coded Thoughts on the Never-upcoming Foreshadowed Li(f)e (Preview) — Babak Ahteshamipour (2022)</li><li>Flying Pig: A Tribute — JPWatt (2006)</li><li>:)$:( — Stéphanie L’Heureux (2020)</li><li>The Snow Witch — Michelle Pettit-Mee (2007)</li><li>Varðeldur — Britt Snell (2013)</li><li>Half Way Home — No Eye Deer Productions (2005)</li></ul></span></div>
+<div class="project allwords screening s-desktop rich-desc" data-group="curatorial-main" tabindex="0" aria-label="Desktop Videoart — 6 Feb 26" style="left:1847.0px;top:792.8px;--text-delay:0.2s">Desktop Videoart<time datetime="2026-02-06">6 Feb 26</time><span class="desc-box" role="tooltip"><ul><li>OS Love — Luc Gut (2016)</li><li>My Mulholland — Jessica McGoff (2020)</li><li>Men Seeking Women — Penny Lane (2007)</li><li>Scrolling Into The Deep — Valerie van Zuijlen (2016)</li><li>Computer Movie No. 2 — CTG (1968)</li><li>Reading // Binging // Benning — Chloé Galibert-Laîné and Kevin B. Lee (2018)</li><li>юманка, метакитч Диалог 0,0701 — Нулевые! (2022)</li><li>Transformers: the Premake — Kevin B. Lee (2014)</li><li>Contra-Internet Inversion Practice #1: Constituting an Outside (Utopian Plagiarism) — Zach Blas (2015)</li><li>Grosse Fatigue — Camille Henrot (2013)</li><li>It’s Okay, No One Can See Us — Molly Soda (2016)</li></ul></span></div>
+<div class="project allwords screening s-narkoza" data-group="curatorial-main" tabindex="0" aria-label="«Наркоза не будет» — 16 Nov 25" style="left:2135.0px;top:792.8px;--text-delay:0.24s">«Наркоза не будет»<span class="screening-credit">Alexandra Sashneva (2006)</span><time datetime="2025-11-16">16 Nov 25</time></div>
+<div class="project allwords screening s-film01" data-group="curatorial-main" tabindex="0" aria-label="film01 — 2 Oct 25" style="left:1991.0px;top:792.8px;--text-delay:0.28s">film01<span class="screening-credit">angelicism01</span><time datetime="2025-10-02">2 Oct 25</time></div>
+<div class="project allwords screening s-madoka" data-group="curatorial-main" tabindex="0" aria-label="Puella Magi Madoka Magica — 17 May 25" style="left:2171.0px;top:878.2px;--text-delay:0.32s">Puella Magi<br>Madoka Magica<time datetime="2025-05-17">17 May 25</time></div>
+<div class="project allwords screening s-infinite" data-group="curatorial-main" tabindex="0" aria-label="Infinite Jest Sims Machinima — 14 Feb 25" style="left:2171.0px;top:968.2px;--text-delay:0.36s">Infinite Jest<br>Sims Machinima<span class="screening-credit">Daria Ivans</span><time datetime="2025-02-14">14 Feb 25</time></div>
+<div class="project allwords screening s-shoujo" data-group="curatorial-main" tabindex="0" aria-label="Shōjo Shūmatsu Ryokō — 19 Nov 24" style="left:2171.0px;top:1058.2px;--text-delay:0.4s">Shōjo Shūmatsu<br>Ryokō<time datetime="2024-11-19">19 Nov 24</time></div>
+<div class="project allwords screening s-strange" data-group="curatorial-main" tabindex="0" aria-label="We Are The Strange — 26 Sep 24" style="left:2135.0px;top:1170.8px;--text-delay:0.44s">We Are The Strange<span class="screening-credit">M dot Strange (2007)</span><time datetime="2024-09-26">26 Sep 24</time></div>
+<div class="project allwords screening s-yuri" data-group="curatorial-main" tabindex="0" aria-label="Yuri Kuma Arashi — 25 May 24" style="left:1991.0px;top:1170.8px;--text-delay:0.48s">Yuri Kuma Arashi<time datetime="2024-05-25">25 May 24</time></div>
+<div class="project allwords screening s-cgi" data-group="curatorial-main" tabindex="0" aria-label="early CGI compilation — 15 May 24" style="left:1847.0px;top:1170.8px;--text-delay:0.52s">early CGI<br>compilation<time datetime="2024-05-15">15 May 24</time></div>
+<div class="project allwords screening s-miracle" data-group="curatorial-main" tabindex="0" aria-label="Miracle Mile — 4 Apr 24" style="left:1721.0px;top:1062.8px;--text-delay:0.56s">Miracle Mile<span class="screening-credit">Steve De Jarnatt (1988)</span><time datetime="2024-04-04">4 Apr 24</time></div>
+<div class="project allwords screening s-asexual" data-group="curatorial-main" tabindex="0" aria-label="Asexual movies — 19 Mar 24" style="left:1721.0px;top:968.2px;--text-delay:0.6s">Asexual movies<time datetime="2024-03-19">19 Mar 24</time></div>
+<div class="project allwords screening s-sims rich-desc" data-group="curatorial-main" tabindex="0" aria-label="sims machinimas — 22 Feb 24" style="left:1721.0px;top:873.8px;--text-delay:0.64s">sims machinimas<time datetime="2024-02-22">22 Feb 24</time><span class="desc-box" role="tooltip"><ul><li>edgy time with mom — twee whistler (2018)</li><li>The Strangerhood – Why are You Here? — Rooster Teeth (2004–2005)</li><li>Podzámok — franziska beyer (2010)</li><li>Post-coded Thoughts on the Never-upcoming Foreshadowed Li(f)e (Preview) — Babak Ahteshamipour (2022)</li><li>Flying Pig: A Tribute — JPWatt (2006)</li><li>:)$:( — Stéphanie L’Heureux (2020)</li><li>The Snow Witch — Michelle Pettit-Mee (2007)</li><li>Varðeldur — Britt Snell (2013)</li><li>Half Way Home — No Eye Deer Productions (2005)</li></ul></span></div>
 </section>
 <button class="subcategory" id="sub-webtools" data-group="webtools" data-line-set="lines-webtools" aria-label="Reveal smaller tools and web experiments"><span class="oval"></span><span class="label">SMALLER TOOLS<br>AND WEB<br>EXPERIMENTS</span></button>
 <button class="subcategory" id="sub-mmos" data-group="mmos" data-line-set="lines-mmos" aria-label="Reveal MMOs projects"><span class="oval"></span><span class="label">MMOs<br>projects</span></button>
@@ -851,18 +885,18 @@ html { transition: background-color .45s ease; }
     ],
 
     'curatorial-main': [
-      { fromPoint:[1900,885], to:'.s-desktop', shape:'square', color:'#a73cf4', targetGap:9 },
-      { fromPoint:[2105,895], to:'.s-narkoza', shape:'square', color:'#27be37', targetGap:9 },
-      { fromPoint:[2010,885], to:'.s-film01', shape:'square', color:'#a73cf4', targetGap:9 },
-      { fromPoint:[2125,925], to:'.s-madoka', shape:'square', color:'#27be37', targetGap:9 },
-      { fromPoint:[2125,1000], to:'.s-infinite', shape:'square', color:'#a73cf4', targetGap:9 },
-      { fromPoint:[2120,1070], to:'.s-shoujo', shape:'square', color:'#27be37', targetGap:9 },
-      { fromPoint:[2095,1105], to:'.s-strange', shape:'square', color:'#a73cf4', targetGap:9 },
-      { fromPoint:[2010,1110], to:'.s-yuri', shape:'square', color:'#27be37', targetGap:9 },
-      { fromPoint:[1900,1105], to:'.s-cgi', shape:'square', color:'#a73cf4', targetGap:9 },
-      { fromPoint:[1875,1070], to:'.s-miracle', shape:'square', color:'#27be37', targetGap:9 },
-      { fromPoint:[1870,995], to:'.s-asexual', shape:'square', color:'#a73cf4', targetGap:9 },
-      { fromPoint:[1880,920], to:'.s-sims', shape:'square', color:'#27be37', targetGap:9 }
+      { fromPoint:[1910.0,896.2], to:'.s-desktop', shape:'square', size:4, spacing:12, color:'#a73cf4', targetGap:9 },
+      { fromPoint:[2094.5,905.2], to:'.s-narkoza', shape:'square', size:4, spacing:12, color:'#27be37', targetGap:9 },
+      { fromPoint:[2009.0,896.2], to:'.s-film01', shape:'square', size:4, spacing:12, color:'#a73cf4', targetGap:9 },
+      { fromPoint:[2112.5,932.2], to:'.s-madoka', shape:'square', size:4, spacing:12, color:'#27be37', targetGap:9 },
+      { fromPoint:[2112.5,999.8], to:'.s-infinite', shape:'square', size:4, spacing:12, color:'#a73cf4', targetGap:9 },
+      { fromPoint:[2108.0,1062.8], to:'.s-shoujo', shape:'square', size:4, spacing:12, color:'#27be37', targetGap:9 },
+      { fromPoint:[2085.5,1094.2], to:'.s-strange', shape:'square', size:4, spacing:12, color:'#a73cf4', targetGap:9 },
+      { fromPoint:[2009.0,1098.8], to:'.s-yuri', shape:'square', size:4, spacing:12, color:'#27be37', targetGap:9 },
+      { fromPoint:[1991.0,1098.8], to:'.s-cgi', shape:'square', size:4, spacing:12, color:'#a73cf4', targetGap:9 },
+      { fromPoint:[1887.5,1062.8], to:'.s-miracle', shape:'square', size:4, spacing:12, color:'#27be37', targetGap:9 },
+      { fromPoint:[1883.0,995.2], to:'.s-asexual', shape:'square', size:4, spacing:12, color:'#a73cf4', targetGap:9 },
+      { fromPoint:[1892.0,927.8], to:'.s-sims', shape:'square', size:4, spacing:12, color:'#27be37', targetGap:9 }
     ],
 
     'mmos': [
@@ -950,7 +984,7 @@ html { transition: background-color .45s ease; }
     return { start, end };
   }
 
-  function addNode(group, x, y, shape, color, index) {
+  function addNode(group, x, y, shape, color, index, size = 5) {
     let node;
     if (shape === 'dot') {
       node = document.createElementNS(SVG_NS, 'circle');
@@ -959,10 +993,10 @@ html { transition: background-color .45s ease; }
       node.setAttribute('r', 2.5);
     } else {
       node = document.createElementNS(SVG_NS, 'rect');
-      node.setAttribute('x', Math.round(x - 2.5));
-      node.setAttribute('y', Math.round(y - 2.5));
-      node.setAttribute('width', 5);
-      node.setAttribute('height', 5);
+      node.setAttribute('x', Math.round(x - size/2));
+      node.setAttribute('y', Math.round(y - size/2));
+      node.setAttribute('width', size);
+      node.setAttribute('height', size);
     }
     node.setAttribute('fill', color);
     node.setAttribute('class', 'trail-node');
@@ -997,14 +1031,14 @@ html { transition: background-color .45s ease; }
       const dy = seg.end.y - seg.start.y;
       const len = Math.hypot(dx, dy);
 
-      const spacing = cfg.shape === 'dot' ? 16 : 14;
+      const spacing = cfg.spacing ?? (cfg.shape === 'dot' ? 16 : 14);
       const count = Math.max(cfg.minNodes ?? 3, Math.floor(len / spacing));
 
       for (let i = 0; i <= count; i++) {
         const t = i / count;
         const x = seg.start.x + dx * t;
         const y = seg.start.y + dy * t;
-        addNode(group, x, y, cfg.shape, cfg.color, name==='curatorial-main' ? i : globalIndex++);
+        addNode(group, x, y, cfg.shape, cfg.color, name==='curatorial-main' ? i : globalIndex++, cfg.size);
       }
     }
     return group;
@@ -1806,3 +1840,4 @@ html { transition: background-color .45s ease; }
 
 </body>
 </html>
+

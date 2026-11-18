@@ -343,7 +343,7 @@ body.map-layout-ready :is(.category,.subcategory,.project,.trail-set) { transiti
 }
 
 .project.project-selected {
-  color: var(--project-color,#758000) !important;
+  color: var(--project-color,#c8d100) !important;
   text-shadow: none;
 }
 
@@ -1328,26 +1328,38 @@ html { transition: background-color .45s ease; }
   function mixRGB(a,b,t) {
     return a.slice(0,3).map((v,i) => Math.round(v+(b[i]-v)*t));
   }
-  const colorVariants = new Map();
-  function adaptiveColor(base,backgrounds,target) {
-    if (!colorVariants.has(base)) {
-      const rgb = colorRGB(base), variants = [];
-      for (let step=0;step<=20;step++) {
-        for (const end of [[0,0,0],[255,255,255]]) {
-          const color = mixRGB(rgb,end,step/20);
-          variants.push({ color, light:luminance(color) });
-        }
-      }
-      colorVariants.set(base,variants);
+  // Switch between the original saturated colors; never tint toward black or white.
+  const inkPalette = {
+    pink:'#bf17c5', purple:'#a73cf4', blue:'#354cff',
+    green:'#86c51b', grass:'#27be37', yellow:'#d4db1c', cyan:'#22b8b8'
+  };
+  function adaptiveColor(base,backgrounds) {
+    const bg = backgrounds[Math.floor(backgrounds.length/2)];
+    const channels = bg.slice(0,3).map(v => v/255);
+    const high = Math.max(...channels), low = Math.min(...channels), chroma = high-low;
+    // The original lettering stays unchanged on the neutral starting background.
+    if (chroma<.08 && luminance(bg)>.7) return base;
+    let hue = 0;
+    if (chroma) {
+      if (high===channels[0]) hue=((channels[1]-channels[2])/chroma)%6;
+      else if (high===channels[1]) hue=(channels[2]-channels[0])/chroma+2;
+      else hue=(channels[0]-channels[1])/chroma+4;
+      hue=(hue*60+360)%360;
     }
+    let choices;
+    if (chroma<.08) choices=Object.values(inkPalette);
+    else if (hue>=35 && hue<90) choices=[inkPalette.pink,inkPalette.purple];
+    else if (hue>=90 && hue<195) choices=[inkPalette.pink,inkPalette.purple,inkPalette.blue];
+    else if (hue>=195 && hue<260) choices=[inkPalette.yellow,inkPalette.green];
+    else choices=[inkPalette.green,inkPalette.grass];
     const lights = backgrounds.map(luminance);
-    let best, bestRatio = 0;
-    for (const candidate of colorVariants.get(base)) {
-      const ratio = Math.min(...lights.map(light => contrastRatio(light,candidate.light)));
-      if (ratio>bestRatio) { best=candidate.color; bestRatio=ratio; }
-      if (ratio>=target) return 'rgb('+candidate.color.join(',')+')';
+    const score = color => Math.min(...lights.map(light => contrastRatio(light,luminance(colorRGB(color)))));
+    let best=choices[0], bestRatio=score(best);
+    for (const color of choices.slice(1)) {
+      const ratio=score(color);
+      if (ratio>bestRatio) { best=color; bestRatio=ratio; }
     }
-    return 'rgb('+best.join(',')+')';
+    return choices.includes(base) && score(base)>=bestRatio*.85 ? base : best;
   }
   const originalTrailColors = new WeakMap();
   let contrastRequest = 0, contrastUntil = 0;

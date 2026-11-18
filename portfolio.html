@@ -1394,6 +1394,8 @@ html { transition: background-color .45s ease; }
     });
     const old = document.querySelector('.old-portfolio');
     old.style.color = adaptiveColor('#bf17c5',backgroundsFor(old),4.5);
+    const various = document.querySelector('.title-various');
+    various.style.color = adaptiveColor('#bf17c5',backgroundsFor(various),4.5);
   }
   function scheduleContrast(duration=0) {
     contrastUntil = Math.max(contrastUntil,performance.now()+duration);

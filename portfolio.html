@@ -135,9 +135,9 @@ body.map-layout-ready :is(.category,.subcategory,.project,.trail-set) { transiti
 .screening .desc-box ul { margin:0; padding:0; list-style:none; }
 .screening .desc-box li + li { margin-top:9px; }
 .project.screening.rich-desc .desc-box a { color:#0C06F7 !important; }
-.screening.rich-desc:is(:hover,:focus-within,.program-open) { z-index:140; clip-path:none !important; }
-.screening.rich-desc:is(:hover,:focus-within,.program-open) .desc-box { display:block; }
-.screening.rich-desc:is(:focus-within,.program-open) .desc-box { opacity:1; visibility:visible; pointer-events:auto; }
+.screening.rich-desc:is(:hover,:focus-within) { z-index:140; clip-path:none !important; }
+.screening.rich-desc:is(:hover,:focus-within) .desc-box { display:block; }
+.screening.rich-desc:focus-within .desc-box { opacity:1; visibility:visible; pointer-events:auto; }
 .project.revealed { visibility:visible; animation:textPixels .72s steps(14,end) forwards; animation-delay:var(--text-delay,.35s); }
 @keyframes textPixels { from { clip-path:inset(0 100% 0 0); } to { clip-path:inset(0 0 0 0); } }
 .subcategory { pointer-events:auto; visibility:hidden; z-index:5; }
@@ -724,7 +724,7 @@ html { transition: background-color .45s ease; }
 <div class="project allwords screening s-cgi" data-group="curatorial-main" tabindex="0" aria-label="early CGI compilation — 15 May 2024" style="left:1640px;top:1215px;--text-delay:0.52s">early CGI<br>compilation<time datetime="2024-05-15">15 May 2024</time></div>
 <div class="project allwords screening s-miracle rich-desc" data-group="curatorial-main" tabindex="0" aria-label="Miracle Mile — 4 Apr 2024" style="left:1610px;top:1040px;--text-delay:0.56s">Miracle Mile<time datetime="2024-04-04">4 Apr 2024</time><span class="desc-box" role="tooltip"><ul><li>Miracle Mile — Steve De Jarnatt (1988)</li></ul></span></div>
 <div class="project allwords screening s-asexual" data-group="curatorial-main" tabindex="0" aria-label="Asexual movies — 19 March" style="left:1620px;top:900px;--text-delay:0.6s">Asexual movies<time>19 March</time></div>
-<div class="project allwords screening s-sims rich-desc" data-group="curatorial-main" tabindex="0" aria-label="sims machinimas — 22 Feb 2024" style="left:1840px;top:790px;--text-delay:0.64s">sims machinimas<time datetime="2024-02-22">22 Feb 2024</time><span class="desc-box" role="tooltip"><ul><li>edgy time with mom — twee whistler (2018)</li><li>The Strangerhood – Why are You Here? — Rooster Teeth (2004–2005)</li><li>Podzámok — franziska beyer (2010)</li><li>Post-coded Thoughts on the Never-upcoming Foreshadowed Li(f)e (Preview) — Babak Ahteshamipour (2022)</li><li>Flying Pig: A Tribute — JPWatt (2006)</li><li>:)$:( — Stéphanie L’Heureux (2020)</li><li>The Snow Witch — Michelle Pettit-Mee (2007)</li><li>Varðeldur — Britt Snell (2013)</li><li>Half Way Home — No Eye Deer Productions (2005)</li></ul></span></div>
+<div class="project allwords screening s-sims rich-desc" data-group="curatorial-main" tabindex="0" aria-label="sims machinimas — 22 Feb 2024" style="left:1680px;top:780px;--text-delay:0.64s">sims machinimas<time datetime="2024-02-22">22 Feb 2024</time><span class="desc-box" role="tooltip"><ul><li>edgy time with mom — twee whistler (2018)</li><li>The Strangerhood – Why are You Here? — Rooster Teeth (2004–2005)</li><li>Podzámok — franziska beyer (2010)</li><li>Post-coded Thoughts on the Never-upcoming Foreshadowed Li(f)e (Preview) — Babak Ahteshamipour (2022)</li><li>Flying Pig: A Tribute — JPWatt (2006)</li><li>:)$:( — Stéphanie L’Heureux (2020)</li><li>The Snow Witch — Michelle Pettit-Mee (2007)</li><li>Varðeldur — Britt Snell (2013)</li><li>Half Way Home — No Eye Deer Productions (2005)</li></ul></span></div>
 </section>
 <button class="subcategory" id="sub-webtools" data-group="webtools" data-line-set="lines-webtools" aria-label="Reveal smaller tools and web experiments"><span class="oval"></span><span class="label">SMALLER TOOLS<br>AND WEB<br>EXPERIMENTS</span></button>
 <button class="subcategory" id="sub-mmos" data-group="mmos" data-line-set="lines-mmos" aria-label="Reveal MMOs projects"><span class="oval"></span><span class="label">MMOs<br>projects</span></button>
@@ -1100,19 +1100,15 @@ html { transition: background-color .45s ease; }
     screening.setAttribute('role','button');
     screening.addEventListener('pointerenter',() => placeProgramme(screening));
     screening.addEventListener('focusin',() => placeProgramme(screening));
-    const toggle = () => {
-      placeProgramme(screening);
-      screening.classList.toggle('program-open');
-    };
     screening.addEventListener('click',event => {
-      if (!event.target.closest('.desc-box')) toggle();
+      if (!event.target.closest('.desc-box')) { placeProgramme(screening); screening.blur(); }
     });
     screening.addEventListener('keydown',event => {
-      if (event.key==='Enter' || event.key===' ') { event.preventDefault(); toggle(); }
-      if (event.key==='Escape') { screening.classList.remove('program-open'); screening.blur(); }
+      if (event.key==='Enter' || event.key===' ') { event.preventDefault(); placeProgramme(screening); }
+      if (event.key==='Escape') screening.blur();
     });
   }
-  const reposition = () => screenings.filter(el => el.matches(':hover,:focus-within,.program-open')).forEach(placeProgramme);
+  const reposition = () => screenings.filter(el => el.matches(':hover,:focus-within')).forEach(placeProgramme);
   window.addEventListener('resize',reposition);
   window.addEventListener('scroll',reposition,{passive:true});
 })();

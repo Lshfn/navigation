@@ -28,8 +28,6 @@ body { overflow:auto; }
 #connections { position:absolute; inset:0; width:100%; height:100%; z-index:1; pointer-events:none; overflow:visible; }
 body.map-expanded .portfolio-wrap { width:max(2520px,100vw); min-height:max(1440px,100vh); }
 body.map-expanded #stage { width:2520px; height:1440px; }
-body.map-expanded.screenings-expanded .portfolio-wrap { width:max(3020px,100vw); min-height:max(1720px,100vh); }
-body.map-expanded.screenings-expanded #stage { width:3020px; height:1720px; }
 .category, .subcategory, .project, .trail-set { translate:var(--cluster-x,0px) var(--cluster-y,0px); }
 body.map-layout-ready :is(.category,.subcategory,.project,.trail-set) { transition:translate .9s cubic-bezier(.22,.68,.25,1); }
 @media (prefers-reduced-motion:reduce) {
@@ -121,23 +119,6 @@ body.map-layout-ready :is(.category,.subcategory,.project,.trail-set) { transiti
 .project.allwords { font-family:AllWords, sans-serif; font-size:17px; }
 .project.webfont { font-family:WebBased, sans-serif; font-size:20px; font-weight:700; font-synthesis:weight; -webkit-text-stroke:.22px currentColor; }
 .project.blue-reveal { color:var(--project-color,var(--blue)); }
-.screening { width:190px; font-size:18px !important; }
-.screening:not(.revealed) { display:none; }
-.screening time { display:block; margin-top:5px; font-size:.85em; }
-.project.screening.rich-desc .desc-box {
-  display:none;
-  left:var(--screening-tip-left,0px); top:var(--screening-tip-top,calc(100% + 8px)); bottom:auto;
-  transform:none; width:min(420px,calc(100vw - 32px)); min-width:0; max-width:420px;
-  max-height:min(68vh,620px); overflow-y:auto; overscroll-behavior:contain;
-  padding:14px 16px; background:#FFF380; color:#0C06F7 !important;
-  font-size:16px; font-style:normal; line-height:1.3; text-shadow:none; box-shadow:none;
-}
-.screening .desc-box ul { margin:0; padding:0; list-style:none; }
-.screening .desc-box li + li { margin-top:9px; }
-.project.screening.rich-desc .desc-box a { color:#0C06F7 !important; }
-.screening.rich-desc:is(:hover,:focus-within) { z-index:140; clip-path:none !important; }
-.screening.rich-desc:is(:hover,:focus-within) .desc-box { display:block; }
-.screening.rich-desc:focus-within .desc-box { opacity:1; visibility:visible; pointer-events:auto; }
 .project.revealed { visibility:visible; animation:textPixels .72s steps(14,end) forwards; animation-delay:var(--text-delay,.35s); }
 @keyframes textPixels { from { clip-path:inset(0 100% 0 0); } to { clip-path:inset(0 0 0 0); } }
 .subcategory { pointer-events:auto; visibility:hidden; z-index:5; }
@@ -434,9 +415,6 @@ body.map-layout-ready :is(.category,.subcategory,.project,.trail-set) { transiti
   cursor: pointer;
 }
 
-#video-player-source { margin-right:auto; color:#0C06F7; font-family:AllWords,sans-serif; font-size:17px; }
-#video-player-source[hidden] { display:none; }
-#video-player-frame-wrap.external-mode { height:min(68vh,700px); aspect-ratio:auto; background:#FFF380; }
 #video-player-frame-wrap {
   position: relative;
   width: 100%;
@@ -713,18 +691,6 @@ html { transition: background-color .45s ease; }
   <div class="project allwords blue-reveal p-parallel" data-group="mmos" style="--text-delay:.28s">Parallel Views<br>&amp; Synthesized<br>Lives<br>2023/24</div>
   <div class="project allwords blue-reveal p-fragments" data-group="mmos" style="--text-delay:.38s" data-desc="An ongoing archive of old virtual worlds.">fragments of<br>flickering MMOs<br>2023-now</div>
   <div class="project allwords blue-reveal p-qq" data-group="mmos" style="--text-delay:.48s">Qq_aaaqqo<br>2025</div>
-<div class="project allwords screening s-desktop rich-desc" data-group="curatorial-main" tabindex="0" aria-label="Desktop Videoart — 6 Feb 2026" style="left:1850px;top:610px;--text-delay:0.2s">Desktop Videoart<time datetime="2026-02-06">6 Feb 2026</time><span class="desc-box" role="tooltip"><ul><li>OS Love — Luc Gut (2016)</li><li>My Mulholland — Jessica McGoff (2020)</li><li>Men Seeking Women — Penny Lane (2007)</li><li>Scrolling Into The Deep — Valerie van Zuijlen (2016)</li><li>Computer Movie No. 2 — CTG (1968)</li><li>Reading // Binging // Benning — Chloé Galibert-Laîné and Kevin B. Lee (2018)</li><li>юманка, метакитч Диалог 0,0701 — Нулевые! (2022)</li><li>Transformers: the Premake — Kevin B. Lee (2014)</li><li>Contra-Internet Inversion Practice #1: Constituting an Outside (Utopian Plagiarism) — Zach Blas (2015)</li><li>Grosse Fatigue — Camille Henrot (2013)</li><li>It’s Okay, No One Can See Us — Molly Soda (2016)</li></ul></span></div>
-<div class="project allwords screening s-narkoza rich-desc" data-group="curatorial-main" tabindex="0" aria-label="«Наркоза не будет» — 16 Nov 2025" style="left:2320px;top:690px;--text-delay:0.24s">«Наркоза не будет»<time datetime="2025-11-16">16 Nov 2025</time><span class="desc-box" role="tooltip"><ul><li>«Наркоза не будет» — Alexandra Sashneva (2006)</li></ul></span></div>
-<div class="project allwords screening s-film01 rich-desc" data-group="curatorial-main" tabindex="0" aria-label="film01 — 2 Oct 2025" style="left:2080px;top:625px;--text-delay:0.28s">film01<time datetime="2025-10-02">2 Oct 2025</time><span class="desc-box" role="tooltip"><ul><li>film01 — angelicism01</li></ul></span></div>
-<div class="project allwords screening s-madoka rich-desc" data-group="curatorial-main" tabindex="0" aria-label="Puella Magi Madoka Magica — 17 May 2025" style="left:2370px;top:870px;--text-delay:0.32s">Puella Magi<br>Madoka Magica<time datetime="2025-05-17">17 May 2025</time><span class="desc-box" role="tooltip"><ul><li>Puella Magi Madoka Magica</li></ul></span></div>
-<div class="project allwords screening s-infinite rich-desc" data-group="curatorial-main" tabindex="0" aria-label="Infinite Jest Sims Machinima — 14 Feb 2025" style="left:2390px;top:1030px;--text-delay:0.36s">Infinite Jest<br>Sims Machinima<time datetime="2025-02-14">14 Feb 2025</time><span class="desc-box" role="tooltip"><ul><li>Infinite Jest Sims Machinima — Daria Ivans</li></ul></span></div>
-<div class="project allwords screening s-shoujo rich-desc" data-group="curatorial-main" tabindex="0" aria-label="Shōjo Shūmatsu Ryokō — 19 Nov 2024" style="left:2320px;top:1190px;--text-delay:0.4s">Shōjo Shūmatsu<br>Ryokō<time datetime="2024-11-19">19 Nov 2024</time><span class="desc-box" role="tooltip"><ul><li>Shōjo Shūmatsu Ryokō</li></ul></span></div>
-<div class="project allwords screening s-strange rich-desc" data-group="curatorial-main" tabindex="0" aria-label="We Are The Strange — 26 Sep 2024" style="left:2100px;top:1300px;--text-delay:0.44s">We Are The Strange<time datetime="2024-09-26">26 Sep 2024</time><span class="desc-box" role="tooltip"><ul><li>We Are The Strange — M dot Strange (2007)</li></ul></span></div>
-<div class="project allwords screening s-yuri rich-desc" data-group="curatorial-main" tabindex="0" aria-label="Yuri Kuma Arashi — 25 May 2024" style="left:1860px;top:1290px;--text-delay:0.48s">Yuri Kuma Arashi<time datetime="2024-05-25">25 May 2024</time><span class="desc-box" role="tooltip"><ul><li>Yuri Kuma Arashi</li></ul></span></div>
-<div class="project allwords screening s-cgi" data-group="curatorial-main" tabindex="0" aria-label="early CGI compilation — 15 May 2024" style="left:1640px;top:1215px;--text-delay:0.52s">early CGI<br>compilation<time datetime="2024-05-15">15 May 2024</time></div>
-<div class="project allwords screening s-miracle rich-desc" data-group="curatorial-main" tabindex="0" aria-label="Miracle Mile — 4 Apr 2024" style="left:1610px;top:1040px;--text-delay:0.56s">Miracle Mile<time datetime="2024-04-04">4 Apr 2024</time><span class="desc-box" role="tooltip"><ul><li>Miracle Mile — Steve De Jarnatt (1988)</li></ul></span></div>
-<div class="project allwords screening s-asexual" data-group="curatorial-main" tabindex="0" aria-label="Asexual movies — 19 March" style="left:1620px;top:900px;--text-delay:0.6s">Asexual movies<time>19 March</time></div>
-<div class="project allwords screening s-sims rich-desc" data-group="curatorial-main" tabindex="0" aria-label="sims machinimas — 22 Feb 2024" style="left:1680px;top:780px;--text-delay:0.64s">sims machinimas<time datetime="2024-02-22">22 Feb 2024</time><span class="desc-box" role="tooltip"><ul><li>edgy time with mom — twee whistler (2018)</li><li>The Strangerhood – Why are You Here? — Rooster Teeth (2004–2005)</li><li>Podzámok — franziska beyer (2010)</li><li>Post-coded Thoughts on the Never-upcoming Foreshadowed Li(f)e (Preview) — Babak Ahteshamipour (2022)</li><li>Flying Pig: A Tribute — JPWatt (2006)</li><li>:)$:( — Stéphanie L’Heureux (2020)</li><li>The Snow Witch — Michelle Pettit-Mee (2007)</li><li>Varðeldur — Britt Snell (2013)</li><li>Half Way Home — No Eye Deer Productions (2005)</li></ul></span></div>
 </section>
 <button class="subcategory" id="sub-webtools" data-group="webtools" data-line-set="lines-webtools" aria-label="Reveal smaller tools and web experiments"><span class="oval"></span><span class="label">SMALLER TOOLS<br>AND WEB<br>EXPERIMENTS</span></button>
 <button class="subcategory" id="sub-mmos" data-group="mmos" data-line-set="lines-mmos" aria-label="Reveal MMOs projects"><span class="oval"></span><span class="label">MMOs<br>projects</span></button>
@@ -849,21 +815,6 @@ html { transition: background-color .45s ease; }
       { fromPoint:[1662,770], to:'#sub-mmos',     shape:'square', color:'#a73cf4', targetGap:7 }
     ],
 
-    'curatorial-main': [
-      { from:'#cat-curatorial', to:'.s-desktop', shape:'dot', color:'#d236ff', sourceGap:8, targetGap:12, minNodes:5 },
-      { from:'#cat-curatorial', to:'.s-narkoza', shape:'dot', color:'#d236ff', sourceGap:8, targetGap:12, minNodes:5 },
-      { from:'#cat-curatorial', to:'.s-film01', shape:'dot', color:'#d236ff', sourceGap:8, targetGap:12, minNodes:5 },
-      { from:'#cat-curatorial', to:'.s-madoka', shape:'dot', color:'#d236ff', sourceGap:8, targetGap:12, minNodes:5 },
-      { from:'#cat-curatorial', to:'.s-infinite', shape:'dot', color:'#d236ff', sourceGap:8, targetGap:12, minNodes:5 },
-      { from:'#cat-curatorial', to:'.s-shoujo', shape:'dot', color:'#d236ff', sourceGap:8, targetGap:12, minNodes:5 },
-      { from:'#cat-curatorial', to:'.s-strange', shape:'dot', color:'#d236ff', sourceGap:8, targetGap:12, minNodes:5 },
-      { from:'#cat-curatorial', to:'.s-yuri', shape:'dot', color:'#d236ff', sourceGap:8, targetGap:12, minNodes:5 },
-      { from:'#cat-curatorial', to:'.s-cgi', shape:'dot', color:'#d236ff', sourceGap:8, targetGap:12, minNodes:5 },
-      { from:'#cat-curatorial', to:'.s-miracle', shape:'dot', color:'#d236ff', sourceGap:8, targetGap:12, minNodes:5 },
-      { from:'#cat-curatorial', to:'.s-asexual', shape:'dot', color:'#d236ff', sourceGap:8, targetGap:12, minNodes:5 },
-      { from:'#cat-curatorial', to:'.s-sims', shape:'dot', color:'#d236ff', sourceGap:8, targetGap:12, minNodes:5 }
-    ],
-
     'mmos': [
     
       { from:'#sub-mmos', to:'.p-parallel',  shape:'dot', color:'#d236ff', sourceGap:6, targetGap:9 },
@@ -920,7 +871,7 @@ html { transition: background-color .45s ease; }
         top:rect.top-offset.y, bottom:rect.bottom-offset.y, cy:rect.cy-offset.y };
     };
     const targetRect = cfg.to ? localRect(cfg.to) : null;
-    if ((!targetRect || (!targetRect.width && !targetRect.height)) && !cfg.toPoint) return null;
+    if (!targetRect && !cfg.toPoint) return null;
 
     let start;
     if (cfg.fromPoint) {
@@ -995,7 +946,7 @@ html { transition: background-color .45s ease; }
         const t = i / count;
         const x = seg.start.x + dx * t;
         const y = seg.start.y + dy * t;
-        addNode(group, x, y, cfg.shape, cfg.color, name==='curatorial-main' ? i : globalIndex++);
+        addNode(group, x, y, cfg.shape, cfg.color, globalIndex++);
       }
     }
     return group;
@@ -1008,17 +959,13 @@ html { transition: background-color .45s ease; }
   }
 
   function revealProjects(group) {
-    if (group==='curatorial-main') {
-      document.body.classList.add('screenings-expanded');
-      svg.setAttribute('viewBox','0 0 3020 1720');
-    }
     document.querySelectorAll('.project[data-group="' + group + '"]')
       .forEach(el => el.classList.add('revealed'));
   }
 
   function revealRoads(group) {
     let g = document.getElementById('trail-' + group);
-    if (!g || group==='curatorial-main') g = drawGroup(group);
+    if (!g) g = drawGroup(group);
     g.classList.add('revealed');
   }
 
@@ -1028,7 +975,9 @@ html { transition: background-color .45s ease; }
     button.classList.add('just-clicked');
   }
 
-  function revealCategory(button) {
+  document.querySelectorAll('.category').forEach(button => {
+    button.addEventListener('click', () => {
+      expandContinents();
       const group = button.dataset.projectGroup;
       if (!revealed.has(group)) {
         revealed.add(group);
@@ -1043,13 +992,6 @@ html { transition: background-color .45s ease; }
         }
         button.setAttribute('aria-expanded', 'true');
       }
-  }
-  document.querySelectorAll('.category').forEach(button => {
-    button.addEventListener('click', () => {
-      expandContinents();
-      if (button.id==='cat-curatorial' && mapMoving) {
-        setTimeout(() => revealCategory(button),matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 950);
-      } else revealCategory(button);
       pulse(button);
     });
   });
@@ -1077,47 +1019,9 @@ html { transition: background-color .45s ease; }
 </script>
 
 
-<script>
-(() => {
-  const screenings = [...document.querySelectorAll('.screening.rich-desc')];
-  function placeProgramme(screening) {
-    const box = screening.querySelector('.desc-box');
-    const r = screening.getBoundingClientRect(), w = box.offsetWidth, h = box.offsetHeight;
-    const clamp = (v,a,b) => Math.max(a,Math.min(b,v));
-    let left = clamp(r.left+(r.width-w)/2,8,innerWidth-w-8);
-    let top;
-    if (r.top>=h+16) top=r.top-h-8;
-    else if (innerHeight-r.bottom>=h+16) top=r.bottom+8;
-    else {
-      top=clamp(r.top+(r.height-h)/2,8,innerHeight-h-8);
-      if (r.left>=w+16) left=r.left-w-8;
-      else if (innerWidth-r.right>=w+16) left=r.right+8;
-    }
-    box.style.setProperty('--screening-tip-left',(left-r.left)+'px');
-    box.style.setProperty('--screening-tip-top',(top-r.top)+'px');
-  }
-  for (const screening of screenings) {
-    screening.setAttribute('role','button');
-    screening.addEventListener('pointerenter',() => placeProgramme(screening));
-    screening.addEventListener('focusin',() => placeProgramme(screening));
-    screening.addEventListener('click',event => {
-      if (!event.target.closest('.desc-box')) { placeProgramme(screening); screening.blur(); }
-    });
-    screening.addEventListener('keydown',event => {
-      if (event.key==='Enter' || event.key===' ') { event.preventDefault(); placeProgramme(screening); }
-      if (event.key==='Escape') screening.blur();
-    });
-  }
-  const reposition = () => screenings.filter(el => el.matches(':hover,:focus-within')).forEach(placeProgramme);
-  window.addEventListener('resize',reposition);
-  window.addEventListener('scroll',reposition,{passive:true});
-})();
-</script>
-
 <div id="video-player-backdrop" aria-hidden="true"></div>
 <div id="video-player-shell" role="dialog" aria-modal="true" aria-label="Project video">
   <div class="video-topbar">
-    <a id="video-player-source" href="#" target="_blank" rel="noopener noreferrer" aria-label="Open source in a new tab" hidden>open ↗</a>
     <button id="video-player-close" type="button" aria-label="Close video">×</button>
   </div>
   <div id="video-player-frame-wrap">
@@ -1155,8 +1059,6 @@ html { transition: background-color .45s ease; }
 <script>
 (() => {
   const projectLinks = new Map([
-    ['.s-cgi', 'https://youtu.be/JYdJCfEqw0E?si=UDERgHRca5bqPB-7'],
-    ['.s-asexual', 'https://docs.google.com/document/d/1Nk5pUP6Dc-va7tll6wc-0bSmkv_oh9KngIid2hdD8-4/edit?usp=sharing'],
     ['.p-roza', 'https://youtu.be/U4kWTKvx9Rw?si=N89qf3Nt9oeM5gJc'],
     ['.p-man', 'https://youtu.be/xmhS5AWBnJg?si=OjNL36qS1Xq0WCjc'],
     ['.p-stories', 'https://youtu.be/Eb1Kik4Mnxg?si=KqCmEZwiERN8joDR'],
@@ -1193,7 +1095,6 @@ html { transition: background-color .45s ease; }
   const backdrop = document.getElementById('video-player-backdrop');
   const frame = document.getElementById('video-player-frame');
   const closeButton = document.getElementById('video-player-close');
-  const sourceLink = document.getElementById('video-player-source');
 
   const localFallback = document.getElementById('video-local-fallback');
   const localLink = document.getElementById('video-local-link');
@@ -1240,9 +1141,6 @@ html { transition: background-color .45s ease; }
   }
 
   function openCrimeaVideos() {
-    frameWrap.classList.remove('external-mode');
-    sourceLink.hidden = true;
-    shell.setAttribute('aria-label','Project video');
     frame.src = '';
     frame.classList.add('hidden');
     localFallback.classList.remove('open');
@@ -1258,12 +1156,6 @@ html { transition: background-color .45s ease; }
   function openVideo(url) {
     const embed = youtubeEmbedUrl(url);
     if (!embed) return false;
-
-    frameWrap.classList.remove('external-mode');
-    sourceLink.href = url;
-    sourceLink.hidden = false;
-    shell.setAttribute('aria-label','Project video');
-    frame.title = 'Project video';
 
     frameWrap.classList.remove('crimea-mode');
     crimeaGrid.classList.remove('open');
@@ -1291,28 +1183,6 @@ html { transition: background-color .45s ease; }
     return true;
   }
 
-  function openScreeningResource(url,title) {
-    const resource = new URL(url);
-    let embeddedUrl = url;
-    if (resource.hostname==='docs.google.com' && resource.pathname.startsWith('/document/d/')) {
-      embeddedUrl = resource.origin+resource.pathname.replace(/\/(edit|view|preview)\/?$/,'/preview');
-    }
-    frameWrap.classList.remove('crimea-mode');
-    frameWrap.classList.add('external-mode');
-    crimeaGrid.classList.remove('open');
-    crimeaVideos.forEach(video => video.pause());
-    localFallback.classList.remove('open');
-    frame.classList.remove('hidden');
-    frame.title = title;
-    frame.src = embeddedUrl;
-    sourceLink.href = url;
-    sourceLink.hidden = false;
-    shell.setAttribute('aria-label',title);
-    shell.classList.add('open');
-    backdrop.classList.add('open');
-    closeButton.focus();
-  }
-
   function closeVideo() {
     shell.classList.remove('open');
     backdrop.classList.remove('open');
@@ -1327,9 +1197,6 @@ html { transition: background-color .45s ease; }
     });
     crimeaGrid.classList.remove('open');
     frameWrap.classList.remove('crimea-mode');
-    frameWrap.classList.remove('external-mode');
-    sourceLink.hidden = true;
-    sourceLink.href = '#';
   }
 
   closeButton.addEventListener('click', closeVideo);
@@ -1350,10 +1217,6 @@ html { transition: background-color .45s ease; }
     el.setAttribute('tabindex', '0');
 
     const openProject = () => {
-      if (el.classList.contains('screening') && !youtubeEmbedUrl(url)) {
-        openScreeningResource(url,el.getAttribute('aria-label'));
-        return;
-      }
       if (url === 'crimea-multivideo') {
         openCrimeaVideos();
         return;

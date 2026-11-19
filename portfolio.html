@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Bump this version whenever the published portfolio changes. -->
-<meta name="portfolio-version" content="20261119-tiktok-year-2024">
+<meta name="portfolio-version" content="20261119-dot-trails-fixed">
 <script>
 // Check a fresh copy on entry, including restored browser tabs, to replace stale cached HTML.
 (() => {
@@ -72,7 +72,7 @@ body.map-layout-ready :is(.category,.subcategory,.project,.trail-set) { transiti
 .trail-set { visibility:hidden; }
 .trail-set.revealed { visibility:visible; }
 .trail-node { opacity:0; shape-rendering:crispEdges; }
-.trail-set.revealed .trail-node { animation:nodeAppear .01s step-end forwards; animation-delay:calc(var(--i) * .03s + var(--set-delay, 0s)); }
+.trail-set.revealed .trail-node { opacity:1; animation:nodeAppear .12s step-end backwards; animation-delay:calc(var(--i) * .03s + var(--set-delay, 0s)); }
 @keyframes nodeAppear { from { opacity:0; } to { opacity:1; } }
 .category, .subcategory { position:absolute; margin:0; padding:0; border:0; background:transparent; appearance:none; cursor:pointer; z-index:3; }
 .category:focus-visible, .subcategory:focus-visible { outline:none; }
@@ -192,14 +192,14 @@ body.map-layout-ready :is(.category,.subcategory,.project,.trail-set) { transiti
 .p-jobless { left:312px; top:496px; width:205px; font-size:22px !important; }
 .p-templates { left:760px; top:670px; width:245px; font-size:22px !important; }
 .p-altered { left:1573px; top:80px; width:220px; font-size:15px !important; }
-.p-public { left:1412px; top:180px; width:190px; font-size:15px !important; }
+.p-public { left:1360px; top:180px; width:190px; font-size:15px !important; }
 .p-interview { left:1895px; top:172px; width:178px; font-size:15px !important; }
-.p-lecture { left:1602px; top:386px; width:220px; font-size:15px !important; }
-.p-man { left:274px; top:677px; width:118px; font-size:15px !important; }
+.p-lecture { left:1602px; top:414px; width:220px; font-size:15px !important; }
+.p-man { left:274px; top:631px; width:118px; font-size:15px !important; }
 .p-roza { left:420px; top:684px; width:88px; font-size:15px !important; }
-.p-antimob { left:286px; top:743px; width:148px; font-size:15px !important; }
+.p-antimob { left:286px; top:719px; width:148px; font-size:15px !important; }
 .p-dora { left:74px; top:809px; width:140px; font-size:15px !important; }
-.p-tapeworm { left:500px; top:815px; width:170px; font-size:15px !important; }
+.p-tapeworm { left:512px; top:815px; width:170px; font-size:15px !important; }
 .p-stories { left:85px; top:1030px; width:140px; font-size:15px !important; }
 .p-unfully { left:590px; top:1128px; width:150px; font-size:15px !important; }
 .p-jewelry { left:1010px; top:1128px; width:150px; font-size:15px !important; }
@@ -211,8 +211,8 @@ body.map-layout-ready :is(.category,.subcategory,.project,.trail-set) { transiti
 .p-haunting { left:1318px; top:912px; width:166px; font-size:15px !important; }
 .p-poluno { left:1472px; top:880px; width:150px; font-size:15px !important; }
 .p-other3d { left:1605px; top:892px; width:155px; font-size:15px !important; }
-.p-parallel { left:1745px; top:630px; width:160px; font-size:15px !important; }
-.p-fragments { left:1810px; top:732px; width:170px; font-size:15px !important; }
+.p-parallel { left:1745px; top:600px; width:160px; font-size:15px !important; }
+.p-fragments { left:1840px; top:732px; width:170px; font-size:15px !important; }
 .p-qq { left:1708px; top:842px; width:144px; font-size:15px !important; }
 .old-portfolio { position:absolute; right:33px; bottom:28px; color:var(--magenta); font-family:AllWords, sans-serif; font-size:15px; z-index:4; }
 @media (prefers-reduced-motion: reduce) { .trail-set.revealed .trail-node, .project.revealed, .subcategory.revealed, .just-clicked .pulse { animation-duration:.01ms !important; animation-delay:0s !important; animation-iteration-count:1 !important; } }
@@ -221,7 +221,8 @@ body.map-layout-ready :is(.category,.subcategory,.project,.trail-set) { transiti
 .trail-set { visibility:hidden; }
 .trail-set.revealed { visibility:visible; }
 .trail-set.revealed .trail-node {
-  animation: nodeAppear .01s step-end forwards;
+  opacity: 1;
+  animation: nodeAppear .12s step-end backwards;
   animation-delay: calc(var(--i) * .03s);
 }
 @keyframes nodeAppear { from { opacity:0; } to { opacity:1; } }
@@ -976,17 +977,27 @@ html { transition: background-color .45s ease; }
   function resolveSegment(cfg, offset) {
     const localRect = selector => {
       const el = typeof selector === 'string' ? document.querySelector(selector) : selector;
-      // These project positions already share their continent's local coordinates.
-      // Use their layout boxes so scroll anchoring and translate transitions cannot double the offset.
-      if (el?.classList.contains('screening') || el?.dataset.group==='virtual-main') {
-        const left=el.offsetLeft, top=el.offsetTop, width=el.offsetWidth, height=el.offsetHeight;
-        return { left, top, right:left+width, bottom:top+height, width, height,
-          cx:left+width/2, cy:top+height/2 };
+      if (!el) return null;
+      let left=el.offsetLeft, top=el.offsetTop, width=el.offsetWidth, height=el.offsetHeight;
+      // Connect to visible lettering, rather than the empty margins of a wide label.
+      // Measure relative to its own box so continent movement cannot shift the path twice.
+      const textGroups = ['webtools','perf-main','video-main','various-main','virtual-main','mmos'];
+      if (el.classList.contains('project') && !el.classList.contains('p-dora') && textGroups.includes(el.dataset.group)) {
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        const tooltip = el.querySelector('.desc-box');
+        if (tooltip) range.setEndBefore(tooltip);
+        const text = range.getBoundingClientRect(), box = el.getBoundingClientRect();
+        if (text.width && text.height) {
+          left += text.left-box.left;
+          top += text.top-box.top;
+          width = text.width;
+          height = text.height;
+        }
+        range.detach();
       }
-      const rect = elementRect(selector);
-      if (!rect) return null;
-      return { ...rect, left:rect.left-offset.x, right:rect.right-offset.x, cx:rect.cx-offset.x,
-        top:rect.top-offset.y, bottom:rect.bottom-offset.y, cy:rect.cy-offset.y };
+      return {left,top,right:left+width,bottom:top+height,width,height,
+        cx:left+width/2,cy:top+height/2};
     };
     const targetRect = cfg.to ? localRect(cfg.to) : null;
     if ((!targetRect || (!targetRect.width && !targetRect.height)) && !cfg.toPoint) return null;
@@ -1053,17 +1064,31 @@ html { transition: background-color .45s ease; }
       const seg = resolveSegment(cfg,offset);
       if (!seg) continue;
 
+      if (Math.hypot(seg.end.x-seg.start.x, seg.end.y-seg.start.y) < 11) {
+        addNode(group, (seg.start.x+seg.end.x)/2, (seg.start.y+seg.end.y)/2,
+          cfg.shape, cfg.color, globalIndex++, cfg.size);
+        group.lastElementChild.dataset.path = cfg.to || cfg.from;
+        continue;
+      }
       const dx = seg.end.x - seg.start.x;
       const dy = seg.end.y - seg.start.y;
       const len = Math.hypot(dx, dy);
 
       const spacing = cfg.spacing ?? (cfg.shape === 'dot' ? 16 : 14);
-      const count = Math.max(cfg.minNodes ?? 3, Math.floor(len / spacing));
+      // Never squeeze the minimum dot count into a shorter gap.
+      const minimumGap = Math.max((cfg.size ?? 5) + 6, spacing * .75);
+      let count = Math.min(Math.max(cfg.minNodes ?? 3, Math.round(len / spacing)),
+        Math.max(1, Math.floor(len / minimumGap)));
 
       // Uneven but repeatable gaps give these two clusters a less mechanical rhythm.
       const varied = name==='curatorial-main' || name==='virtual-main';
       const rhythm = [1,1.28,.9,1.5,1.08,.86];
-      const gaps = Array.from({length:count}, (_,i) => varied ? rhythm[(i+globalIndex)%rhythm.length] : 1);
+      const makeGaps = () => Array.from({length:count}, (_,i) => varied ? rhythm[(i+globalIndex)%rhythm.length] : 1);
+      let gaps = makeGaps();
+      while (count > 1 && len * Math.min(...gaps) / gaps.reduce((a,b)=>a+b,0) < minimumGap) {
+        count--;
+        gaps = makeGaps();
+      }
       const total = gaps.reduce((a,b) => a+b,0);
       let travelled = 0;
       for (let i = 0; i <= count; i++) {
@@ -1072,6 +1097,7 @@ html { transition: background-color .45s ease; }
         const x = seg.start.x + dx * t;
         const y = seg.start.y + dy * t;
         addNode(group, x, y, cfg.shape, cfg.color, name==='curatorial-main' ? i : globalIndex++, cfg.size);
+        group.lastElementChild.dataset.path = cfg.to || cfg.from;
       }
     }
     return group;
@@ -1874,5 +1900,6 @@ html { transition: background-color .45s ease; }
 
 </body>
 </html>
+
 
 

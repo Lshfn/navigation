@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Bump this version whenever the published portfolio changes. -->
-<meta name="portfolio-version" content="20261119-screening-trail-adjustment">
+<meta name="portfolio-version" content="20261120-annlee-webtools">
 <script>
 // Check a fresh copy on entry, including restored browser tabs, to replace stale cached HTML.
 (() => {
@@ -186,7 +186,8 @@ body.map-layout-ready :is(.category,.subcategory,.project,.trail-set) { transiti
 .p-drawing { left:430px; top:72px; width:112px; font-size:20px !important; }
 .p-glitch { left:674px; top:82px; width:118px; font-size:20px !important; }
 .p-geocities { left:250px; top:186px; width:155px; font-size:21px !important; }
-.p-sky { left:436px; top:314px; width:126px; font-size:19px !important; }
+.p-sky { left:476px; top:314px; width:126px; font-size:19px !important; }
+.p-annlee { left:260px; top:300px; width:164px; font-size:19px !important; }
 .p-chronicle { left:1010px; top:206px; width:262px; font-size:18px !important; }
 .p-breakup { left:1146px; top:340px; width:204px; font-size:20px !important; }
 .p-jobless { left:312px; top:496px; width:205px; font-size:22px !important; }
@@ -407,7 +408,7 @@ body.map-layout-ready :is(.category,.subcategory,.project,.trail-set) { transiti
   min-width:155px; width:175px; max-width:175px;
   padding:13px 14px 14px; font-size:13px; line-height:1.28; text-align:left;
 }
-:is(.p-drawing,.p-geocities,.p-sky)[data-desc]::after {
+:is(.p-drawing,.p-geocities,.p-sky,.p-annlee)[data-desc]::after {
   left:auto; right:calc(100% - var(--title-left,0px) + 6px);
   top:50%; bottom:auto; transform:translateY(-50%);
 }
@@ -751,6 +752,7 @@ html { transition: background-color .45s ease; }
   <div class="project allwords blue-reveal p-glitch" data-group="webtools" style="--text-delay:.36s" data-desc="A Telegram bot responding to disrupted communication in Russia by glitching uploaded files and mixing them with fragments of earlier uploads.">glitch tg<br>bot</div>
   <div class="project allwords blue-reveal p-geocities" data-group="webtools" style="--text-delay:.44s" data-desc="A bookmarklet that transforms modern websites with retro backgrounds, wild fonts, blinking text, and scrolling marquees.">geocitiesizer<br>-2.0</div>
   <div class="project allwords blue-reveal p-sky" data-group="webtools" style="--text-delay:.52s" data-desc="An interactive page about living through the Russian–Ukrainian war and wondering whether the sky is clear yet.">is_the_sky<br>clear yet</div>
+  <div class="project allwords blue-reveal p-annlee" data-group="webtools" style="--text-delay:.60s" data-desc="Kandinsky 2.0's post-Annlee generative imaginary">This Annlee<br>Does Not Exist</div>
   <div class="project allwords p-altered" data-group="perf-main" style="--text-delay:.30s">#alteredmybrainchemistry<br>TikTok performance<br>2024</div>
   <div class="project allwords p-public" data-group="perf-main" style="--text-delay:.38s">public discussion on<br>imperfect technologies<br>2023</div>
   <div class="project allwords p-interview" data-group="perf-main" style="--text-delay:.46s">interview with the<br>researchers of the<br>metaverses<br>2023</div>
@@ -873,7 +875,8 @@ html { transition: background-color .45s ease; }
       { from:'#sub-webtools', to:'.p-drawing',   shape:'dot', color:'#d236ff', sourceGap:7, targetGap:10 },
       { from:'#sub-webtools', to:'.p-glitch',    shape:'dot', color:'#d236ff', sourceGap:7, targetGap:10 },
       { from:'#sub-webtools', to:'.p-geocities', shape:'dot', color:'#d236ff', sourceGap:7, targetGap:10 },
-      { from:'#sub-webtools', to:'.p-sky',       shape:'dot', color:'#d236ff', sourceGap:7, targetGap:10 }
+      { from:'#sub-webtools', to:'.p-sky',       shape:'dot', color:'#d236ff', sourceGap:7, targetGap:10 },
+      { from:'#sub-webtools', to:'.p-annlee',    shape:'dot', color:'#d236ff', sourceGap:7, targetGap:10 }
     ],
 
     'perf-main': [
@@ -1288,6 +1291,7 @@ html { transition: background-color .45s ease; }
     ['.p-other3d', 'https://www.instagram.com/_lshfn/'],
     ['.p-fragments', 'https://www.are.na/rebirth-sdaiana'],
     ['.p-sky', 'https://dariaivans.neocities.org/sky'],
+    ['.p-annlee', 'https://dariaivans.hotglue.me/?thisaidoesntexist.head/'],
     ['.p-geocities', 'https://dariaivans.neocities.org/geocitiesizer2/geo2'],
     ['.p-drawing', 'https://dariaivans.hotglue.me/?draw']
   ]);

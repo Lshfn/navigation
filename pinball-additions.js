@@ -42,12 +42,12 @@
     });
   }
   const flower = document.getElementById('teleporter');
-  flower.setAttribute('aria-label','Set animated flower background');
+  flower.setAttribute('aria-label','Toggle animated flower background');
   flower.setAttribute('aria-pressed','false');
   action(flower, () => {
-    document.body.classList.add('flower-background');
-    flower.setAttribute('aria-pressed','true');
-    status.textContent='Animated flower background enabled.';
+    const enabled = document.body.classList.toggle('flower-background');
+    flower.setAttribute('aria-pressed',String(enabled));
+    status.textContent=enabled ? 'Animated flower background enabled.' : 'Normal background restored.';
   });
 
   function flash(el) {

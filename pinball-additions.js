@@ -32,11 +32,24 @@
     return [p.x,p.y];
   }
   function action(el, fn, keys=['Enter',' ']) {
+    // Mark every game control, including newly spawned balls, for the yellow cursor.
+    el.classList.add('new-control');
+    if (!el.hasAttribute('role')) el.setAttribute('role','button');
+    if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex','0');
     el.addEventListener('click', fn);
     el.addEventListener('keydown', e => {
       if (keys.includes(e.key)) { e.preventDefault(); fn(e); }
     });
   }
+  const flower = document.getElementById('teleporter');
+  flower.setAttribute('aria-label','Set animated flower background');
+  flower.setAttribute('aria-pressed','false');
+  action(flower, () => {
+    document.body.classList.add('flower-background');
+    flower.setAttribute('aria-pressed','true');
+    status.textContent='Animated flower background enabled.';
+  });
+
   function flash(el) {
     el.animate([{opacity:1},{opacity:.48},{opacity:1}],{duration:300});
   }
@@ -781,4 +794,5 @@
   new MutationObserver(restoreTubeBall).observe(main,{attributes:true,attributeFilter:['cx','cy']});
   main.parentNode.appendChild(main);
 })();
+
 

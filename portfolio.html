@@ -5,7 +5,7 @@
 <link rel="icon" type="image/png" sizes="256x256" href="https://dariaivans.neocities.org/favicon/9692-256x256x32.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Bump this version whenever the published portfolio changes. -->
-<meta name="portfolio-version" content="20261124-polunochnoe-documentation">
+<meta name="portfolio-version" content="20261124-jobless-exhibition">
 <script>
 // Check a fresh copy on entry, including restored browser tabs, to replace stale cached HTML.
 (() => {
@@ -108,7 +108,7 @@ body.map-layout-ready :is(.category,.subcategory,.project,.trail-set) { transiti
 #cat-virtual .virtual-star-right { left:312px; top:74px; width:56px; height:57px; }
 #cat-virtual .category-title { left:82px; top:70px; width:282px; font-size:29px; line-height:.95; }
 #cat-curatorial { left:1883px; top:896.3px; width:234px; height:202.5px; }
-#cat-curatorial .curatorial-star { left:98px; top:139px; width:49px; height:50px; }
+#cat-curatorial .curatorial-star { left:84px; top:110px; width:78px; height:80px; }
 #cat-curatorial .curatorial-bg { left:9.5px; top:8.2px; width:215px; height:186px; object-fit:contain; }
 #cat-curatorial .category-title { left:22.5px; top:84.6px; width:189px; font-size:22px; line-height:.92; }
 .projects { position:absolute; inset:0; z-index:4; pointer-events:none; }
@@ -503,6 +503,19 @@ body.map-layout-ready :is(.category,.subcategory,.project,.trail-set) { transiti
   cursor: pointer;
 }
 
+
+/* Exhibition photographs share the existing video window. */
+.p-jobless.rich-desc:focus-within { z-index:120; clip-path:none !important; overflow:visible !important; }
+.p-jobless.rich-desc:focus-within .desc-box { opacity:1; visibility:visible; pointer-events:auto; }
+#video-player-frame-wrap.exhibition-mode { aspect-ratio:auto; height:min(60vh,580px); background:transparent; }
+#jobless-exhibition-gallery { height:100%; display:flex; flex-direction:column; gap:8px; }
+#jobless-exhibition-gallery[hidden], #jobless-exhibition-caption[hidden] { display:none; }
+#jobless-exhibition-image { display:block; flex:1; min-height:0; width:100%; object-fit:contain; }
+.exhibition-controls { display:flex; justify-content:center; align-items:center; gap:16px; }
+.exhibition-controls button { border:0; padding:3px 12px; background:#c8d100; color:#a800a4; font-family:AllWords,sans-serif; font-size:21px; cursor:pointer; }
+#jobless-exhibition-counter { color:#175a2d; font-family:AllWords,sans-serif; font-size:17px; }
+#jobless-exhibition-caption { margin:10px 0 2px; color:#175a2d; font-family:AllWords,sans-serif; font-size:16px; line-height:1.2; text-align:center; }
+
 #video-player-source { margin-right:auto; color:#0C06F7; font-family:AllWords,sans-serif; font-size:17px; }
 #video-player-source[hidden] { display:none; }
 #video-player-frame-wrap.external-mode { height:min(68vh,700px); aspect-ratio:auto; background:#FFF380; }
@@ -754,7 +767,7 @@ html { transition: background-color .45s ease; }
 <section class="projects">
   <div class="project webfont p-chronicle" data-group="web-main" style="--text-delay:.34s" data-desc="An interactive map of the early Runet.">the Chronicle of the Runet<br>(from Eugene Gorny)</div>
   <div class="project webfont p-breakup" data-group="web-main" style="--text-delay:.44s" data-desc="A webzine about love, breakups, and the disruptions of human relationships, explored through web design.">Break up Studies<br>(broshenka)<br>Webzine<br>2025</div>
-  <div class="project webfont p-jobless rich-desc" data-group="web-main" style="--text-delay:.54s">Jobless Webzine<br>2025<span class="desc-box">A webzine about the precarities of being an artist. INC also published an <a href="https://networkcultures.org/ourcreativereset/2025/11/06/jobless-webzine/" target="_blank" rel="noopener noreferrer">article</a> about the project.</span></div>
+  <div class="project webfont p-jobless rich-desc" data-group="web-main" style="--text-delay:.54s">Jobless Webzine<br>2025<span class="desc-box">A webzine about the precarities of being an artist. INC also published an <a href="https://networkcultures.org/ourcreativereset/2025/11/06/jobless-webzine/" target="_blank" rel="noopener noreferrer">article</a> about the project. <a class="jobless-exhibition-link" href="https://dariaivans.neocities.org/portfolio_img/20250919GZF_ALUKALA%20-10.jpg" aria-haspopup="dialog">exhibition views</a></span></div>
   <div class="project webfont p-templates rich-desc" data-group="web-main" style="--text-delay:.64s">templates-00s-10s<br>'Shablony'<br>2026<span class="desc-box">A project built around my handmade archive of Photoshop templates, made during the SFPC <a href="https://alexa4nn.github.io/archive-of-archives/" target="_blank" rel="noopener noreferrer">course</a> <em>Digital Decay and Afterlife</em>.</span></div>
   <div class="project allwords blue-reveal p-drawing" data-group="webtools" style="--text-delay:.28s" data-desc="A browser drawing playground with a choice of brushes and adjustable brush sizes.">drawing<br>cute</div>
   <div class="project allwords blue-reveal p-glitch" data-group="webtools" style="--text-delay:.36s" data-desc="A Telegram bot responding to disrupted communication in Russia by glitching uploaded files and mixing them with fragments of earlier uploads.">glitch tg<br>bot</div>
@@ -1243,6 +1256,14 @@ html { transition: background-color .45s ease; }
       allowfullscreen>
     </iframe>
 
+    <div id="jobless-exhibition-gallery" hidden>
+      <img id="jobless-exhibition-image" alt="" decoding="async">
+      <div class="exhibition-controls">
+        <button id="jobless-exhibition-prev" type="button" aria-label="Previous exhibition view">←</button>
+        <span id="jobless-exhibition-counter" aria-live="polite"></span>
+        <button id="jobless-exhibition-next" type="button" aria-label="Next exhibition view">→</button>
+      </div>
+    </div>
     <div id="crimea-video-grid">
       <video controls playsinline preload="metadata"
         src="./VID_59030807_153755_328-web.mp4"></video>
@@ -1263,11 +1284,13 @@ html { transition: background-color .45s ease; }
       </a>
     </div>
   </div>
+  <p id="jobless-exhibition-caption" hidden>Grrrl Zine Festival · Southend-on-Sea, Essex · 2025</p>
 </div>
 
 <script>
 (() => {
   const projectLinks = new Map([
+    ['.s-narkoza', 'https://youtu.be/TVdJ_6mhI3k?si=DRS7InR-hSqP-usF'],
     ['.s-cgi', 'https://youtu.be/JYdJCfEqw0E?si=UDERgHRca5bqPB-7'],
     ['.s-asexual', 'https://docs.google.com/document/d/1Nk5pUP6Dc-va7tll6wc-0bSmkv_oh9KngIid2hdD8-4/edit?usp=sharing'],
     ['.p-roza', 'https://youtu.be/U4kWTKvx9Rw?si=N89qf3Nt9oeM5gJc'],
@@ -1315,6 +1338,56 @@ html { transition: background-color .45s ease; }
   const frameWrap = document.getElementById('video-player-frame-wrap');
   const crimeaGrid = document.getElementById('crimea-video-grid');
   const crimeaVideos = Array.from(crimeaGrid.querySelectorAll('video'));
+  const exhibitionGallery = document.getElementById('jobless-exhibition-gallery');
+  const exhibitionImage = document.getElementById('jobless-exhibition-image');
+  const exhibitionCaption = document.getElementById('jobless-exhibition-caption');
+  const exhibitionCounter = document.getElementById('jobless-exhibition-counter');
+  const exhibitionLink = document.querySelector('.jobless-exhibition-link');
+  const exhibitionImages = [
+    'https://dariaivans.neocities.org/portfolio_img/20250919GZF_ALUKALA%20-10.jpg',
+    'https://dariaivans.neocities.org/portfolio_img/20250919GZF_ALUKALA%20-84.jpg',
+    'https://dariaivans.neocities.org/portfolio_img/ALUKALA%20Exhib%202.jpg'
+  ];
+  let exhibitionIndex = 0;
+  let exhibitionReturnFocus = null;
+  function hideExhibition() {
+    exhibitionGallery.hidden = true;
+    exhibitionCaption.hidden = true;
+    exhibitionImage.removeAttribute('src');
+    frameWrap.classList.remove('exhibition-mode');
+  }
+  function showExhibitionImage(index) {
+    exhibitionIndex = (index + exhibitionImages.length) % exhibitionImages.length;
+    exhibitionImage.alt = 'Jobless Webzine — exhibition view ' + (exhibitionIndex + 1) + ' of ' + exhibitionImages.length;
+    exhibitionImage.src = exhibitionImages[exhibitionIndex];
+    exhibitionCounter.textContent = (exhibitionIndex + 1) + ' / ' + exhibitionImages.length;
+    sourceLink.href = exhibitionImages[exhibitionIndex];
+  }
+  function openJoblessExhibition() {
+    exhibitionReturnFocus = document.activeElement;
+    frame.src = '';
+    frame.classList.add('hidden');
+    localFallback.classList.remove('open');
+    frameWrap.classList.remove('external-mode','crimea-mode');
+    frameWrap.classList.add('exhibition-mode');
+    crimeaGrid.classList.remove('open');
+    crimeaVideos.forEach(video => video.pause());
+    exhibitionGallery.hidden = false;
+    exhibitionCaption.hidden = false;
+    sourceLink.hidden = false;
+    showExhibitionImage(0);
+    shell.setAttribute('aria-label','Jobless Webzine exhibition views');
+    shell.classList.add('open');
+    backdrop.classList.add('open');
+    closeButton.focus();
+  }
+  exhibitionLink.addEventListener('click', event => {
+    event.preventDefault();
+    event.stopPropagation();
+    openJoblessExhibition();
+  });
+  document.getElementById('jobless-exhibition-prev').addEventListener('click', () => showExhibitionImage(exhibitionIndex - 1));
+  document.getElementById('jobless-exhibition-next').addEventListener('click', () => showExhibitionImage(exhibitionIndex + 1));
 
   function youtubeEmbedUrl(url) {
     try {
@@ -1355,6 +1428,7 @@ html { transition: background-color .45s ease; }
   }
 
   function openCrimeaVideos() {
+    hideExhibition();
     frameWrap.classList.remove('external-mode');
     sourceLink.hidden = true;
     shell.setAttribute('aria-label','Project video');
@@ -1373,6 +1447,7 @@ html { transition: background-color .45s ease; }
   function openVideo(url) {
     const embed = youtubeEmbedUrl(url);
     if (!embed) return false;
+    hideExhibition();
 
     frameWrap.classList.remove('external-mode');
     sourceLink.href = url;
@@ -1407,6 +1482,7 @@ html { transition: background-color .45s ease; }
   }
 
   function openScreeningResource(url,title) {
+    hideExhibition();
     const resource = new URL(url);
     let embeddedUrl = url;
     if (resource.hostname==='docs.google.com' && resource.pathname.startsWith('/document/d/')) {
@@ -1429,6 +1505,10 @@ html { transition: background-color .45s ease; }
   }
 
   function closeVideo() {
+    const restoreFocus = !exhibitionGallery.hidden ? exhibitionReturnFocus : null;
+    hideExhibition();
+    if (restoreFocus?.isConnected) restoreFocus.focus({preventScroll:true});
+    exhibitionReturnFocus = null;
     shell.classList.remove('open');
     backdrop.classList.remove('open');
     frame.src = '';
@@ -1451,6 +1531,10 @@ html { transition: background-color .45s ease; }
   backdrop.addEventListener('click', closeVideo);
 
   document.addEventListener('keydown', event => {
+    if (!exhibitionGallery.hidden && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) {
+      event.preventDefault();
+      showExhibitionImage(exhibitionIndex + (event.key === 'ArrowRight' ? 1 : -1));
+    }
     if (event.key === 'Escape' && shell.classList.contains('open')) {
       closeVideo();
     }
@@ -1485,6 +1569,7 @@ html { transition: background-color .45s ease; }
     });
 
     el.addEventListener('keydown', event => {
+      if (event.target.closest('.desc-box a')) return;
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
         openProject();
@@ -1912,6 +1997,7 @@ html { transition: background-color .45s ease; }
 
 </body>
 </html>
+
 
 
 

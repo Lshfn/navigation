@@ -5,7 +5,7 @@
 <link rel="icon" type="image/png" sizes="256x256" href="https://dariaivans.neocities.org/favicon/9692-256x256x32.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Bump this version whenever the published portfolio changes. -->
-<meta name="portfolio-version" content="20261124-jobless-exhibition">
+<meta name="portfolio-version" content="20261124-project-media-galleries">
 <script>
 // Check a fresh copy on entry, including restored browser tabs, to replace stale cached HTML.
 (() => {
@@ -505,8 +505,8 @@ body.map-layout-ready :is(.category,.subcategory,.project,.trail-set) { transiti
 
 
 /* Exhibition photographs share the existing video window. */
-.p-jobless.rich-desc:focus-within { z-index:120; clip-path:none !important; overflow:visible !important; }
-.p-jobless.rich-desc:focus-within .desc-box { opacity:1; visibility:visible; pointer-events:auto; }
+.project.rich-desc:focus-within { z-index:120; clip-path:none !important; overflow:visible !important; }
+.project.rich-desc:focus-within .desc-box { opacity:1; visibility:visible; pointer-events:auto; }
 #video-player-frame-wrap.exhibition-mode { aspect-ratio:auto; height:min(60vh,580px); background:transparent; }
 #jobless-exhibition-gallery { height:100%; display:flex; flex-direction:column; gap:8px; }
 #jobless-exhibition-gallery[hidden], #jobless-exhibition-caption[hidden] { display:none; }
@@ -515,6 +515,17 @@ body.map-layout-ready :is(.category,.subcategory,.project,.trail-set) { transiti
 .exhibition-controls button { border:0; padding:3px 12px; background:#c8d100; color:#a800a4; font-family:AllWords,sans-serif; font-size:21px; cursor:pointer; }
 #jobless-exhibition-counter { color:#175a2d; font-family:AllWords,sans-serif; font-size:17px; }
 #jobless-exhibition-caption { margin:10px 0 2px; color:#175a2d; font-family:AllWords,sans-serif; font-size:16px; line-height:1.2; text-align:center; }
+
+
+.p-infinite.rich-desc .desc-box, .p-altered.rich-desc .desc-box { top:50%; bottom:auto; transform:translateY(-50%); min-width:155px; width:175px; max-width:175px; padding:13px 14px 14px; font-size:13px; line-height:1.28; }
+.p-infinite.rich-desc .desc-box { left:auto; right:calc(100% - var(--title-left,0px) + 6px); }
+.p-altered.rich-desc .desc-box { left:calc(var(--title-right,100%) + 6px); }
+#project-media-stage { flex:1; min-height:0; position:relative; display:flex; justify-content:center; align-items:center; }
+#jobless-exhibition-image { height:100%; max-height:100%; }
+#project-media-stage [hidden] { display:none !important; }
+#project-media-embed { width:100%; height:100%; border:0; }
+#project-media-videos { width:100%; height:100%; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+#project-media-videos video { width:100%; height:100%; min-height:0; object-fit:contain; background:#111; }
 
 #video-player-source { margin-right:auto; color:#0C06F7; font-family:AllWords,sans-serif; font-size:17px; }
 #video-player-source[hidden] { display:none; }
@@ -766,15 +777,15 @@ html { transition: background-color .45s ease; }
 <svg id="connections" viewBox="0 0 2100 1220" aria-hidden="true"></svg>
 <section class="projects">
   <div class="project webfont p-chronicle" data-group="web-main" style="--text-delay:.34s" data-desc="An interactive map of the early Runet.">the Chronicle of the Runet<br>(from Eugene Gorny)</div>
-  <div class="project webfont p-breakup" data-group="web-main" style="--text-delay:.44s" data-desc="A webzine about love, breakups, and the disruptions of human relationships, explored through web design.">Break up Studies<br>(broshenka)<br>Webzine<br>2025</div>
-  <div class="project webfont p-jobless rich-desc" data-group="web-main" style="--text-delay:.54s">Jobless Webzine<br>2025<span class="desc-box">A webzine about the precarities of being an artist. INC also published an <a href="https://networkcultures.org/ourcreativereset/2025/11/06/jobless-webzine/" target="_blank" rel="noopener noreferrer">article</a> about the project. <a class="jobless-exhibition-link" href="https://dariaivans.neocities.org/portfolio_img/20250919GZF_ALUKALA%20-10.jpg" aria-haspopup="dialog">exhibition views</a></span></div>
+  <div class="project webfont p-breakup rich-desc" data-group="web-main" style="--text-delay:.44s" data-desc="A webzine about love, breakups, and the disruptions of human relationships, explored through web design.">Break up Studies<br>(broshenka)<br>Webzine<br>2025<span class="desc-box">A webzine about love, breakups, and the disruptions of human relationships, explored through web design. <a data-media-gallery="breakup" data-media-start="0" href="https://dariaivans.neocities.org/portfolio_img/photo_2025-10-22%2015.52.20.jpeg" aria-haspopup="dialog">presentation</a></span></div>
+  <div class="project webfont p-jobless rich-desc" data-group="web-main" style="--text-delay:.54s">Jobless Webzine<br>2025<span class="desc-box">A webzine about the precarities of being an artist. INC also published an <a href="https://networkcultures.org/ourcreativereset/2025/11/06/jobless-webzine/" target="_blank" rel="noopener noreferrer">article</a> about the project. <a class="jobless-exhibition-link" data-media-gallery="jobless" href="https://dariaivans.neocities.org/portfolio_img/20250919GZF_ALUKALA%20-10.jpg" aria-haspopup="dialog">exhibition views</a></span></div>
   <div class="project webfont p-templates rich-desc" data-group="web-main" style="--text-delay:.64s">templates-00s-10s<br>'Shablony'<br>2026<span class="desc-box">A project built around my handmade archive of Photoshop templates, made during the SFPC <a href="https://alexa4nn.github.io/archive-of-archives/" target="_blank" rel="noopener noreferrer">course</a> <em>Digital Decay and Afterlife</em>.</span></div>
   <div class="project allwords blue-reveal p-drawing" data-group="webtools" style="--text-delay:.28s" data-desc="A browser drawing playground with a choice of brushes and adjustable brush sizes.">drawing<br>cute</div>
   <div class="project allwords blue-reveal p-glitch" data-group="webtools" style="--text-delay:.36s" data-desc="A Telegram bot responding to disrupted communication in Russia by glitching uploaded files and mixing them with fragments of earlier uploads.">glitch tg<br>bot</div>
   <div class="project allwords blue-reveal p-geocities" data-group="webtools" style="--text-delay:.44s" data-desc="A bookmarklet that transforms modern websites with retro backgrounds, wild fonts, blinking text, and scrolling marquees.">geocitiesizer<br>-2.0</div>
   <div class="project allwords blue-reveal p-sky" data-group="webtools" style="--text-delay:.52s" data-desc="An interactive page about living through the Russian–Ukrainian war and wondering whether the sky is clear yet.">is_the_sky<br>clear yet</div>
   <div class="project allwords blue-reveal p-annlee" data-group="webtools" style="--text-delay:.60s" data-desc="Kandinsky 2.0's post-Annlee generative imaginary">This Annlee<br>Does Not Exist</div>
-  <div class="project allwords p-altered" data-desc="A live audiovisual performance with Anna Morskaya at the Russian Museum, remixing around 200 TikTok videos into layers of war, girlhood, dance, and political control over the internet." data-group="perf-main" style="--text-delay:.30s">#alteredmybrainchemistry<br>TikTok performance<br>2024</div>
+  <div class="project allwords p-altered rich-desc" data-desc="A live audiovisual performance with Anna Morskaya at the Russian Museum, remixing around 200 TikTok videos into layers of war, girlhood, dance, and political control over the internet." data-group="perf-main" style="--text-delay:.30s">#alteredmybrainchemistry<br>TikTok performance<br>2024<span class="desc-box">A live audiovisual performance with Anna Morskaya at the Russian Museum, remixing around 200 TikTok videos into layers of war, girlhood, dance, and political control over the internet. <a data-media-gallery="performance" data-media-start="1" href="https://dariaivans.neocities.org/portfolio_img/photo_2026-10-28%2014.04.37.jpeg" aria-haspopup="dialog">performance views</a></span></div>
   <div class="project allwords p-public" data-group="perf-main" style="--text-delay:.38s">public discussion on<br>imperfect technologies<br>2023</div>
   <div class="project allwords p-interview" data-group="perf-main" style="--text-delay:.46s">interview with the<br>researchers of the<br>metaverses<br>2023</div>
   <div class="project allwords p-lecture" data-group="perf-main" style="--text-delay:.54s">lecture on the Sims,<br>modding and machinima<br>2025</div>
@@ -789,7 +800,7 @@ html { transition: background-color .45s ease; }
   <div class="project allwords p-drawings" data-group="various-main" style="--text-delay:.46s">drawings</div>
   <div class="project allwords p-encounters" data-group="virtual-main" style="--text-delay:.26s" data-desc="A search for Atlantis in a virtual Antarctica, where a philosopher, a scientist, an artist, and a director become spaces to explore.">Encounters at the<br>end of the world<br>2022<span class="project-format">documentation</span></div>
   <div class="project allwords p-c8" data-group="virtual-main" style="--text-delay:.34s" data-desc="VR spaces inspired by Samuel R. Delany’s Dhalgren and the attempt to evoke smells in a medium without them.">C8H8O3<br>2022<span class="project-format">documentation</span></div>
-  <div class="project allwords p-infinite" data-group="virtual-main" style="--text-delay:.42s" data-desc="A nonlinear adaptation of David Foster Wallace’s Infinite Jest, filmed across The Sims games and shaped by their histories and behavioural clichés.">Infinite Jest the<br>Sims Machinima<br>2025</div>
+  <div class="project allwords p-infinite rich-desc" data-group="virtual-main" style="--text-delay:.42s" data-desc="A nonlinear adaptation of David Foster Wallace’s Infinite Jest, filmed across The Sims games and shaped by their histories and behavioural clichés.">Infinite Jest the<br>Sims Machinima<br>2025<span class="desc-box">A nonlinear adaptation of David Foster Wallace’s Infinite Jest, filmed across The Sims games and shaped by their histories and behavioural clichés. <a data-media-gallery="infinite" data-media-start="0" href="https://dariaivans.neocities.org/portfolio_img/photo_2026-10-28%2013.57.25.jpeg" aria-haspopup="dialog">installation views</a></span></div>
   <div class="project allwords p-crimea" data-group="virtual-main" style="--text-delay:.50s" data-desc="An AR journey through the Crimea of my childhood, revisited through photospheres made after 2014.">A journey to<br>Crimea<br>2022<span class="project-format">documentation</span></div>
   <div class="project allwords p-haunting" data-group="virtual-main" style="--text-delay:.58s" data-desc="A VRChat world where glitch shaders, recursive corridors, and chaotic portals interrupt movement, vision, and control.">Haunting on the<br>Metaverse<br>2023</div>
   <div class="project allwords p-poluno" data-group="virtual-main" style="--text-delay:.66s" data-desc="A 3D project connecting Mansi culture in the Urals with memories of my grandmother’s childhood.">Polunochnoe<br>2021<span class="project-format">documentation</span></div>
@@ -1257,11 +1268,15 @@ html { transition: background-color .45s ease; }
     </iframe>
 
     <div id="jobless-exhibition-gallery" hidden>
-      <img id="jobless-exhibition-image" alt="" decoding="async">
+      <div id="project-media-stage">
+        <img id="jobless-exhibition-image" alt="" decoding="async">
+        <iframe id="project-media-embed" title="TikTok performance documentation" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen hidden></iframe>
+        <div id="project-media-videos" hidden></div>
+      </div>
       <div class="exhibition-controls">
-        <button id="jobless-exhibition-prev" type="button" aria-label="Previous exhibition view">←</button>
+        <button id="jobless-exhibition-prev" type="button" aria-label="Previous project view">←</button>
         <span id="jobless-exhibition-counter" aria-live="polite"></span>
-        <button id="jobless-exhibition-next" type="button" aria-label="Next exhibition view">→</button>
+        <button id="jobless-exhibition-next" type="button" aria-label="Next project view">→</button>
       </div>
     </div>
     <div id="crimea-video-grid">
@@ -1342,28 +1357,196 @@ html { transition: background-color .45s ease; }
   const exhibitionImage = document.getElementById('jobless-exhibition-image');
   const exhibitionCaption = document.getElementById('jobless-exhibition-caption');
   const exhibitionCounter = document.getElementById('jobless-exhibition-counter');
-  const exhibitionLink = document.querySelector('.jobless-exhibition-link');
-  const exhibitionImages = [
-    'https://dariaivans.neocities.org/portfolio_img/20250919GZF_ALUKALA%20-10.jpg',
-    'https://dariaivans.neocities.org/portfolio_img/20250919GZF_ALUKALA%20-84.jpg',
-    'https://dariaivans.neocities.org/portfolio_img/ALUKALA%20Exhib%202.jpg'
-  ];
+  const mediaEmbed = document.getElementById('project-media-embed');
+  const mediaVideos = document.getElementById('project-media-videos');
+  const mediaGalleries = {
+  "jobless": {
+    "title": "Jobless Webzine — exhibition views",
+    "caption": "Grrrl Zine Festival · Southend-on-Sea, Essex · 2025",
+    "items": [
+      {
+        "type": "image",
+        "src": "./media/portfolio/jobless-1.webp",
+        "original": "https://dariaivans.neocities.org/portfolio_img/20250919GZF_ALUKALA%20-10.jpg",
+        "alt": "Jobless Webzine — exhibition views — photograph 1"
+      },
+      {
+        "type": "image",
+        "src": "./media/portfolio/jobless-2.webp",
+        "original": "https://dariaivans.neocities.org/portfolio_img/20250919GZF_ALUKALA%20-84.jpg",
+        "alt": "Jobless Webzine — exhibition views — photograph 2"
+      },
+      {
+        "type": "image",
+        "src": "./media/portfolio/jobless-3.webp",
+        "original": "https://dariaivans.neocities.org/portfolio_img/ALUKALA%20Exhib%202.jpg",
+        "alt": "Jobless Webzine — exhibition views — photograph 3"
+      }
+    ]
+  },
+  "breakup": {
+    "title": "Breakup Studies Webzine — presentation",
+    "caption": "Golyj Wood · Saint Petersburg · 2 February 2025",
+    "items": [
+      {
+        "type": "image",
+        "src": "./media/portfolio/breakup-1.webp",
+        "original": "https://dariaivans.neocities.org/portfolio_img/photo_2025-10-22%2015.52.20.jpeg",
+        "alt": "Breakup Studies Webzine — presentation — photograph 1"
+      },
+      {
+        "type": "image",
+        "src": "./media/portfolio/breakup-2.webp",
+        "original": "https://dariaivans.neocities.org/portfolio_img/photo_2025-10-22%2015.52.17.jpeg",
+        "alt": "Breakup Studies Webzine — presentation — photograph 2"
+      },
+      {
+        "type": "image",
+        "src": "./media/portfolio/breakup-3.webp",
+        "original": "https://dariaivans.neocities.org/portfolio_img/photo_2026-10-28%2013.58.01.jpeg",
+        "alt": "Breakup Studies Webzine — presentation — photograph 3"
+      },
+      {
+        "type": "image",
+        "src": "./media/portfolio/breakup-4.webp",
+        "original": "https://dariaivans.neocities.org/portfolio_img/photo_2026-10-28%2013.57.57.jpeg",
+        "alt": "Breakup Studies Webzine — presentation — photograph 4"
+      },
+      {
+        "type": "image",
+        "src": "./media/portfolio/breakup-5.webp",
+        "original": "https://dariaivans.neocities.org/portfolio_img/photo_2026-10-28%2013.57.55.jpeg",
+        "alt": "Breakup Studies Webzine — presentation — photograph 5"
+      },
+      {
+        "type": "image",
+        "src": "./media/portfolio/breakup-6.webp",
+        "original": "https://dariaivans.neocities.org/portfolio_img/photo_2026-10-28%2013.57.52.jpeg",
+        "alt": "Breakup Studies Webzine — presentation — photograph 6"
+      }
+    ]
+  },
+  "performance": {
+    "title": "#alteredmybrainchemistry — performance views",
+    "caption": "Russian Museum · Saint Petersburg · 2024",
+    "items": [
+      {
+        "type": "youtube",
+        "src": "https://youtu.be/q6abl3-JjVI?si=9dKmnblwn-l_eOVT"
+      },
+      {
+        "type": "image",
+        "src": "./media/portfolio/performance-1.webp",
+        "original": "https://dariaivans.neocities.org/portfolio_img/photo_2026-10-28%2014.04.37.jpeg",
+        "alt": "#alteredmybrainchemistry — performance views — photograph 1"
+      },
+      {
+        "type": "image",
+        "src": "./media/portfolio/performance-2.webp",
+        "original": "https://dariaivans.neocities.org/portfolio_img/photo_2026-10-28%2014.05.01.jpeg",
+        "alt": "#alteredmybrainchemistry — performance views — photograph 2"
+      }
+    ]
+  },
+  "infinite": {
+    "title": "Infinite Jest — installation views",
+    "caption": "Vaults Centre for Artistic Production · 30 January 2025",
+    "items": [
+      {
+        "type": "image",
+        "src": "./media/portfolio/infinite-1.webp",
+        "original": "https://dariaivans.neocities.org/portfolio_img/photo_2026-10-28%2013.57.25.jpeg",
+        "alt": "Infinite Jest — installation views — photograph 1"
+      },
+      {
+        "type": "image",
+        "src": "./media/portfolio/infinite-2.webp",
+        "original": "https://dariaivans.neocities.org/portfolio_img/photo_2026-10-28%2013.57.21.jpeg",
+        "alt": "Infinite Jest — installation views — photograph 2"
+      },
+      {
+        "type": "image",
+        "src": "./media/portfolio/infinite-3.webp",
+        "original": "https://dariaivans.neocities.org/portfolio_img/photo_2026-10-28%2013.57.27.jpeg",
+        "alt": "Infinite Jest — installation views — photograph 3"
+      },
+      {
+        "type": "videos",
+        "videos": [
+          {
+            "src": "./media/portfolio/infinite-video-1.mp4",
+            "poster": "./media/portfolio/infinite-video-1-poster.webp",
+            "label": "Infinite Jest installation video 1"
+          },
+          {
+            "src": "./media/portfolio/infinite-video-2.mp4",
+            "poster": "./media/portfolio/infinite-video-2-poster.webp",
+            "label": "Infinite Jest installation video 2"
+          }
+        ]
+      }
+    ]
+  }
+};
+  let activeGallery = null;
   let exhibitionIndex = 0;
   let exhibitionReturnFocus = null;
+  function clearGalleryMedia() {
+    mediaEmbed.removeAttribute('src');
+    mediaEmbed.hidden = true;
+    mediaVideos.querySelectorAll('video').forEach(video => {
+      video.pause();
+      video.removeAttribute('src');
+      video.load();
+    });
+    mediaVideos.replaceChildren();
+    mediaVideos.hidden = true;
+    exhibitionImage.hidden = true;
+    exhibitionImage.removeAttribute('src');
+  }
   function hideExhibition() {
+    clearGalleryMedia();
+    activeGallery = null;
     exhibitionGallery.hidden = true;
     exhibitionCaption.hidden = true;
-    exhibitionImage.removeAttribute('src');
     frameWrap.classList.remove('exhibition-mode');
   }
   function showExhibitionImage(index) {
-    exhibitionIndex = (index + exhibitionImages.length) % exhibitionImages.length;
-    exhibitionImage.alt = 'Jobless Webzine — exhibition view ' + (exhibitionIndex + 1) + ' of ' + exhibitionImages.length;
-    exhibitionImage.src = exhibitionImages[exhibitionIndex];
-    exhibitionCounter.textContent = (exhibitionIndex + 1) + ' / ' + exhibitionImages.length;
-    sourceLink.href = exhibitionImages[exhibitionIndex];
+    if (!activeGallery) return;
+    clearGalleryMedia();
+    const items = activeGallery.items;
+    exhibitionIndex = (index + items.length) % items.length;
+    const item = items[exhibitionIndex];
+    exhibitionCounter.textContent = (exhibitionIndex + 1) + ' / ' + items.length;
+    sourceLink.hidden = item.type === 'videos';
+    sourceLink.href = item.original || item.src || '#';
+    if (item.type === 'image') {
+      exhibitionImage.alt = item.alt;
+      exhibitionImage.src = item.src;
+      exhibitionImage.hidden = false;
+      // Preload only the next photograph after the current one, never whole videos.
+      const next = items[(exhibitionIndex + 1) % items.length];
+      if (next.type === 'image') { const image = new Image(); image.src = next.src; }
+    } else if (item.type === 'youtube') {
+      mediaEmbed.src = youtubeEmbedUrl(item.src);
+      mediaEmbed.hidden = false;
+    } else {
+      item.videos.forEach(itemVideo => {
+        const video = document.createElement('video');
+        video.controls = true;
+        video.playsInline = true;
+        video.preload = 'metadata';
+        video.poster = itemVideo.poster;
+        video.setAttribute('aria-label',itemVideo.label);
+        video.src = itemVideo.src;
+        mediaVideos.append(video);
+      });
+      mediaVideos.hidden = false;
+    }
   }
-  function openJoblessExhibition() {
+  function openMediaGallery(key, index = 0) {
+    const gallery = mediaGalleries[key];
+    if (!gallery) return;
     exhibitionReturnFocus = document.activeElement;
     frame.src = '';
     frame.classList.add('hidden');
@@ -1372,19 +1555,22 @@ html { transition: background-color .45s ease; }
     frameWrap.classList.add('exhibition-mode');
     crimeaGrid.classList.remove('open');
     crimeaVideos.forEach(video => video.pause());
+    activeGallery = gallery;
     exhibitionGallery.hidden = false;
+    exhibitionCaption.textContent = gallery.caption;
     exhibitionCaption.hidden = false;
-    sourceLink.hidden = false;
-    showExhibitionImage(0);
-    shell.setAttribute('aria-label','Jobless Webzine exhibition views');
+    showExhibitionImage(index);
+    shell.setAttribute('aria-label',gallery.title);
     shell.classList.add('open');
     backdrop.classList.add('open');
     closeButton.focus();
   }
-  exhibitionLink.addEventListener('click', event => {
-    event.preventDefault();
-    event.stopPropagation();
-    openJoblessExhibition();
+  document.querySelectorAll('[data-media-gallery]').forEach(link => {
+    link.addEventListener('click', event => {
+      event.preventDefault();
+      event.stopPropagation();
+      openMediaGallery(link.dataset.mediaGallery, Number(link.dataset.mediaStart || 0));
+    });
   });
   document.getElementById('jobless-exhibition-prev').addEventListener('click', () => showExhibitionImage(exhibitionIndex - 1));
   document.getElementById('jobless-exhibition-next').addEventListener('click', () => showExhibitionImage(exhibitionIndex + 1));
@@ -1549,6 +1735,7 @@ html { transition: background-color .45s ease; }
     el.setAttribute('tabindex', '0');
 
     const openProject = () => {
+      if (el.classList.contains('p-altered')) { openMediaGallery('performance'); return; }
       if (el.classList.contains('screening') && !youtubeEmbedUrl(url)) {
         openScreeningResource(url,el.getAttribute('aria-label'));
         return;
@@ -1997,6 +2184,7 @@ html { transition: background-color .45s ease; }
 
 </body>
 </html>
+
 
 
 

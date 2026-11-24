@@ -1,7 +1,7 @@
 (() => {
   const LINKS = {
     history: "https://lshfn.github.io/navigation/history.html",
-    cv: "https://docs.google.com/document/d/14i8lpF-PPK2IcqgMuQ-s5R-ya_tmGrCH/edit?usp=sharing&ouid=107911058444608401925&rtpof=true&sd=true",
+    cv: "https://docs.google.com/document/d/1kO6ovrtrkkETzK3V0-Ab_ArryLKiCU3VoRI5KAsO6fk/edit?usp=sharing",
     official: "https://lshfn.github.io/navigation/portfolio.html",
     teaching: "https://dariaivans.neocities.org/contact/contact",
     unofficial: "https://lshfn.github.io/navigation/teaching.html",
@@ -881,3 +881,4 @@
   requestAnimationFrame(animateJellyTitle);
 
 })();
+

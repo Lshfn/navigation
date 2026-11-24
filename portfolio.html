@@ -5,7 +5,7 @@
 <link rel="icon" type="image/png" sizes="256x256" href="https://dariaivans.neocities.org/favicon/9692-256x256x32.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Bump this version whenever the published portfolio changes. -->
-<meta name="portfolio-version" content="20261124-project-media-galleries">
+<meta name="portfolio-version" content="20261124-haunting-tapeworm-cv">
 <script>
 // Check a fresh copy on entry, including restored browser tabs, to replace stale cached HTML.
 (() => {
@@ -517,9 +517,9 @@ body.map-layout-ready :is(.category,.subcategory,.project,.trail-set) { transiti
 #jobless-exhibition-caption { margin:10px 0 2px; color:#175a2d; font-family:AllWords,sans-serif; font-size:16px; line-height:1.2; text-align:center; }
 
 
-.p-infinite.rich-desc .desc-box, .p-altered.rich-desc .desc-box { top:50%; bottom:auto; transform:translateY(-50%); min-width:155px; width:175px; max-width:175px; padding:13px 14px 14px; font-size:13px; line-height:1.28; }
-.p-infinite.rich-desc .desc-box { left:auto; right:calc(100% - var(--title-left,0px) + 6px); }
-.p-altered.rich-desc .desc-box { left:calc(var(--title-right,100%) + 6px); }
+:is(.p-infinite,.p-altered,.p-haunting,.p-tapeworm).rich-desc .desc-box { top:50%; bottom:auto; transform:translateY(-50%); min-width:155px; width:175px; max-width:175px; padding:13px 14px 14px; font-size:13px; line-height:1.28; }
+:is(.p-infinite,.p-haunting).rich-desc .desc-box { left:auto; right:calc(100% - var(--title-left,0px) + 6px); }
+:is(.p-altered,.p-tapeworm).rich-desc .desc-box { left:calc(var(--title-right,100%) + 6px); }
 #project-media-stage { flex:1; min-height:0; position:relative; display:flex; justify-content:center; align-items:center; }
 #jobless-exhibition-image { height:100%; max-height:100%; }
 #project-media-stage [hidden] { display:none !important; }
@@ -527,6 +527,7 @@ body.map-layout-ready :is(.category,.subcategory,.project,.trail-set) { transiti
 #project-media-videos { width:100%; height:100%; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
 #project-media-videos video { width:100%; height:100%; min-height:0; object-fit:contain; background:#111; }
 
+#jobless-exhibition-caption a { color:inherit; text-decoration:underline; }
 #video-player-source { margin-right:auto; color:#0C06F7; font-family:AllWords,sans-serif; font-size:17px; }
 #video-player-source[hidden] { display:none; }
 #video-player-frame-wrap.external-mode { height:min(68vh,700px); aspect-ratio:auto; background:#FFF380; }
@@ -752,6 +753,7 @@ html { transition: background-color .45s ease; }
 }
 
 </style>
+<script src="./interaction-cursor.js?v=20261124-dragon" defer></script>
 </head>
 <body>
 <div class="portfolio-wrap"><main id="stage">
@@ -793,7 +795,7 @@ html { transition: background-color .45s ease; }
   <div class="project allwords p-roza" data-group="video-main" style="--text-delay:.36s">Roza<br>Vetrov</div>
   <div class="project allwords p-antimob" data-group="video-main" style="--text-delay:.44s" data-desc="A two-part video and sound project with Polina Orlikova, made in response to Russia’s invasion of Ukraine and mobilisation in 2022.">Antimobilization<br>2022</div>
   <div class="project allwords p-dora" data-group="video-main" style="--text-delay:.52s" data-desc="An investigation into a stranger’s photographic archive slips into worlds where facts lose their connections and causality follows other rules.">Dora and the<br>Wreath of Christ<br>2021</div>
-  <div class="project allwords p-tapeworm" data-group="video-main" style="--text-delay:.60s" data-desc="A video work and AR filter that casts the software–human relationship as a parasitic entanglement, blurring the boundaries between host and parasite.">tapeworm<br>ex-communication<br>2023</div>
+  <div class="project allwords p-tapeworm rich-desc" data-group="video-main" style="--text-delay:.60s" data-desc="A video work and AR filter that casts the software–human relationship as a parasitic entanglement, blurring the boundaries between host and parasite.">tapeworm<br>ex-communication<br>2023<span class="desc-box">A video work and AR filter that casts the software–human relationship as a parasitic entanglement, blurring the boundaries between host and parasite. <a data-media-gallery="tapeworm" data-media-start="1" href="https://dariaivans.neocities.org/portfolio_img/453634641_320959561012543_3017785496378093520_n.jpg" aria-haspopup="dialog">installation views</a></span></div>
   <div class="project allwords p-stories" data-group="video-main" style="--text-delay:.68s" data-desc="Video, sound, and AR filters imagining humanity surviving Earth’s destruction as a single entity, following Vladislav Mamyshev-Monroe’s vision. With Polina Orlikova.">Stories of the<br>lost time<br>2021</div>
   <div class="project allwords p-unfully" data-group="various-main" style="--text-delay:.28s">unfully recovered<br>2024</div>
   <div class="project allwords p-jewelry" data-group="various-main" style="--text-delay:.38s">hand made jewelry<br>2024</div>
@@ -802,7 +804,7 @@ html { transition: background-color .45s ease; }
   <div class="project allwords p-c8" data-group="virtual-main" style="--text-delay:.34s" data-desc="VR spaces inspired by Samuel R. Delany’s Dhalgren and the attempt to evoke smells in a medium without them.">C8H8O3<br>2022<span class="project-format">documentation</span></div>
   <div class="project allwords p-infinite rich-desc" data-group="virtual-main" style="--text-delay:.42s" data-desc="A nonlinear adaptation of David Foster Wallace’s Infinite Jest, filmed across The Sims games and shaped by their histories and behavioural clichés.">Infinite Jest the<br>Sims Machinima<br>2025<span class="desc-box">A nonlinear adaptation of David Foster Wallace’s Infinite Jest, filmed across The Sims games and shaped by their histories and behavioural clichés. <a data-media-gallery="infinite" data-media-start="0" href="https://dariaivans.neocities.org/portfolio_img/photo_2026-10-28%2013.57.25.jpeg" aria-haspopup="dialog">installation views</a></span></div>
   <div class="project allwords p-crimea" data-group="virtual-main" style="--text-delay:.50s" data-desc="An AR journey through the Crimea of my childhood, revisited through photospheres made after 2014.">A journey to<br>Crimea<br>2022<span class="project-format">documentation</span></div>
-  <div class="project allwords p-haunting" data-group="virtual-main" style="--text-delay:.58s" data-desc="A VRChat world where glitch shaders, recursive corridors, and chaotic portals interrupt movement, vision, and control.">Haunting on the<br>Metaverse<br>2023</div>
+  <div class="project allwords p-haunting rich-desc" data-group="virtual-main" style="--text-delay:.58s" data-desc="A VRChat world where glitch shaders, recursive corridors, and chaotic portals interrupt movement, vision, and control.">Haunting on the<br>Metaverse<br>2023<span class="desc-box">A VRChat world where glitch shaders, recursive corridors, and chaotic portals interrupt movement, vision, and control. <a data-media-gallery="haunting" data-media-start="0" href="https://youtu.be/eX5gVjBaq1g?si=9xjtMiA5ce3RXlan" aria-haspopup="dialog">video documentation</a> · <a data-media-gallery="haunting" data-media-start="1" href="https://dariaivans.neocities.org/portfolio_img/photo_2026-10-28%2013.56.03.jpeg" aria-haspopup="dialog">installation views</a> · <a data-media-gallery="haunting" data-media-start="3" href="https://dariaivans.neocities.org/portfolio_img/photo_2026-10-28%2013.55.13.jpeg" aria-haspopup="dialog">workshop views</a></span></div>
   <div class="project allwords p-poluno" data-group="virtual-main" style="--text-delay:.66s" data-desc="A 3D project connecting Mansi culture in the Urals with memories of my grandmother’s childhood.">Polunochnoe<br>2021<span class="project-format">documentation</span></div>
   <div class="project allwords p-other3d" data-group="virtual-main" style="--text-delay:.74s" data-desc="A selection of 3D works and experiments.">other 3D<br>art works</div>
   <div class="project allwords blue-reveal p-parallel" data-group="mmos" style="--text-delay:.28s" data-desc="Long-exposure images of avatar movements bring populated and fading virtual worlds into the same space. With Alexander Kovalev.">Parallel Views<br>&amp; Synthesized<br>Lives<br>2023/24</div>
@@ -1486,6 +1488,69 @@ html { transition: background-color .45s ease; }
         ]
       }
     ]
+  },
+  "haunting": {
+    "title": "Haunting on the Metaverse — documentation",
+    "caption": "STAGE 2023 · AIR ITMO graduation show · Saint Petersburg",
+    "items": [
+      {
+        "type": "youtube",
+        "src": "https://youtu.be/eX5gVjBaq1g?si=9xjtMiA5ce3RXlan",
+        "caption": "Haunting on the Metaverse · video documentation"
+      },
+      {
+        "type": "image",
+        "src": "./media/portfolio/itmo-1.webp",
+        "original": "https://dariaivans.neocities.org/portfolio_img/photo_2026-10-28%2013.56.03.jpeg",
+        "alt": "Haunting on the Metaverse — STAGE 2023 installation view 1",
+        "caption": "STAGE 2023 · AIR ITMO graduation show · Saint Petersburg"
+      },
+      {
+        "type": "image",
+        "src": "./media/portfolio/itmo-2.webp",
+        "original": "https://dariaivans.neocities.org/portfolio_img/photo_2026-10-28%2013.55.54.jpeg",
+        "alt": "Haunting on the Metaverse — STAGE 2023 installation view 2",
+        "caption": "STAGE 2023 · AIR ITMO graduation show · Saint Petersburg"
+      },
+      {
+        "type": "image",
+        "src": "./media/portfolio/stage-1.webp",
+        "original": "https://dariaivans.neocities.org/portfolio_img/photo_2026-10-28%2013.55.13.jpeg",
+        "alt": "Haunting on the Metaverse — STAGE 2023 workshop view 1",
+        "caption": "Workshop · STAGE 2023 Public program · Saint Petersburg"
+      },
+      {
+        "type": "image",
+        "src": "./media/portfolio/stage-2.webp",
+        "original": "https://dariaivans.neocities.org/portfolio_img/photo_2026-10-28%2013.55.20.jpeg",
+        "alt": "Haunting on the Metaverse — STAGE 2023 workshop view 2",
+        "caption": "Workshop · STAGE 2023 Public program · Saint Petersburg"
+      }
+    ]
+  },
+  "tapeworm": {
+    "title": "Tapeworm / ex-communication — installation views",
+    "caption": "Becoming Animal · Willesden Gallery · London · 8 August – 1 September",
+    "captionLink": "https://www.instagram.com/becominganimalexhibition_/",
+    "items": [
+      {
+        "type": "youtube",
+        "src": "https://youtu.be/VPNkrIS2QhA?si=HxGcpV7uP3_QruPq",
+        "caption": "Tapeworm / ex-communication · video documentation"
+      },
+      {
+        "type": "image",
+        "src": "./media/portfolio/tapeworm-1.webp",
+        "original": "https://dariaivans.neocities.org/portfolio_img/453634641_320959561012543_3017785496378093520_n.jpg",
+        "alt": "Tapeworm / ex-communication — Becoming Animal installation view 1"
+      },
+      {
+        "type": "image",
+        "src": "./media/portfolio/tapeworm-2.webp",
+        "original": "https://dariaivans.neocities.org/portfolio_img/452866535_1246385126531117_5669938179940273130_n.jpg",
+        "alt": "Tapeworm / ex-communication — Becoming Animal installation view 2"
+      }
+    ]
   }
 };
   let activeGallery = null;
@@ -1517,6 +1582,16 @@ html { transition: background-color .45s ease; }
     const items = activeGallery.items;
     exhibitionIndex = (index + items.length) % items.length;
     const item = items[exhibitionIndex];
+    exhibitionCaption.replaceChildren();
+    const caption = item.caption || activeGallery.caption;
+    if (!item.caption && activeGallery.captionLink) {
+      const link = document.createElement('a');
+      link.href = activeGallery.captionLink;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      link.textContent = caption;
+      exhibitionCaption.append(link);
+    } else exhibitionCaption.textContent = caption;
     exhibitionCounter.textContent = (exhibitionIndex + 1) + ' / ' + items.length;
     sourceLink.hidden = item.type === 'videos';
     sourceLink.href = item.original || item.src || '#';
@@ -1528,6 +1603,7 @@ html { transition: background-color .45s ease; }
       const next = items[(exhibitionIndex + 1) % items.length];
       if (next.type === 'image') { const image = new Image(); image.src = next.src; }
     } else if (item.type === 'youtube') {
+      mediaEmbed.title = activeGallery.title + ' — video documentation';
       mediaEmbed.src = youtubeEmbedUrl(item.src);
       mediaEmbed.hidden = false;
     } else {
@@ -1736,6 +1812,7 @@ html { transition: background-color .45s ease; }
 
     const openProject = () => {
       if (el.classList.contains('p-altered')) { openMediaGallery('performance'); return; }
+      if (el.classList.contains('p-tapeworm')) { openMediaGallery('tapeworm'); return; }
       if (el.classList.contains('screening') && !youtubeEmbedUrl(url)) {
         openScreeningResource(url,el.getAttribute('aria-label'));
         return;
@@ -2184,6 +2261,7 @@ html { transition: background-color .45s ease; }
 
 </body>
 </html>
+
 
 
 

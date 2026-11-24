@@ -1,7 +1,6 @@
 /* Da Dragon Wiv Da Long Tongue, magexxx67 — https://www.rw-designer.com/cursor-detail/5918 */
 (() => {
   if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-  const selectors = 'a[href],button,[role="button"],[role="link"],[onclick],[tabindex]:not([tabindex="-1"]),.nav,.new-control,.pipe,.secondary-ball,.catcher,.category,.subcategory,.project[data-project-url],video[controls]';
   const style = document.createElement('style');
   style.textContent = `html.dragon-interaction-cursor,html.dragon-interaction-cursor body,html.dragon-interaction-cursor body * {cursor:none !important;}
     #dragon-interaction-cursor {position:fixed;width:48px;height:48px;left:0;top:0;pointer-events:none;z-index:2147483647;display:none;}
@@ -14,7 +13,6 @@
   image.draggable = false;
   image.src = new URL('./media/portfolio/dragon-cursor.webp',document.currentScript.src).href;
   document.body.append(image);
-  let pressed = false;
   let active = false;
   let ready = false;
   const show = value => {
@@ -29,13 +27,13 @@
     if (event.pointerType !== 'mouse' && event.pointerType !== 'pen') return;
     image.style.left = event.clientX + 'px';
     image.style.top = event.clientY + 'px';
-    show(pressed || !!event.target.closest?.(selectors));
+    show(true);
   };
   document.addEventListener('pointermove',track,{passive:true});
   document.addEventListener('pointerover',track,{passive:true});
-  document.addEventListener('pointerdown',event => {pressed = true;track(event);},{passive:true});
-  document.addEventListener('pointerup',event => {pressed = false;track(event);},{passive:true});
-  const reset = () => {pressed = false;show(false);};
+  document.addEventListener('pointerdown',track,{passive:true});
+  document.addEventListener('pointerup',track,{passive:true});
+  const reset = () => show(false);
   document.addEventListener('pointercancel',reset,{passive:true});
   document.documentElement.addEventListener('pointerleave',reset,{passive:true});
   window.addEventListener('blur',reset);

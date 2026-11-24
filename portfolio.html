@@ -5,7 +5,7 @@
 <link rel="icon" type="image/png" sizes="256x256" href="https://dariaivans.neocities.org/favicon/9692-256x256x32.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Bump this version whenever the published portfolio changes. -->
-<meta name="portfolio-version" content="20261124-haunting-tapeworm-cv">
+<meta name="portfolio-version" content="20261124-haunting-tapeworm-cv-prefetch">
 <script>
 // Check a fresh copy on entry, including restored browser tabs, to replace stale cached HTML.
 (() => {
@@ -1595,13 +1595,13 @@ html { transition: background-color .45s ease; }
     exhibitionCounter.textContent = (exhibitionIndex + 1) + ' / ' + items.length;
     sourceLink.hidden = item.type === 'videos';
     sourceLink.href = item.original || item.src || '#';
+    // Preload the next photograph while viewing either a photo or a video.
+    const next = items[(exhibitionIndex + 1) % items.length];
+    if (next.type === 'image') { const image = new Image(); image.src = next.src; }
     if (item.type === 'image') {
       exhibitionImage.alt = item.alt;
       exhibitionImage.src = item.src;
       exhibitionImage.hidden = false;
-      // Preload only the next photograph after the current one, never whole videos.
-      const next = items[(exhibitionIndex + 1) % items.length];
-      if (next.type === 'image') { const image = new Image(); image.src = next.src; }
     } else if (item.type === 'youtube') {
       mediaEmbed.title = activeGallery.title + ' — video documentation';
       mediaEmbed.src = youtubeEmbedUrl(item.src);
